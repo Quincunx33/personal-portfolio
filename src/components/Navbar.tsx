@@ -1,5 +1,6 @@
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "motion/react";
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useFirebase } from "../context/FirebaseContext";
 import { LogIn, LogOut, X, Mail, Github, Instagram, Linkedin } from "lucide-react";
 import profileImage from "../assets/IMG_5197.jpeg";
@@ -18,6 +19,7 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
   const { user, loginWithGoogle, logoutUser } = useFirebase();
+  const location = useLocation();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
@@ -29,11 +31,8 @@ export default function Navbar() {
   });
 
   const treeNodes = [
-    { name: "About", href: "#about" },
-    { name: "Projects", href: "#projects" },
-    { name: "Album", href: "#album" },
-    { name: "Contact", href: "#contact" },
-    { name: "Resume", href: "/resume.pdf" }
+    { name: "Home", href: "/" },
+    { name: "Join Dumbland", href: "/join" }
   ];
 
   return (
@@ -66,7 +65,7 @@ export default function Navbar() {
               {user.photoURL && (
                 <img 
                   src={user.photoURL} 
-                  alt="Dumb Citizen" 
+                  alt="Sovereign" 
                   className="w-5 h-5 rounded-full border border-emerald-400"
                   referrerPolicy="no-referrer"
                 />
@@ -75,7 +74,7 @@ export default function Navbar() {
             </div>
           ) : (
              <div className="hidden md:flex bg-slate-800/50 px-3 py-1 rounded-full border border-slate-700/50">
-               <span className="text-[10px] text-slate-400 font-mono tracking-widest uppercase">Guest</span>
+               <span className="text-[10px] text-slate-400 font-mono tracking-widest uppercase">Guest Traveler</span>
              </div>
           )}
 
@@ -120,9 +119,9 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 bg-slate-950/90 backdrop-blur-xl z-40 overflow-y-auto overflow-x-hidden pt-24 pb-12 px-4 flex flex-col"
+            className="fixed inset-0 bg-slate-950/95 backdrop-blur-2xl z-40 overflow-y-auto overflow-x-hidden pt-24 pb-12 px-4 flex flex-col"
           >
-            {/* The Tree Structure */}
+            {/* The Tree Structure (Navigation) */}
             <div className="relative w-full flex-grow flex flex-col justify-center max-w-2xl mx-auto z-10 py-8 min-h-[500px]">
               
               {/* Main Glowing Trunk */}
@@ -143,8 +142,6 @@ export default function Navbar() {
                 const isLeft = i % 2 === 0;
                 return (
                   <div key={i} className="flex w-full items-center justify-center relative h-[80px] md:h-[100px] my-3 group">
-                    
-                    {/* SVG Branch behind nodes - Compact Branches */}
                     <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full pointer-events-none z-0 overflow-visible opacity-80">
                       <defs>
                         <linearGradient id={`branchGraLeft-${i}`} x1="1" y1="1" x2="0" y2="0">
@@ -181,26 +178,28 @@ export default function Navbar() {
                       )}
                     </svg>
 
-                    {/* Left Node Container */}
                     <div className="flex-1 flex justify-end pr-8 md:pr-12 relative">
                       {isLeft && (
-                        <motion.a
-                          href={node.href}
+                        <Link
+                          to={node.href}
                           onClick={() => {
-                            if (node.href.startsWith('#')) setIsMobileMenuOpen(false);
+                            setIsMobileMenuOpen(false);
                           }}
-                          initial={{ opacity: 0, scale: 0.5, x: 20 }}
-                          animate={{ opacity: 1, scale: 1, x: 0 }}
-                          transition={{ delay: 0.5 + i * 0.15, type: "spring", bounce: 0.4 }}
-                          whileHover={{ scale: 1.05, y: -2 }}
-                          className="bg-slate-900 border border-emerald-500/50 py-2 md:py-3 px-5 rounded-2xl shadow-[0_0_15px_rgba(16,185,129,0.2)] text-emerald-300 relative z-20 flex items-center justify-center min-w-[120px] md:min-w-[150px] hover:bg-[#06241a] hover:border-emerald-400 group-hover:shadow-[0_0_25px_rgba(16,185,129,0.4)]"
+                          className="bg-slate-900 border border-emerald-500/50 py-2 md:py-3 px-5 rounded-2xl shadow-[0_0_15px_rgba(16,185,129,0.2)] text-emerald-300 relative z-20 flex items-center justify-center min-w-[120px] md:min-w-[150px] hover:bg-[#06241a] hover:border-emerald-400 block"
                         >
-                          <span className="font-extrabold tracking-widest uppercase text-[11px] md:text-xs">{node.name}</span>
-                        </motion.a>
+                          <motion.span 
+                            initial={{ opacity: 0, scale: 0.5, x: 20 }}
+                            animate={{ opacity: 1, scale: 1, x: 0 }}
+                            transition={{ delay: 0.5 + i * 0.15, type: "spring", bounce: 0.4 }}
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            className="font-extrabold tracking-widest uppercase text-[11px] md:text-xs inline-block"
+                          >
+                            {node.name}
+                          </motion.span>
+                        </Link>
                       )}
                     </div>
 
-                    {/* Trunk Glowing Bulb */}
                     <div className="w-8 md:w-12 shrink-0 z-20 flex items-center justify-center">
                       <motion.div 
                         initial={{ scale: 0 }}
@@ -210,73 +209,32 @@ export default function Navbar() {
                       />
                     </div>
 
-                    {/* Right Node Container */}
                     <div className="flex-1 flex justify-start pl-8 md:pl-12 relative">
                       {!isLeft && (
-                        <motion.a
-                          href={node.href}
+                        <Link
+                          to={node.href}
                           onClick={() => {
-                            if (node.href.startsWith('#')) setIsMobileMenuOpen(false);
+                            setIsMobileMenuOpen(false);
                           }}
-                          initial={{ opacity: 0, scale: 0.5, x: -20 }}
-                          animate={{ opacity: 1, scale: 1, x: 0 }}
-                          transition={{ delay: 0.5 + i * 0.15, type: "spring", bounce: 0.4 }}
-                          whileHover={{ scale: 1.05, y: -2 }}
-                          className="bg-slate-900 border border-emerald-500/50 py-2 md:py-3 px-5 rounded-2xl shadow-[0_0_15px_rgba(16,185,129,0.2)] text-emerald-300 relative z-20 flex items-center justify-center min-w-[120px] md:min-w-[150px] hover:bg-[#0d211a] hover:border-emerald-400 group-hover:shadow-[0_0_25px_rgba(16,185,129,0.4)]"
+                          className="bg-slate-900 border border-emerald-500/50 py-2 md:py-3 px-5 rounded-2xl shadow-[0_0_15px_rgba(16,185,129,0.2)] text-emerald-300 relative z-20 flex items-center justify-center min-w-[120px] md:min-w-[150px] hover:bg-[#0d211a] hover:border-emerald-400 block"
                         >
-                          <span className="font-extrabold tracking-widest uppercase text-[11px] md:text-xs">{node.name}</span>
-                        </motion.a>
+                          <motion.span
+                            initial={{ opacity: 0, scale: 0.5, x: -20 }}
+                            animate={{ opacity: 1, scale: 1, x: 0 }}
+                            transition={{ delay: 0.5 + i * 0.15, type: "spring", bounce: 0.4 }}
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            className="font-extrabold tracking-widest uppercase text-[11px] md:text-xs inline-block"
+                          >
+                            {node.name}
+                          </motion.span>
+                        </Link>
                       )}
                     </div>
                   </div>
                 );
               })}
 
-              {/* Social Branch for Mobile */}
-              <div className="flex w-full items-center justify-center relative h-[80px] md:h-[100px] my-3 group md:hidden">
-                <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full pointer-events-none z-0 overflow-visible opacity-80">
-                  <defs>
-                    <linearGradient id={`branchGraLeft-social`} x1="1" y1="1" x2="0" y2="0">
-                      <stop offset="0%" stopColor="#10b981" />
-                      <stop offset="100%" stopColor="#047857" stopOpacity="0.5" />
-                    </linearGradient>
-                  </defs>
-                  <motion.path
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ delay: 0.3 + treeNodes.length * 0.15, duration: 0.8, ease: "circOut" }}
-                    d="M 50 100 C 50 85, 45 65, 10 50"
-                    fill="none"
-                    stroke={`url(#branchGraLeft-social)`}
-                    strokeWidth="2.5"
-                    vectorEffect="non-scaling-stroke"
-                  />
-                </svg>
-
-                <div className="flex-1 flex justify-end pr-8 relative">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.5, x: 20 }}
-                    animate={{ opacity: 1, scale: 1, x: 0 }}
-                    transition={{ delay: 0.5 + treeNodes.length * 0.15, type: "spring", bounce: 0.4 }}
-                    className="bg-slate-900 border border-emerald-500/50 py-2 px-4 rounded-2xl shadow-[0_0_15px_rgba(16,185,129,0.2)] text-emerald-300 relative z-20 flex items-center justify-center gap-3 min-w-[140px]"
-                  >
-                    <a href="mailto:taaissu@gmail.com" className="hover:text-emerald-400 transition-colors p-1"><Mail size={16} /></a>
-                    <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors p-1"><Github size={16} /></a>
-                    <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors p-1"><Linkedin size={16} /></a>
-                    <a href="https://instagram.com" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors p-1"><Instagram size={16} /></a>
-                  </motion.div>
-                </div>
-
-                <div className="w-8 shrink-0 z-20 flex items-center justify-center">
-                  <motion.div 
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.2 + treeNodes.length * 0.15, type: "spring" }}
-                    className="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_15px_#34d399] border-2 border-slate-950"
-                  />
-                </div>
-                <div className="flex-1 pl-8" />
-              </div>
+              <div className="h-20" />
             </div>
 
             {/* Tree Base Root (Auth Ground) */}
@@ -297,7 +255,7 @@ export default function Navbar() {
                         <div className="p-1 rounded-full bg-gradient-to-tr from-emerald-500 to-emerald-200">
                           <img 
                             src={user.photoURL} 
-                            alt="Citizen" 
+                            alt="Sovereign" 
                             className="w-12 h-12 rounded-full border border-black"
                             referrerPolicy="no-referrer"
                           />
@@ -312,7 +270,7 @@ export default function Navbar() {
                       }}
                       className="mt-2 text-xs text-rose-400 border border-rose-500/20 bg-rose-500/10 px-5 py-2 hover:bg-rose-500/20 rounded-full font-mono uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer transition-all w-full"
                     >
-                      <LogOut size={16} /> extract root
+                      <LogOut size={16} /> leave the realm
                     </button>
                   </div>
                 ) : (
@@ -324,7 +282,7 @@ export default function Navbar() {
                     className="px-10 py-4 bg-gradient-to-r from-emerald-600 to-teal-400 text-slate-950 font-black rounded-full hover:scale-105 transition-transform w-max flex items-center justify-center gap-3 text-sm uppercase tracking-widest cursor-pointer shadow-[0_0_35px_rgba(16,185,129,0.6)] border-2 border-emerald-200/50"
                   >
                     <LogIn size={20} />
-                    <span>Plant Your Root</span>
+                    <span>Enter Dumbland</span>
                   </button>
                 )}
               </div>

@@ -4,20 +4,20 @@
  */
 
 import React, { useState, createContext, useContext, useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
-import Projects from "./components/Projects";
-import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import SocialSidebar from "./components/SocialSidebar";
 import MockSocialApps from "./components/MockSocialApps";
 import LoadingScreen from "./components/LoadingScreen";
 import DumbCard from "./components/DumbCard";
 import SecurityShield from "./components/SecurityShield";
-import Album from "./components/Album";
+import JoinDumbland from "./components/JoinDumbland";
 import { ChevronDown, Sparkles } from "lucide-react";
 import { AnimatePresence, motion, useScroll, useSpring } from "motion/react";
+import { trackVisitor } from "./utils/tracking";
 
 type AppType = "fb" | "ig" | "github";
 
@@ -41,6 +41,7 @@ export default function App() {
   const [touchStart, setTouchStart] = useState<number | null>(null);
 
   const { scrollYProgress } = useScroll();
+  const location = useLocation();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -54,6 +55,13 @@ export default function App() {
 
   // Auto-scroll helper
   useEffect(() => {
+    trackVisitor();
+    
+    if (location.pathname !== "/") {
+      setHasScrolled(true);
+      return;
+    }
+    
     if (isLoading) return;
     const scrollTimer = setTimeout(() => {
       if (!hasScrolled) {
@@ -108,12 +116,12 @@ export default function App() {
               <motion.div 
                 id="global-scroll-progress"
                 style={{ scaleX }} 
-                className="fixed top-0 left-0 right-0 h-[3.5px] bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 origin-left z-[100] shadow-[0_1px_15px_rgba(16,185,129,0.7)]" 
+                className="fixed top-0 left-0 right-0 h-[3.5px] bg-gradient-to-r from-indigo-500 via-purple-400 to-indigo-400 origin-left z-[100] shadow-[0_1px_15px_rgba(99,102,241,0.7)]" 
               />
 
               {/* Ambient Centered Card Showcase */}
               <AnimatePresence>
-                {!hasScrolled && (
+                {!hasScrolled && location.pathname === "/" && (
                   <motion.div
                     id="intro-card-overlay"
                     initial={{ opacity: 1, zIndex: 100 }}
@@ -172,7 +180,7 @@ export default function App() {
                       className="z-10 focus:outline-none my-12 md:my-16 lg:my-20 xl:my-24 flex items-center justify-center"
                       style={{ transformStyle: "preserve-3d", perspective: "1000px" }}
                     >
-                      <DumbCard />
+                      <DumbCard showConsole={false} alwaysShowDeveloper={true} />
                     </motion.div>
 
                     {/* High quality interactive layout bottom prompt */}
@@ -196,13 +204,13 @@ export default function App() {
                       }}
                       className="absolute bottom-10 flex flex-col items-center gap-3 cursor-pointer group z-10 select-none pb-4"
                     >
-                      <span className="font-mono text-[10px] md:text-[11px] tracking-[0.4em] font-bold uppercase text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.5)] transition-all duration-300">
+                      <span className="font-mono text-[10px] md:text-[11px] tracking-[0.4em] font-bold uppercase text-indigo-400 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)] transition-all duration-300">
                         Enter Portfolio
                       </span>
                       <motion.div
                         animate={{ y: [0, 10, 0] }}
                         transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-                        className="text-emerald-500"
+                        className="text-indigo-500"
                       >
                         <ChevronDown size={28} className="stroke-[2px]" />
                       </motion.div>
@@ -215,19 +223,21 @@ export default function App() {
               <SocialSidebar />
               
               <main className={`px-6 md:px-24 max-w-7xl mx-auto transition-opacity duration-1000 ${hasScrolled ? 'opacity-100' : 'opacity-0'}`}>
-                <Hero />
-                <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} viewport={{ once: true }}>
-                  <About />
-                </motion.div>
-                <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} viewport={{ once: true }}>
-                  <Projects />
-                </motion.div>
-                <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} viewport={{ once: true }}>
-                  <Album />
-                </motion.div>
-                <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} viewport={{ once: true }}>
-                  <Contact />
-                </motion.div>
+                <Routes>
+                  <Route path="/" element={
+                    <>
+                      <Hero />
+                      <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} viewport={{ once: true }}>
+                        <About />
+                      </motion.div>
+                    </>
+                  } />
+                  <Route path="/join" element={
+                    <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} viewport={{ once: true }} className="pt-24 min-h-screen">
+                      <JoinDumbland />
+                    </motion.div>
+                  } />
+                </Routes>
               </main>
               <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} viewport={{ once: true }}>
                 <Footer />

@@ -7,6 +7,41 @@ import {
   Facebook, MoreHorizontal, ThumbsUp, MessageSquare, Instagram, Zap, ChevronDown 
 } from "lucide-react";
 
+const dumbifyText = (text: string, isActive: boolean) => {
+  if (!isActive) return text;
+  let t = text;
+  const dictionary: [RegExp, string][] = [
+    [/production server/gi, "overheated potato chassis 🥔"],
+    [/production/gi, "danger zone 💣"],
+    [/servers/gi, "toasters 🍞"],
+    [/server/gi, "toasting node 🍞"],
+    [/TypeScript/g, "TypeGuesser 🔮"],
+    [/TypeScript/gi, "TypeGuesser 🔮"],
+    [/JavaScript/g, "SpaghettiLoader 🍝"],
+    [/JavaScript/gi, "SpaghettiLoader 🍝"],
+    [/debugging/gi, "weeping at walls 😭"],
+    [/debug/gi, "hunting invisible bugs 🕷️"],
+    [/centered/gi, "pushed 1px to the left 💀"],
+    [/center/gi, "ejected from screen 🚀"],
+    [/divs/gi, "slippery boxes 📦"],
+    [/div/gi, "slippery box 📦"],
+    [/React/g, "Heavy Panic Loop 🔄"],
+    [/CSS grid/gi, "layout jail 🕸️"],
+    [/CSS/gi, "Cascading Mental Breakdowns 🩸"],
+    [/developer/gi, "Certified Keyboard Pounder 🤡"],
+    [/Googler/gi, "Ctrl-C Ctrl-V Archeologist 🕵️‍♀️"],
+    [/signature/gi, "random scribble 🖍️"],
+    [/credentials/gi, "made-up excuse notes 🤡"],
+    [/minimalism/gi, "having no working code assets"],
+    [/biometric/gi, "smudge identity grid"],
+    [/design/gi, "moving boxes with eyes closed"],
+  ];
+  dictionary.forEach(([regex, replacement]) => {
+    t = t.replace(regex, replacement);
+  });
+  return t;
+};
+
 interface MockSocialAppsProps {
   isOpen: boolean;
   onClose: () => void;
@@ -14,16 +49,18 @@ interface MockSocialAppsProps {
 }
 
 export default function MockSocialApps({ isOpen, onClose, activeApp }: MockSocialAppsProps) {
+  const [isDumbified, setIsDumbified] = useState(false);
+
   if (!isOpen || !activeApp) return null;
 
   const renderApp = () => {
     switch (activeApp) {
       case "fb":
-        return <FacebookMock />;
+        return <FacebookMock isDumbified={isDumbified} setIsDumbified={setIsDumbified} />;
       case "ig":
-        return <InstagramMock />;
+        return <InstagramMock isDumbified={isDumbified} setIsDumbified={setIsDumbified} />;
       case "github":
-        return <GithubMock />;
+        return <GithubMock isDumbified={isDumbified} setIsDumbified={setIsDumbified} />;
       default:
         return null;
     }
@@ -92,13 +129,18 @@ interface FBPost {
   type: "code" | "zap" | "globe" | "text";
 }
 
-function FacebookMock() {
+interface MockAppProps {
+  isDumbified: boolean;
+  setIsDumbified: (val: boolean) => void;
+}
+
+function FacebookMock({ isDumbified, setIsDumbified }: MockAppProps) {
   const [activeProfile, setActiveProfile] = useState<"main" | "secondary">("main");
   const [showAccountSwitcher, setShowAccountSwitcher] = useState(false);
   
   const profiles = {
-    main: { id: "main", name: "Tasfiya Tabassum (Main)", initials: "TT", img: {profilePic}, link: "https://www.facebook.com/taissuuu?" },
-    secondary: { id: "secondary", name: "Tasfiya Tabassum (Dev)", initials: "TT", img: {profilePic}, link: "https://www.facebook.com/taaissu?" }
+    main: { id: "main", name: "Tasfiya Tabassum (Main)", initials: "TT", img: profilePic, link: "https://www.facebook.com/taissuuu?" },
+    secondary: { id: "secondary", name: "Tasfiya Tabassum (Dev)", initials: "TT", img: profilePic, link: "https://www.facebook.com/taaissu?" }
   };
 
   const current = profiles[activeProfile];
@@ -108,7 +150,7 @@ function FacebookMock() {
     {
       id: "fb-1",
       author: "Tasfiya Tabassum (Certified)",
-      avatar: {profilePic},
+      avatar: profilePic,
       time: "1h",
       content: "Just updated my signature profile! 🚀 Exploring the limits of systematic absurdity in NID logic. What do you think?",
       likes: 120,
@@ -119,7 +161,7 @@ function FacebookMock() {
     {
       id: "fb-2",
       author: "Tasfiya Tabassum (Certified)",
-      avatar: {profilePic},
+      avatar: profilePic,
       time: "3h",
       content: "Thinking about why CSS is called cascading. It really does cascade into absolute chaos sometimes... 🎨 #WebDev #DumbLogic",
       likes: 242,
@@ -130,7 +172,7 @@ function FacebookMock() {
     {
       id: "fb-3",
       author: "Tasfiya Tabassum (Certified)",
-      avatar: {profilePic},
+      avatar: profilePic,
       time: "5h",
       content: "Coffee + Code = Productive Chaos. ☕️💻 Still debugging that off-by-one error on the security barcode.",
       likes: 365,
@@ -218,9 +260,15 @@ function FacebookMock() {
             <User size={10} /> Profile: {activeProfile === "main" ? "Main" : "Dev"} <ChevronDown size={10} />
           </button>
         </div>
-        <div className="flex gap-2">
-          <a href={current.link} target="_blank" rel="noopener noreferrer" className="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 hover:bg-white/30 transition-colors">
-            <Globe size={12} /> Open Real
+        <div className="flex gap-1.5 items-center">
+          <button 
+            onClick={() => setIsDumbified(!isDumbified)}
+            className={`px-2.5 py-1 rounded-full text-[9px] tracking-wider font-black uppercase flex items-center gap-1 transition-all active:scale-95 border ${isDumbified ? 'bg-amber-400 text-slate-900 border-amber-300' : 'bg-white/10 border-white/5 text-white hover:bg-white/20'}`}
+          >
+            🤡 LENS: {isDumbified ? "DUMB" : "NORM"}
+          </button>
+          <a href={current.link} target="_blank" rel="noopener noreferrer" className="bg-white/20 px-2.5 py-1 rounded-full text-[10.5px] font-bold flex items-center gap-1 hover:bg-white/30 transition-colors">
+            <Globe size={11} /> Open Real
           </a>
         </div>
       </div>
@@ -350,7 +398,7 @@ function FacebookMock() {
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {/* Create Story card */}
             <div 
-              onClick={() => setActiveStory({ name: "Your Story", contentColor: "bg-indigo-600", img: {profilePic} })}
+              onClick={() => setActiveStory({ name: "Your Story", contentColor: "bg-indigo-600", img: profilePic })}
               className="w-24 h-40 bg-zinc-400 rounded-xl relative flex-shrink-0 overflow-hidden shadow-sm group cursor-pointer"
             >
               <img src={profilePic} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Self avatar" />
@@ -466,7 +514,7 @@ function FacebookMock() {
 
             {/* Post Content */}
             <div className="px-4 pb-3">
-              <p className="text-xs leading-relaxed text-slate-800 font-medium">{post.content}</p>
+              <p className="text-xs leading-relaxed text-slate-800 font-medium">{dumbifyText(post.content, isDumbified)}</p>
             </div>
 
             {/* Interactive Visual Canvas Box */}
@@ -583,7 +631,7 @@ interface IGPost {
   imgUrl?: string;
 }
 
-function InstagramMock() {
+function InstagramMock({ isDumbified, setIsDumbified }: MockAppProps) {
   const [view, setView] = useState<"feed" | "profile">("feed");
   
   // Custom states for IG
@@ -707,7 +755,13 @@ function InstagramMock() {
       {/* IG Header */}
       <div className="p-4 border-b flex justify-between items-center sticky top-0 bg-white/95 backdrop-blur-sm z-30">
         <h1 className="text-2xl font-black italic tracking-tighter text-slate-900" style={{ fontFamily: 'serif' }}>Instagram</h1>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-2 items-center">
+          <button 
+            onClick={() => setIsDumbified(!isDumbified)}
+            className={`px-3 py-1.5 rounded-md text-[9px] font-black uppercase tracking-widest flex items-center gap-1 transition-all active:scale-95 border ${isDumbified ? 'bg-amber-400 text-slate-900 border-amber-300 animate-pulse' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-150'}`}
+          >
+            🤡 Lens: {isDumbified ? "DUMB" : "NORM"}
+          </button>
           <a href="https://www.instagram.com/taissuuu" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-md hover:opacity-90 transition-all shadow-md active:scale-95">
             Open Real
           </a>
@@ -775,7 +829,7 @@ function InstagramMock() {
               </div>
               <div className="p-4 text-xs">
                 <p className="font-bold mb-1">{selectedPhotoPost.likes} likes</p>
-                <p className="text-slate-800 leading-relaxed italic">"{selectedPhotoPost.caption}"</p>
+                <p className="text-slate-800 leading-relaxed italic">"{dumbifyText(selectedPhotoPost.caption, isDumbified)}"</p>
               </div>
             </motion.div>
           </motion.div>
@@ -893,8 +947,8 @@ function InstagramMock() {
                         Liked by <b>tester_dev</b> and <b>{post.likes}</b> others
                      </p>
                      <p className="text-slate-800 leading-relaxed font-semibold">
-                       <span className="font-black mr-2 text-slate-950">@{post.username}</span> 
-                       {post.caption}
+                       <span className="font-black mr-2 text-slate-950">@{post.username}</span> {dumbifyText(post.caption, isDumbified)} {/*
+                       */}&nbsp;
                      </p>
 
                      {post.comments.length > 0 && (
@@ -1040,7 +1094,7 @@ interface GHRepo {
   isPublic: boolean;
 }
 
-function GithubMock() {
+function GithubMock({ isDumbified, setIsDumbified }: MockAppProps) {
   const [activeTab, setActiveTab] = useState<"overview" | "repositories" | "activity">("overview");
   
   // State managed Repositories
@@ -1144,7 +1198,13 @@ function GithubMock() {
             />
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+           <button 
+             onClick={() => setIsDumbified(!isDumbified)}
+             className={`px-3 py-1.5 rounded-md text-[9px] font-black uppercase tracking-widest flex items-center gap-1 transition-all active:scale-95 border ${isDumbified ? 'bg-amber-400 text-slate-900 border-amber-300 animate-pulse' : 'bg-[#21262d] border-[#30363d] text-[#c9d1d9] hover:bg-[#30363d]'}`}
+           >
+             🤡 Lens: {isDumbified ? "DUMB" : "NORM"}
+           </button>
            <a href="https://github.com/Quincunx33" target="_blank" rel="noopener noreferrer" className="bg-[#238636] text-white px-3 py-1.5 rounded-md text-[9px] font-black uppercase tracking-widest hover:bg-[#2ea043] transition-colors shadow-lg active:scale-95 leading-none">
              Open Real
            </a>
@@ -1328,7 +1388,7 @@ function GithubMock() {
                           <h5 className="font-bold text-xs text-[#58a6ff] hover:underline cursor-pointer">{repo.name}</h5>
                           <span className="text-[8px] px-1.5 py-0.2 rounded-full border border-[#30363d] text-[#8b949e] font-bold uppercase tracking-wider">Public</span>
                        </div>
-                       <p className="text-[11px] text-[#8b949e] mb-4 italic leading-normal">{repo.desc}</p>
+                       <p className="text-[11px] text-[#8b949e] mb-4 italic leading-normal">{dumbifyText(repo.desc, isDumbified)}</p>
                        
                        <div className="flex items-center justify-between text-[10px] text-[#8b949e] pt-1">
                           <div className="flex items-center gap-3">
@@ -1363,7 +1423,7 @@ function GithubMock() {
                          {repo.isStarred ? "Starred" : "Star"}
                        </button>
                     </div>
-                    <p className="text-[11px] text-[#8b949e] mb-4 leading-relaxed italic">{repo.desc}</p>
+                    <p className="text-[11px] text-[#8b949e] mb-4 leading-relaxed italic">{dumbifyText(repo.desc, isDumbified)}</p>
                     <div className="flex items-center gap-5 text-[10px] text-[#8b949e]">
                        <div className="flex items-center gap-1.5"><div className={`w-2.5 h-2.5 rounded-full ${repo.color}`}></div>{repo.lang}</div>
                        <div className="flex items-center gap-1"><Star size={11} fill={repo.isStarred ? "currentColor" : "none"} className={repo.isStarred ? "text-yellow-400" : ""} /> {repo.starsNum}</div>

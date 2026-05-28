@@ -1,74 +1,121 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { 
-  User, 
-  signInWithPopup, 
-  GoogleAuthProvider, 
-  signOut, 
-  onAuthStateChanged 
-} from "firebase/auth";
-import { 
   doc, 
-  getDoc, 
   setDoc, 
   updateDoc, 
   increment, 
   onSnapshot,
-  getDocFromServer
+  getDoc
 } from "firebase/firestore";
-import { auth, db, handleFirestoreError, OperationType } from "../utils/firebase";
+import { 
+  signInWithPopup, 
+  signOut, 
+  onAuthStateChanged,
+  GoogleAuthProvider
+} from "firebase/auth";
+import { db, auth, handleFirestoreError, OperationType } from "../utils/firebase";
+import profilePic from "../assets/IMG_5197.jpeg";
 
 interface FirebaseContextType {
-  user: User | null;
+  user: any;
   authLoading: boolean;
   citizenProfile: any | null;
   visitorCount: number;
   loginWithGoogle: () => Promise<void>;
   logoutUser: () => Promise<void>;
+  updateCitizenProfile: (updates: any) => Promise<void>;
 }
 
 const FirebaseContext = createContext<FirebaseContextType | undefined>(undefined);
 
 export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [citizenProfile, setCitizenProfile] = useState<any | null>(null);
   const [visitorCount, setVisitorCount] = useState<number>(0);
 
-  // Monitor Auth state
+  // Monitor real Firebase Auth state
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (usersData) => {
-      setUser(usersData);
-      setAuthLoading(false);
-
-      if (usersData) {
-        if (!usersData.emailVerified) {
-          console.warn("User email is not verified. Some features might be restricted.");
-        }
-        // Log of Dumb Citizen Profile
-        const citizenRef = doc(db, "citizens", usersData.uid);
+    const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
+      setAuthLoading(true);
+      if (firebaseUser) {
+        const citizenRef = doc(db, "citizens", firebaseUser.uid);
         try {
           const docSnap = await getDoc(citizenRef);
           if (!docSnap.exists()) {
-            const newCitizen = {
-              uid: usersData.uid,
-              displayName: usersData.displayName || "Dumb Citizen",
-              photoURL: usersData.photoURL || null,
+            // Generate standard funny profile values
+            const funnyNames = [
+              "Div Centering Guru 🤡",
+              "CSS Grid Survivor 💀",
+              "Git Push --Force Expert 💣",
+              "React Loop Creator 🔄",
+              "StackOverflow Historian 🕵️‍♀️",
+              "10x Copy-Paster Pro 🚀",
+              "TypeScript Any-Caster 🌟",
+              "Coffee Optimizer ☕"
+            ];
+            const randomName = funnyNames[Math.floor(Math.random() * funnyNames.length)];
+            const newProfile = {
+              uid: firebaseUser.uid,
+              displayName: firebaseUser.displayName || randomName,
+              photoURL: firebaseUser.photoURL || profilePic,
               joinedAt: new Date().toISOString(),
+              occupation: "CSS Grid Survivor 💀",
+              favoriteBug: "Off-by-one error",
+              clearance: "LEVEL OMEGA",
+              codingSkill: "Brilliant Chaos",
+              address: "Khulna, Sector 7",
+              accentColor: "#006a4e",
+              sticker: "none",
+              email: firebaseUser.email || ""
             };
-            await setDoc(citizenRef, newCitizen);
-            setCitizenProfile(newCitizen);
+            await setDoc(citizenRef, newProfile);
+            setUser(newProfile);
+            setCitizenProfile(newProfile);
           } else {
-            setCitizenProfile(docSnap.data());
+            const data = docSnap.data();
+            setUser(data);
+            setCitizenProfile(data);
           }
-        } catch (err) {
-          console.error("Error setting up citizen profile: ", err);
+        } catch (error) {
+          console.warn("Failed to retrieve/create citizen profile, using local fallback:", error);
+          const fallbackProfile = {
+            uid: firebaseUser.uid,
+            displayName: firebaseUser.displayName || "Dumb Citizen 🤡",
+            photoURL: firebaseUser.photoURL || profilePic,
+            joinedAt: new Date().toISOString(),
+            occupation: "CSS Grid Survivor 💀",
+            favoriteBug: "Off-by-one error",
+            clearance: "LEVEL OMEGA",
+            codingSkill: "Brilliant Chaos",
+            address: "Khulna, Sector 7",
+            accentColor: "#006a4e",
+            sticker: "none",
+            email: firebaseUser.email || ""
+          };
+          setUser(fallbackProfile);
+          setCitizenProfile(fallbackProfile);
         }
       } else {
-        setCitizenProfile(null);
+        const localProfile = localStorage.getItem("dumbland_offline_profile");
+        if (localProfile) {
+          try {
+            const parsed = JSON.parse(localProfile);
+            setUser(parsed);
+            setCitizenProfile(parsed);
+          } catch (e) {
+            // Default to Queen Profile if nothing is saved
+          }
+        } else {
+          // If not logged in and no local profile, set to null
+          setUser(null);
+          setCitizenProfile(null);
+        }
       }
+      setAuthLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => unsubscribeAuth();
   }, []);
 
   // Monitor and update website visitor count
@@ -110,11 +157,11 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, []);
 
   const loginWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
     try {
+      const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
     } catch (error) {
-      console.error("Login Error: ", error);
+      console.error("Popup Authentication failed:", error);
     }
   };
 
@@ -122,7 +169,32 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     try {
       await signOut(auth);
     } catch (error) {
-      console.error("Logout Error: ", error);
+      console.error("Signout failed:", error);
+    }
+  };
+
+  const updateCitizenProfile = async (updates: any) => {
+    if (!auth.currentUser) {
+      // Offline mode updates
+      setUser((prev: any) => {
+        const merged = prev ? { ...prev, ...updates, isOffline: true } : { ...updates, isOffline: true };
+        localStorage.setItem("dumbland_offline_profile", JSON.stringify(merged));
+        setCitizenProfile(merged);
+        return merged;
+      });
+      return;
+    }
+    const citizenId = auth.currentUser.uid;
+    const citizenRef = doc(db, "citizens", citizenId);
+    try {
+      await setDoc(citizenRef, updates, { merge: true });
+      setUser((prev: any) => {
+        const merged = prev ? { ...prev, ...updates } : { ...updates };
+        setCitizenProfile(merged);
+        return merged;
+      });
+    } catch (error) {
+      handleFirestoreError(error, OperationType.UPDATE, `citizens/${citizenId}`);
     }
   };
 
@@ -135,6 +207,7 @@ export const FirebaseProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         visitorCount,
         loginWithGoogle,
         logoutUser,
+        updateCitizenProfile,
       }}
     >
       {children}

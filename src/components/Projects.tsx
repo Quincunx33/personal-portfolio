@@ -70,26 +70,26 @@ export default function Projects() {
   const mockFacebookProfile = {
     name: "Tasfiya Tabassum",
     username: "@taissuuu",
-    bio: "Certified Dumb Developer 🤡 | Professional Googler & CSS grid survivor. If you see me smiling, I finally got my divs to align.",
-    followers: "4.2K friends",
-    following: "1.1K following",
-    avatar: {profilePic},
+    bio: "The Sovereign Queen of Dumbland 👑 | Governing the absurd with absolute majesty and a plastic crown. Deciding my own vibe since day one.",
+    followers: "9.8K citizens",
+    following: "124 decrees",
+    avatar: profilePic,
     posts: [
       {
         id: 1,
         time: "Just now",
-        content: "My doctor told me my posture is getting worse. I told him it's because my whole back is carrying the team's production server on a single thread. 💻😭. Still, the div was centered eventualy!",
-        likes: 342,
-        comments: 64,
-        shares: 12
+        content: "Behold the Queen's Power! Just issued a royal decree making caffeine mandatory for all Dumbland officials. Logic is for the commoners; majesty is for the Queen. 👑✨",
+        likes: 1240,
+        comments: 156,
+        shares: 88
       },
       {
         id: 2,
         time: "Yesterday at 14:12 PM",
-        content: "Me visiting StackOverflow for the 45th time today to copy-paste the exact same center-div CSS code because my short-term memory is non-existent. 🚶‍♀️💨",
-        likes: 512,
-        comments: 104,
-        shares: 28
+        content: "My doctor told me I need more order in my life. I told him chaos is the foundation of my empire. Unvetted cosmic authority achieved. 🚶‍♀️💎",
+        likes: 856,
+        comments: 210,
+        shares: 42
       }
     ]
   };
@@ -97,16 +97,16 @@ export default function Projects() {
   const mockInstagramProfile = {
     username: "taissuuu",
     fullName: "Tasfiya",
-    bio: "✨ Staring at the screen until the red lines disappear\n🕵️‍♀️ StackOverflow Historian\n🎨 Turning custom themes into chaotic scripts\n☕ Fueled by pure panic and dark coffee",
-    followers: "1,240 followers",
-    following: "482 following",
-    postsCount: "135 posts",
-    avatar: {profilePic},
+    bio: "✨ Wielder of Queenly Power\n🕵️‍♀️ Sovereign of the Realm\n🎨 Designing High-Precision Chaos\n☕ Fueled by Coffee and Majesty",
+    followers: "5,640 subjects",
+    following: "32 realms",
+    postsCount: "256 decrees",
+    avatar: profilePic,
     grid: [
-      { id: 1, img: {profilePic}, likes: 211, comments: 45 },
-      { id: 2, placeholder: "div { display: flex; justify-content: center; }", text: "Centered perfectly! 😭", likes: 189, comments: 32 },
-      { id: 3, placeholder: "console.log('here')", text: "Ready for production 🤡", likes: 350, comments: 88 },
-      { id: 4, placeholder: "npm audit fix\n14,290 vulnerabilities", text: "Perfect.", likes: 420, comments: 112 },
+      { id: 1, img: profilePic, likes: 511, comments: 45 },
+      { id: 2, placeholder: "decree.issue();", text: "Optimal Majesty ✨", likes: 489, comments: 32 },
+      { id: 3, placeholder: "interface Queen { ... }", text: "Defining the Standard 👑", likes: 750, comments: 88 },
+      { id: 4, placeholder: "reign.continue();", text: "Genesis Logic.", likes: 920, comments: 112 },
     ]
   };
 

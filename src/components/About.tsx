@@ -1,15 +1,16 @@
 import { motion } from "motion/react";
 import SecureImage from "./SecureImage";
 import profileImage from "../assets/IMG_5197.jpeg";
+import mockMap from "../assets/images/dumbland_map_1779997056061.png";
 
 export default function About() {
-  const skills = [
-    "JavaScript (ES6+)",
-    "TypeScript",
-    "React",
-    "Node.js",
-    "Tailwind CSS",
-    "Next.js"
+  const powers = [
+    "Existential Overthinking 🧠",
+    "Queen's Aura ✨",
+    "Absolute Sleep Immunity 😴",
+    "Caffeine Alchemy & Stories ☕",
+    "Royal Chaos Governance 👑",
+    "Unquestionable Sovereignty 🌟"
   ];
 
   return (
@@ -24,7 +25,7 @@ export default function About() {
         <div className="flex items-center gap-4 mb-10" style={{ transform: "translateZ(20px)" }}>
           <h2 className="text-3xl font-bold text-slate-200">
             <span className="text-emerald-500 font-mono text-xl mr-2">01.</span>
-            About Me
+            History & Queen's Reign
           </h2>
           <div className="h-px bg-slate-700 flex-1 md:max-w-xs"></div>
         </div>
@@ -32,16 +33,16 @@ export default function About() {
         <div className="grid md:grid-cols-5 gap-10">
           <div className="md:col-span-3 text-slate-400 space-y-4 text-lg leading-relaxed" style={{ transform: "translateZ(30px)" }}>
             <motion.p initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: false }} transition={{ duration: 0.5, delay: 0.1 }}>
-              Let’s be completely honest: my name is Tasfiya, and I am a certified chaos engineer. I can easily spend four agonizing hours debugging a simple, minor layout issue only to realize I was editing the wrong file the entire time. My code is 10% logic, 40% wishful thinking, and 50% flat-out garbage that somehow compiles. 🤡
+              Let’s be honest: my name is Tasfiya, and I am the Sovereign **Queen** of Dumbland. I rule over this glorious empire of pure absurdity with an iron will, an invisible crown, and a profound talent for making decisions that defy conventional logic. My reign is built on absolute majesty, select silence, and the divine royal right to change my mind whenever I please. 👑
             </motion.p>
             <motion.p initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: false }} transition={{ duration: 0.5, delay: 0.2 }}>
-              My daily routine consists of copy-pasting code from ChatGPT, ignoring compilation warnings, and deploying straight to the main branch while praying key servers do not catch fire. I have zero productivity, a severe caffeine dependency, and a special talent for breaking perfectly functional databases. If you are looking for an impeccable, standard developer, you should definitely keep scrolling. 💀
+              My power is absolute and unquestionable. I govern the hearts, minds, and vibes of Dumbland. I have zero space for conventional rules, but a severe dependency on coffee, absolute authority, and setting peerless trends. My daily routine consists of issuing majestic decrees and maintaining perfect chaos without a second thought. 💀
             </motion.p>
             <motion.p initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: false }} transition={{ duration: 0.5, delay: 0.3 }}>
-              Here are a few technologies I frequently ruin, complain about, and have a highly toxic relationship with:
+              Here are a few of my sovereign, high-grade **Queenly Powers** that I exercise daily to maintain the peerless majesty of my realm:
             </motion.p>
             <ul className="grid grid-cols-2 gap-2 mt-4 font-mono text-sm text-slate-300">
-              {skills.map((skill, index) => (
+              {powers.map((power, index) => (
                 <motion.li 
                   key={index} 
                   initial={{ opacity: 0, y: 10 }}
@@ -51,23 +52,23 @@ export default function About() {
                   transition={{ duration: 0.3, delay: 0.4 + index * 0.1 }}
                   className="flex items-center gap-2 cursor-default"
                 >
-                  <span className="text-emerald-500 text-xs">▸</span> {skill}
+                  <span className="text-emerald-500 text-xs">▸</span> {power}
                 </motion.li>
               ))}
             </ul>
 
             <div className="mt-8 space-y-4 font-mono text-sm">
               <div className="flex gap-4 border-b border-slate-800 pb-2">
-                <span className="text-emerald-500 font-bold w-24">Home Addr:</span>
-                <span className="text-slate-300">Khulna</span>
+                <span className="text-emerald-500 font-bold w-24">Royal Seat:</span>
+                <span className="text-slate-300">Dumbland Capital</span>
               </div>
               <div className="flex gap-4 border-b border-slate-800 pb-2">
-                <span className="text-emerald-500 font-bold w-24">Education:</span>
-                <span className="text-slate-300">Not gonna tell you</span>
+                <span className="text-emerald-500 font-bold w-24">Decrees:</span>
+                <span className="text-slate-300">Absolute & Final</span>
               </div>
               <div className="flex gap-4 border-b border-slate-800 pb-2">
-                <span className="text-emerald-500 font-bold w-24">Work:</span>
-                <span className="text-slate-300">Not gonna tell you</span>
+                <span className="text-emerald-500 font-bold w-24">Duties:</span>
+                <span className="text-slate-300">Ruling the realm with perfection</span>
               </div>
             </div>
           </div>
@@ -101,7 +102,7 @@ export default function About() {
           </motion.div>
         </div>
 
-        {/* Khulna University Map */}
+        {/* Mock Dumbland Map */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -111,18 +112,26 @@ export default function About() {
         >
           <h3 className="text-xl font-bold text-slate-200 mb-6 flex items-center">
             <span className="text-emerald-500 font-mono text-lg mr-2">📍</span>
-            My Orbit (Khulna University)
+            My Orbit (Dumbland Royal Grid)
           </h3>
-          <div className="w-full h-64 md:h-80 rounded-xl overflow-hidden border-2 border-slate-800 grayscale hover:grayscale-0 transition-all duration-500 opacity-80 hover:opacity-100">
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3677.892055106575!2d89.535035!3d22.80556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ff8f82869fb041%3A0xe5419ebd8ebdd83b!2sKhulna%20University!5e0!3m2!1sen!2sbd!4v1716180325492!5m2!1sen!2sbd" 
-              width="100%" 
-              height="100%" 
-              style={{ border: 0 }} 
-              allowFullScreen={false} 
-              loading="lazy" 
-              referrerPolicy="no-referrer-when-downgrade"
+          <div className="w-full h-64 md:h-80 rounded-xl overflow-hidden border-2 border-slate-800 bg-slate-900 flex items-center justify-center relative shadow-[0_0_25px_rgba(16,185,129,0.15)] group">
+            <img 
+              src={mockMap} 
+              alt="Dumbland Map" 
+              className="w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-700 ease-in-out filter hue-rotate-15 contrast-125 saturate-150"
             />
+            {/* Overlay Map UI Elements */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center pointer-events-none">
+              <div className="w-4 h-4 bg-emerald-500 rounded-full animate-ping absolute -top-2"></div>
+              <div className="w-4 h-4 bg-emerald-400 rounded-full absolute -top-2"></div>
+              
+              <div className="mt-6 bg-slate-950/80 backdrop-blur border border-emerald-500/50 px-4 py-2 rounded shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                <h4 className="text-sm font-black text-slate-100 uppercase tracking-widest font-sans text-center">Dumbland Capital</h4>
+                <p className="text-emerald-400 font-mono text-[10px] text-center mt-1">RESTRICTED ZONE (QUEEN ONLY)</p>
+              </div>
+            </div>
+            {/* Map styling overlays */}
+            <div className="absolute inset-0 border-[6px] border-slate-950/40 rounded-xl pointer-events-none"></div>
           </div>
         </motion.div>
       </motion.div>

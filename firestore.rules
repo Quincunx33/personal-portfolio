@@ -24,11 +24,18 @@ service cloud.firestore {
       allow update: if request.resource.data.visitors is int && request.resource.data.visitors == resource.data.visitors + 1;
     }
 
+    match /visitor_logs/{logId} {
+      // Allow any visitor to create a log entry, and allow read access for all
+      allow create: if true;
+      allow read: if true;
+      allow update, delete: if false;
+    }
+
     // 3. Citizen Profiles
     match /citizens/{citizenId} {
-      allow get: if isSignedIn();
-      allow create: if isVerified() && citizenId == request.auth.uid && request.resource.data.uid == request.auth.uid && request.resource.data.displayName is string;
-      allow update, delete: if isVerified() && citizenId == request.auth.uid;
+      allow read: if true;
+      allow create: if isSignedIn() && citizenId == request.auth.uid;
+      allow update, delete: if isSignedIn() && citizenId == request.auth.uid;
     }
   }
 }

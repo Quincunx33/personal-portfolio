@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Github, Linkedin, Mail, Twitter, ChevronDown, ExternalLink, LogIn, Users } from "lucide-react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import DumbCard from "./DumbCard";
@@ -45,7 +46,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-emerald-500 font-mono mb-4 text-sm md:text-base">Hi, my name is</h2>
+          <h2 className="text-emerald-500 font-mono mb-4 text-sm md:text-base uppercase tracking-widest">Supreme Queen of the People's Republic // Tasfiya</h2>
         </motion.div>
         
         <motion.div
@@ -53,52 +54,44 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-slate-200 tracking-tight mb-4">
-            Tasfiya Tabassum.
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-slate-200 tracking-tight mb-4 select-text">
+            Tasfiya Tabassum 👑
           </h1>
         </motion.div>
- 
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-slate-400 tracking-tight mb-8">
-            I build things for the web.
+          <h1 className="text-2xl sm:text-3xl lg:text-5xl font-black text-rose-450 tracking-tight mb-8 uppercase font-mono">
+            The Sovereign Queen
           </h1>
         </motion.div>
- 
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <p className="text-slate-400 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
-            I'm a software engineer specializing in building (and occasionally designing) exceptional, high-quality websites and applications.
+          <p className="text-slate-400 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed mb-10 select-text">
+            Wielder of the legendary <b>Queen's Power</b>, governing the glorious territory of Dumbland. I don't just exist; I rule with absolute majesty, unrivaled style, and the divine right to maintain perfect chaos. Every whim is a decree, and every decision is backed by the unassailable logic of my sovereign will.
           </p>
         </motion.div>
- 
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
           className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center relative z-10"
         >
-          <a href="#projects" className="px-8 py-3 bg-emerald-500/10 text-emerald-500 border border-emerald-500 rounded font-mono hover:bg-emerald-500/20 transition-colors pointer-events-auto text-sm w-full sm:w-auto text-center">
-            Check out my work
-          </a>
+          <Link to="/join" className="px-8 py-3 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 rounded font-mono hover:bg-emerald-500/20 transition-colors pointer-events-auto text-sm w-full sm:w-auto text-center font-bold tracking-wider uppercase">
+            Join Dumbland
+          </Link>
  
-          {!user ? (
-            <button 
-              onClick={loginWithGoogle}
-              className="px-8 py-3 bg-emerald-500 text-slate-950 font-sans font-bold hover:bg-emerald-400 transition-all rounded pointer-events-auto flex items-center justify-center gap-2 text-sm cursor-pointer shadow-[0_0_20px_rgba(16,185,129,0.3)] w-full sm:w-auto uppercase tracking-wider"
-            >
-              <LogIn size={14} />
-              <span>Join Dumb World</span>
-            </button>
-          ) : (
+          {user && (
             <div className="flex items-center gap-2 bg-[#0d211a] border border-emerald-500/15 px-4 py-2.5 rounded text-sm w-full sm:w-auto justify-center">
-              <span className="font-mono text-xs font-bold text-emerald-400 uppercase tracking-widest">Dumbland Citizen</span>
+              <span className="font-mono text-xs font-bold text-emerald-400 uppercase tracking-widest">Sovereign Citizen</span>
             </div>
           )}
         </motion.div>
@@ -111,7 +104,7 @@ export default function Hero() {
         className="flex-shrink-0 w-full lg:w-auto my-8 lg:my-0 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative z-10"
         style={{ transformStyle: "preserve-3d" }}
       >
-        <DumbCard />
+        <DumbCard showConsole={false} alwaysShowDeveloper={true} />
       </motion.div>
     </div>
   </motion.div>
