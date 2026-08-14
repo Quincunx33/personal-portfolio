@@ -1,8 +1,0 @@
-{
-  "name": "Sovereign Queen of Dumbland | taaissu Portal",
-  "description": "Sovereign administration block and bio index of Tasfiya Tabassum (taaissu), Sovereign Queen of Dumbland.",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}
