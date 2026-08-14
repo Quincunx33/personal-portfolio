@@ -217,6 +217,7 @@ export default defineConfig({
   envDir: path.resolve(import.meta.dirname),
   root: path.resolve(import.meta.dirname, "client"),
   build: {
+    target: "es2019",
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
   },
