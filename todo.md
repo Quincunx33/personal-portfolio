@@ -8,6 +8,13 @@
 
 ## GitHub Push
 
-- [ ] Confirm the existing destination repository and local Git state.
-- [ ] Commit the latest taaissu portfolio source.
-- [ ] Push the commit to the existing GitHub repository and verify the remote branch.
+- [x] Confirm the existing destination repository and local Git state.
+- [x] Commit the latest taaissu portfolio source.
+- [x] Push the commit to the existing GitHub repository and verify the remote branch.
+
+## Cloudflare Image Fix
+
+- [ ] Confirm which `/manus-storage/` image URLs fail on Cloudflare and locate the staged originals.
+- [ ] Copy the portrait, logo, and generated visual assets into a deployable repository asset directory.
+- [ ] Update React image references and favicon metadata to use repository-relative paths.
+- [ ] Push the fix to the existing GitHub repository and verify the Cloudflare deployment serves the images.
