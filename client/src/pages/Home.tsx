@@ -2,7 +2,7 @@
  * taaissu editorial cyber-organic system: field-notebook layout, burnt amber signal,
  * Cormorant Garamond + IBM Plex Mono, tactile textures, asymmetric content rhythm.
  */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, ChevronDown, Github, Mail, MapPin, Menu, X } from "lucide-react";
 
 const portrait = "/assets/taaissu-portrait.jpg";
@@ -11,7 +11,29 @@ const atlasTexture = "/assets/taaissu-project-atlas.jpg";
 const signalTexture = "/assets/taaissu-signal.jpg";
 const logoMark = "/assets/taaissu-mark.png";
 
-const projects = [
+interface Project {
+  name: string;
+  displayName?: string;
+  type: string;
+  language: string;
+  description: string;
+  stat: string;
+  url: string;
+  image: string;
+  isFork: boolean;
+}
+
+type GithubRepository = {
+  name: string;
+  description: string | null;
+  language: string | null;
+  html_url: string;
+  fork: boolean;
+};
+
+const projectImages = [atlasTexture, signalTexture, heroTexture, portrait];
+
+const fallbackProjects: Project[] = [
   { name: "PS2-WebXperience", displayName: "PS2 WebXperience", type: "Interactive experience", language: "TypeScript", description: "A nostalgic PlayStation 2-inspired browser interface simulation built with React, TypeScript, Vite, and Motion.", stat: "public repository", url: "https://github.com/Quincunx33/PS2-WebXperience", image: "/assets/taaissu-project-atlas.jpg", isFork: false },
   { name: "ishkali-vnc", displayName: "ishkali VNC", type: "Systems experiment", language: "Unspecified", description: "Tasfia's Hacker Lab — pre-built Alpine 3.14 x86 rootfs for iSH (iOS), with 925+ commands, pentest tools, compilers, editors, and a VNC server.", stat: "public repository", url: "https://github.com/Quincunx33/ishkali-vnc", image: "/assets/taaissu-signal.jpg", isFork: false },
   { name: "kali-minimal", displayName: "Kali Minimal", type: "Systems experiment", language: "Unspecified", description: "Ultra-minimal terminal-only Kali Linux ISOs for i386, ARM64, and x86_64 virtualization with QEMU and UTM SE support.", stat: "public repository", url: "https://github.com/Quincunx33/kali-minimal", image: "/assets/taaissu-hero-texture.jpg", isFork: false },
@@ -44,12 +66,64 @@ const projects = [
   { name: "re3", displayName: "re3", type: "Systems library", language: "Unspecified", description: "Public repository with a minimal description.", stat: "public fork / reference", url: "https://github.com/Quincunx33/re3", image: "/assets/taaissu-hero-texture.jpg", isFork: true },
 ];
 
+const readableName = (name: string) => name.replace(/[-_]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+const classifyRepository = (repo: GithubRepository): string => {
+  const text = `${repo.name} ${repo.description ?? ""}`.toLowerCase();
+  if (/jailbreak|ai safety|red-team/.test(text)) return "AI safety research";
+  if (/phish|stress|hacking|pentest|penetration|kali|security|wpa2|osint|shellcode/.test(text)) return "Security tooling";
+  if (/cron|schedule|automation|http ping/.test(text)) return "Automation tooling";
+  if (/portfolio/.test(text)) return "Portfolio";
+  if (/media|iptv|tv/.test(text)) return "Media workflow";
+  if (/browser|webassembly|web os|webos|ipad|playstation|ps2|simulator|simulation|hand tracking/.test(text)) return "Interactive experience";
+  if (/share|file|p2p/.test(text)) return "File workflow";
+  if (/api|server|http/.test(text)) return "API laboratory";
+  if (/three\.js|ammo|bullet|engine|library|linux|rootfs|virtual|vnc|iso|qemu|operating system|os experiment/.test(text)) return "Systems library";
+  return "Systems experiment";
+};
+
+const mapRepository = (repo: GithubRepository, index: number): Project => ({
+  name: repo.name,
+  type: classifyRepository(repo),
+  language: repo.language ?? "Unspecified",
+  description: repo.description ?? "Public repository on GitHub; description not provided.",
+  stat: repo.fork ? "public fork / reference" : "public repository",
+  url: repo.html_url,
+  image: projectImages[index % projectImages.length],
+  isFork: repo.fork,
+});
+
 const filters = ["All work","Identity","Desktop experiment","AI safety research","Portfolio","Automation tooling","Security tooling","Media workflow","Browser experiment","File workflow","API laboratory","Systems library","Interactive experience","Systems experiment"];
 
 export default function Home() {
+  const [projects, setProjects] = useState<Project[]>(fallbackProjects);
+  const [syncState, setSyncState] = useState<"live" | "fallback">("fallback");
   const [filter, setFilter] = useState("All work");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const syncRepositories = async () => {
+      try {
+        const repositories: GithubRepository[] = [];
+        for (let page = 1; page <= 10; page += 1) {
+          const response = await fetch(`https://api.github.com/users/Quincunx33/repos?type=public&sort=updated&per_page=100&page=${page}`, { signal: controller.signal, headers: { Accept: "application/vnd.github+json" } });
+          if (!response.ok) throw new Error(`GitHub API responded with ${response.status}`);
+          const pageRepositories = (await response.json()) as GithubRepository[];
+          repositories.push(...pageRepositories.filter((repository) => !repository.name.startsWith(".")));
+          if (pageRepositories.length < 100) break;
+        }
+        setProjects(repositories.map(mapRepository));
+        setSyncState("live");
+      } catch {
+        if (!controller.signal.aborted) setSyncState("fallback");
+      }
+    };
+    void syncRepositories();
+    return () => controller.abort();
+  }, []);
+
   const visibleProjects = useMemo(() => filter === "All work" ? projects : projects.filter((project) => project.type === filter), [filter]);
 
   const scrollTo = (id: string) => {
@@ -90,17 +164,17 @@ export default function Home() {
           <div className="portrait-frame"><img src={portrait} alt="Tasfiya Tabassum playing guitar in the hills" /></div>
           <div className="portrait-caption"><span>01 / human signal</span><span>Khulna → everywhere</span></div>
         </div>
-        <div className="hero-index"><span>Scroll to inspect</span><span className="index-line" /><span>00—30</span></div>
+        <div className="hero-index"><span>Scroll to inspect</span><span className="index-line" /><span>00—{String(projects.length).padStart(2, "0")}</span></div>
       </section>
 
       <section className="manifesto-band" id="about">
         <div className="section-kicker"><span>01</span><span>About the maker</span></div>
         <div className="manifesto-copy"><p className="large-statement">Systems should feel <em>useful</em> before they feel impressive.</p><p className="body-copy">My work moves across TypeScript, Python, real-time applications, browser APIs, web assembly, automation, and responsible security research. I like the part where a difficult idea becomes a tool someone can actually use.</p></div>
-        <div className="stats-strip"><div><strong>30</strong><span>public repos</span></div><div><strong>934</strong><span>contributions / year</span></div><div><strong>30</strong><span>public repos indexed</span></div></div>
+        <div className="stats-strip"><div><strong>{projects.length}</strong><span>public repos</span></div><div><strong>934</strong><span>contributions / year</span></div><div><strong>{projects.length}</strong><span>public repos indexed</span></div></div>
       </section>
 
       <section className="work-section" id="work">
-        <div className="work-heading"><div className="section-kicker"><span>02</span><span>Selected work</span></div><h2>From the<br /><em>workbench.</em></h2><p>Systems, interfaces, and small provocations pulled from the public lab.</p></div>
+        <div className="work-heading"><div className="section-kicker"><span>02</span><span>Selected work</span></div><h2>From the<br /><em>workbench.</em></h2><p>Systems, interfaces, and small provocations pulled from the public lab.</p><p className="sync-note">GitHub index / {syncState === "live" ? "live" : "bundled fallback"}</p></div>
         <div className="filter-row" role="tablist" aria-label="Filter projects">{filters.map((item) => <button key={item} className={filter === item ? "filter active" : "filter"} onClick={() => setFilter(item)} role="tab" aria-selected={filter === item}>{item}</button>)}</div>
         <div className="project-list">{visibleProjects.map((project, index) => <article key={project.name} className={expanded === project.name ? "project-card expanded" : "project-card"} onClick={() => setExpanded(expanded === project.name ? null : project.name)}>
           <div className="project-number">0{index + 1}</div><div className="project-main"><div className="project-meta"><span>{project.type}</span><span className="language">{project.language}</span>{project.isFork && <span className="fork-tag">fork</span>}</div><h3>{project.name}</h3><p>{project.description}</p>{expanded === project.name && <div className="project-detail"><span>{project.stat}</span><a href={project.url} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>Open repository <ArrowUpRight size={15} /></a></div>}</div><div className="project-visual" style={{ backgroundImage: `linear-gradient(130deg, rgba(18,18,17,.28), rgba(18,18,17,.7)), url(${project.image})` }}><span>Inspect <ArrowUpRight size={16} /></span></div>
