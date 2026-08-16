@@ -12,6 +12,10 @@ const signalTexture = "/assets/taaissu-signal.jpg";
 const logoMark = "/assets/taaissu-mark.png";
 
 const projects = [
+  { name: "PS2-WebXperience", displayName: "PS2 WebXperience", type: "Interactive experience", language: "TypeScript", description: "A nostalgic PlayStation 2-inspired browser interface simulation built with React, TypeScript, Vite, and Motion.", stat: "public repository", url: "https://github.com/Quincunx33/PS2-WebXperience", image: "/assets/taaissu-project-atlas.jpg", isFork: false },
+  { name: "ishkali-vnc", displayName: "ishkali VNC", type: "Systems experiment", language: "Unspecified", description: "Tasfia's Hacker Lab — pre-built Alpine 3.14 x86 rootfs for iSH (iOS), with 925+ commands, pentest tools, compilers, editors, and a VNC server.", stat: "public repository", url: "https://github.com/Quincunx33/ishkali-vnc", image: "/assets/taaissu-signal.jpg", isFork: false },
+  { name: "kali-minimal", displayName: "Kali Minimal", type: "Systems experiment", language: "Unspecified", description: "Ultra-minimal terminal-only Kali Linux ISOs for i386, ARM64, and x86_64 virtualization with QEMU and UTM SE support.", stat: "public repository", url: "https://github.com/Quincunx33/kali-minimal", image: "/assets/taaissu-hero-texture.jpg", isFork: false },
+  { name: "penbox", displayName: "Penbox", type: "Security tooling", language: "Python", description: "72-in-1 Python CLI penetration testing toolbox covering scanning, WPA2 handshake analysis, shellcode, hash cracking, OSINT, and more.", stat: "public repository", url: "https://github.com/Quincunx33/penbox", image: "/assets/taaissu-portrait.jpg", isFork: false },
   { name: "mycat-companion", displayName: "MyCat Companion", type: "Desktop experiment", language: "Python", description: "A cross-platform desktop cat companion with pet care, Pomodoro focus sessions, sticky notes, sounds, smooth eye tracking, and dark skins.", stat: "public repository", url: "https://github.com/Quincunx33/mycat-companion", image: "/assets/taaissu-project-atlas.jpg", isFork: false },
   { name: "Ai-jailbreak", displayName: "AI Jailbreak", type: "AI safety research", language: "Unspecified", description: "A collection of jailbreak prompts and exploit techniques for local and frontier AI models, described on GitHub as a red-teaming and AI safety research collection.", stat: "public repository", url: "https://github.com/Quincunx33/Ai-jailbreak", image: "/assets/taaissu-signal.jpg", isFork: false },
   { name: "ipad-simulation", displayName: "iPad Simulation", type: "Interactive experience", language: "TypeScript", description: "Interactive iPad mini 5 and iPadOS 26-inspired browser simulator with responsive controls, app surfaces, and Liquid Glass-style icons.", stat: "public repository", url: "https://github.com/Quincunx33/ipad-simulation", image: "/assets/taaissu-hero-texture.jpg", isFork: false },
@@ -86,13 +90,13 @@ export default function Home() {
           <div className="portrait-frame"><img src={portrait} alt="Tasfiya Tabassum playing guitar in the hills" /></div>
           <div className="portrait-caption"><span>01 / human signal</span><span>Khulna → everywhere</span></div>
         </div>
-        <div className="hero-index"><span>Scroll to inspect</span><span className="index-line" /><span>00—26</span></div>
+        <div className="hero-index"><span>Scroll to inspect</span><span className="index-line" /><span>00—30</span></div>
       </section>
 
       <section className="manifesto-band" id="about">
         <div className="section-kicker"><span>01</span><span>About the maker</span></div>
         <div className="manifesto-copy"><p className="large-statement">Systems should feel <em>useful</em> before they feel impressive.</p><p className="body-copy">My work moves across TypeScript, Python, real-time applications, browser APIs, web assembly, automation, and responsible security research. I like the part where a difficult idea becomes a tool someone can actually use.</p></div>
-        <div className="stats-strip"><div><strong>26</strong><span>public repos</span></div><div><strong>934</strong><span>contributions / year</span></div><div><strong>26</strong><span>public repos indexed</span></div></div>
+        <div className="stats-strip"><div><strong>30</strong><span>public repos</span></div><div><strong>934</strong><span>contributions / year</span></div><div><strong>30</strong><span>public repos indexed</span></div></div>
       </section>
 
       <section className="work-section" id="work">

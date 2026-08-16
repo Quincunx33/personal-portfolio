@@ -1,184 +1,242 @@
 [
   {
-    "name": "mycat-companion",
-    "description": "A cross-platform desktop cat companion with pet care, Pomodoro focus sessions, sticky notes, sounds, smooth eye tracking, and dark skins.",
-    "url": "https://github.com/Quincunx33/mycat-companion",
-    "language": "Python",
-    "updatedAt": "2026-08-14T21:49:20Z"
-  },
-  {
     "name": "Ai-jailbreak",
+    "html_url": "https://github.com/Quincunx33/Ai-jailbreak",
     "description": "A collection of jailbreak prompts and exploit techniques for local and frontier AI models, with modern methods for Qwen3.5, Gemma 4, Llama 4, Kimi K3, GPT-OSS, GPT-5.x, Gemini 3.x and Grok 4.x. For red-teaming and AI safety research only.",
-    "url": "https://github.com/Quincunx33/Ai-jailbreak",
-    "language": "Unspecified",
-    "updatedAt": "2026-08-14T19:38:53Z"
-  },
-  {
-    "name": "ipad-simulation",
-    "description": "Interactive iPad mini 5 and iPadOS 26-inspired browser simulator with responsive controls, app surfaces, and Liquid Glass-style icons.",
-    "url": "https://github.com/Quincunx33/ipad-simulation",
-    "language": "TypeScript",
-    "updatedAt": "2026-08-14T18:33:21Z"
-  },
-  {
-    "name": "phishGard",
-    "description": "Defensive server-side phishing URL analysis with headless auditing and Gemini supplemental intelligence",
-    "url": "https://github.com/Quincunx33/phishGard",
-    "language": "TypeScript",
-    "updatedAt": "2026-08-14T16:55:34Z"
-  },
-  {
-    "name": "solar-sclipse",
-    "description": "Interactive 3D total solar eclipse simulator with historical replay archive",
-    "url": "https://github.com/Quincunx33/solar-sclipse",
-    "language": "TypeScript",
-    "updatedAt": "2026-08-14T16:34:38Z"
-  },
-  {
-    "name": "personal-portfolio",
-    "description": "Interactive React/Vite portfolio for Tasfiya Tabassum — useful experiments, security tooling, systems work, and the modern web.",
-    "url": "https://github.com/Quincunx33/personal-portfolio",
-    "language": "TypeScript",
-    "updatedAt": "2026-08-14T14:34:13Z"
-  },
-  {
-    "name": "cronjob",
-    "description": "A visual cron and HTTP ping dashboard for recurring schedules, next-run visibility, execution history, and deduplicated failure alerts.",
-    "url": "https://github.com/Quincunx33/cronjob",
-    "language": "TypeScript",
-    "updatedAt": "2026-08-14T14:11:43Z"
-  },
-  {
-    "name": "WebOs",
-    "description": "Lightweight webOs",
-    "url": "https://github.com/Quincunx33/WebOs",
-    "language": "JavaScript",
-    "updatedAt": "2026-08-14T12:25:50Z"
-  },
-  {
-    "name": "Quincunx33",
-    "description": null,
-    "url": "https://github.com/Quincunx33/Quincunx33",
-    "language": "Unspecified",
-    "updatedAt": "2026-08-14T11:47:47Z"
-  },
-  {
-    "name": "stress-test-server",
-    "description": "High-performance permanent HTTP test server & benchmarking target for stress-testing tools with live logging, scheduled cleanup, and synthetic discovery fixtures.",
-    "url": "https://github.com/Quincunx33/stress-test-server",
-    "language": "TypeScript",
-    "updatedAt": "2026-08-14T09:02:44Z"
-  },
-  {
-    "name": "stressTest-landing",
-    "description": "Pipeline Stress Tester - focused HTTP load testing and API performance benchmarking",
-    "url": "https://github.com/Quincunx33/stressTest-landing",
-    "language": "TypeScript",
-    "updatedAt": "2026-08-14T09:01:46Z"
-  },
-  {
-    "name": "Ip-tv",
-    "description": "Ip-tv",
-    "url": "https://github.com/Quincunx33/Ip-tv",
-    "language": "TypeScript",
-    "updatedAt": "2026-08-14T01:14:43Z"
-  },
-  {
-    "name": "Stress-Tester",
-    "description": "XIO Stress Tester is an ultra-fast, modern, cluster-driven HTTP load generator designed to benchmark servers, stress-test firewalls, and audit Web Application Firewalls (WAF).",
-    "url": "https://github.com/Quincunx33/Stress-Tester",
-    "language": "TypeScript",
-    "updatedAt": "2026-08-13T21:22:51Z"
-  },
-  {
-    "name": "Virtual-machine",
-    "description": "Emulator ",
-    "url": "https://github.com/Quincunx33/Virtual-machine",
-    "language": "HTML",
-    "updatedAt": "2026-08-13T11:07:07Z"
-  },
-  {
-    "name": "Bolt-share",
-    "description": "Advanced p2p file's sharing both local and online",
-    "url": "https://github.com/Quincunx33/Bolt-share",
-    "language": "JavaScript",
-    "updatedAt": "2026-08-12T16:19:06Z"
-  },
-  {
-    "name": "bomber-v2",
-    "description": "🚀 Ultimate SMS & Email Bomber v2.1 | Interactive | High-Speed | Proxy Support | Cross-Platform",
-    "url": "https://github.com/Quincunx33/bomber-v2",
-    "language": "Python",
-    "updatedAt": "2026-08-10T13:40:52Z"
-  },
-  {
-    "name": "fastroads",
-    "description": "Slowroads.io with roadster modified to be fast",
-    "url": "https://github.com/Quincunx33/fastroads",
-    "language": "Unspecified",
-    "updatedAt": "2026-08-07T23:13:38Z"
-  },
-  {
-    "name": "PyBrowser",
-    "description": "PyBrowser: Python Playground",
-    "url": "https://github.com/Quincunx33/PyBrowser",
-    "language": "TypeScript",
-    "updatedAt": "2026-08-07T23:11:51Z"
-  },
-  {
-    "name": "ammo.js",
-    "description": "Direct port of the Bullet physics engine to JavaScript using Emscripten",
-    "url": "https://github.com/Quincunx33/ammo.js",
-    "language": "Unspecified",
-    "updatedAt": "2026-08-07T19:30:03Z"
-  },
-  {
-    "name": "reVCDOS",
-    "description": "Web-based port of GTA: Vice City running in browser via WebAssembly.",
-    "url": "https://github.com/Quincunx33/reVCDOS",
-    "language": "Python",
-    "updatedAt": "2026-08-07T18:16:16Z"
-  },
-  {
-    "name": "bananaos",
-    "description": "oparating system",
-    "url": "https://github.com/Quincunx33/bananaos",
-    "language": "TypeScript",
-    "updatedAt": "2026-06-15T19:36:28Z"
-  },
-  {
-    "name": "EthicalHackingTools",
-    "description": "🛡️ HackerAI Framework (Project Sirra): A professional, modular security testing environment with automated orchestration, security sandboxing, and vulnerability assessment capabilities.",
-    "url": "https://github.com/Quincunx33/EthicalHackingTools",
-    "language": "Python",
-    "updatedAt": "2026-05-08T02:04:53Z"
-  },
-  {
-    "name": "naruto-sasuke",
-    "description": "Naruto and Sasuke Hand Tracking Power Effects with MediaPipe, featuring dynamic visuals, immersive audio, and interactive UI/UX.",
-    "url": "https://github.com/Quincunx33/naruto-sasuke",
-    "language": "HTML",
-    "updatedAt": "2026-04-21T15:16:42Z"
+    "language": null,
+    "fork": false,
+    "updated_at": "2026-08-15T16:54:42Z"
   },
   {
     "name": "BananaOs-",
+    "html_url": "https://github.com/Quincunx33/BananaOs-",
     "description": null,
-    "url": "https://github.com/Quincunx33/BananaOs-",
     "language": "JavaScript",
-    "updatedAt": "2026-04-01T02:05:53Z"
+    "fork": false,
+    "updated_at": "2026-04-01T02:05:53Z"
   },
   {
-    "name": "three.js",
-    "description": "JavaScript 3D Library.",
-    "url": "https://github.com/Quincunx33/three.js",
+    "name": "Bolt-share",
+    "html_url": "https://github.com/Quincunx33/Bolt-share",
+    "description": "Advanced p2p file's sharing both local and online",
     "language": "JavaScript",
-    "updatedAt": "2026-01-08T14:33:58Z"
+    "fork": false,
+    "updated_at": "2026-08-12T16:19:06Z"
+  },
+  {
+    "name": "EthicalHackingTools",
+    "html_url": "https://github.com/Quincunx33/EthicalHackingTools",
+    "description": "🛡️ HackerAI Framework (Project Sirra): A professional, modular security testing environment with automated orchestration, security sandboxing, and vulnerability assessment capabilities.",
+    "language": "Python",
+    "fork": false,
+    "updated_at": "2026-05-08T02:04:53Z"
+  },
+  {
+    "name": "Ip-tv",
+    "html_url": "https://github.com/Quincunx33/Ip-tv",
+    "description": "Ip-tv",
+    "language": "TypeScript",
+    "fork": false,
+    "updated_at": "2026-08-16T00:50:12Z"
+  },
+  {
+    "name": "PS2-WebXperience",
+    "html_url": "https://github.com/Quincunx33/PS2-WebXperience",
+    "description": "A nostalgic PlayStation 2-inspired browser interface simulation built with React, TypeScript, Vite, and Motion.",
+    "language": "TypeScript",
+    "fork": false,
+    "updated_at": "2026-08-16T07:06:29Z"
+  },
+  {
+    "name": "PyBrowser",
+    "html_url": "https://github.com/Quincunx33/PyBrowser",
+    "description": "PyBrowser: Python Playground",
+    "language": "TypeScript",
+    "fork": false,
+    "updated_at": "2026-08-07T23:11:51Z"
+  },
+  {
+    "name": "Quincunx33",
+    "html_url": "https://github.com/Quincunx33/Quincunx33",
+    "description": null,
+    "language": null,
+    "fork": false,
+    "updated_at": "2026-08-16T08:42:29Z"
+  },
+  {
+    "name": "Stress-Tester",
+    "html_url": "https://github.com/Quincunx33/Stress-Tester",
+    "description": "XIO Stress Tester is an ultra-fast, modern, cluster-driven HTTP load generator designed to benchmark servers, stress-test firewalls, and audit Web Application Firewalls (WAF).",
+    "language": "TypeScript",
+    "fork": false,
+    "updated_at": "2026-08-13T21:22:51Z"
+  },
+  {
+    "name": "Virtual-machine",
+    "html_url": "https://github.com/Quincunx33/Virtual-machine",
+    "description": "Emulator ",
+    "language": "HTML",
+    "fork": false,
+    "updated_at": "2026-08-13T11:07:07Z"
+  },
+  {
+    "name": "WebOs",
+    "html_url": "https://github.com/Quincunx33/WebOs",
+    "description": "Lightweight webOs",
+    "language": "JavaScript",
+    "fork": false,
+    "updated_at": "2026-08-14T12:25:50Z"
+  },
+  {
+    "name": "ammo.js",
+    "html_url": "https://github.com/Quincunx33/ammo.js",
+    "description": "Direct port of the Bullet physics engine to JavaScript using Emscripten",
+    "language": null,
+    "fork": false,
+    "updated_at": "2026-08-07T19:30:03Z"
+  },
+  {
+    "name": "bananaos",
+    "html_url": "https://github.com/Quincunx33/bananaos",
+    "description": "oparating system",
+    "language": "TypeScript",
+    "fork": false,
+    "updated_at": "2026-06-15T19:36:28Z"
+  },
+  {
+    "name": "bomber-v2",
+    "html_url": "https://github.com/Quincunx33/bomber-v2",
+    "description": "🚀 Ultimate SMS & Email Bomber v2.1 | Interactive | High-Speed | Proxy Support | Cross-Platform",
+    "language": "Python",
+    "fork": false,
+    "updated_at": "2026-08-10T13:40:52Z"
+  },
+  {
+    "name": "cronjob",
+    "html_url": "https://github.com/Quincunx33/cronjob",
+    "description": "A visual cron and HTTP ping dashboard for recurring schedules, next-run visibility, execution history, and deduplicated failure alerts.",
+    "language": "TypeScript",
+    "fork": false,
+    "updated_at": "2026-08-14T14:11:43Z"
+  },
+  {
+    "name": "fastroads",
+    "html_url": "https://github.com/Quincunx33/fastroads",
+    "description": "Slowroads.io with roadster modified to be fast",
+    "language": null,
+    "fork": false,
+    "updated_at": "2026-08-07T23:13:38Z"
+  },
+  {
+    "name": "ipad-simulation",
+    "html_url": "https://github.com/Quincunx33/ipad-simulation",
+    "description": "Interactive iPad mini 5 and iPadOS 26-inspired browser simulator with responsive controls, app surfaces, and Liquid Glass-style icons.",
+    "language": "TypeScript",
+    "fork": false,
+    "updated_at": "2026-08-14T22:57:07Z"
+  },
+  {
+    "name": "ishkali-vnc",
+    "html_url": "https://github.com/Quincunx33/ishkali-vnc",
+    "description": "Tasfia's Hacker Lab - pre-built Alpine 3.14 x86 rootfs for iSH (iOS). 925+ commands: pentest tools, compilers, editors, VNC server - extract and run on iPhone/iPad, zero install steps.",
+    "language": null,
+    "fork": false,
+    "updated_at": "2026-08-15T08:51:00Z"
+  },
+  {
+    "name": "kali-minimal",
+    "html_url": "https://github.com/Quincunx33/kali-minimal",
+    "description": "Ultra-minimal terminal-only Kali Linux ISOs for i386, ARM64, and x86_64 virtualization with QEMU and UTM SE support.",
+    "language": null,
+    "fork": false,
+    "updated_at": "2026-08-16T07:11:50Z"
+  },
+  {
+    "name": "mycat-companion",
+    "html_url": "https://github.com/Quincunx33/mycat-companion",
+    "description": "A cross-platform desktop cat companion with pet care, Pomodoro focus sessions, sticky notes, sounds, smooth eye tracking, and dark skins.",
+    "language": "Python",
+    "fork": false,
+    "updated_at": "2026-08-14T21:49:20Z"
+  },
+  {
+    "name": "naruto-sasuke",
+    "html_url": "https://github.com/Quincunx33/naruto-sasuke",
+    "description": "Naruto and Sasuke Hand Tracking Power Effects with MediaPipe, featuring dynamic visuals, immersive audio, and interactive UI/UX.",
+    "language": "HTML",
+    "fork": false,
+    "updated_at": "2026-04-21T15:16:42Z"
+  },
+  {
+    "name": "penbox",
+    "html_url": "https://github.com/Quincunx33/penbox",
+    "description": "72-in-1 Python CLI penetration testing toolbox — nmap-grade scanning, WPA2 handshake analysis, shellcode engine, hash cracking, OSINT & more. Zero dependencies, cross-platform.",
+    "language": "Python",
+    "fork": false,
+    "updated_at": "2026-08-15T10:43:18Z"
+  },
+  {
+    "name": "personal-portfolio",
+    "html_url": "https://github.com/Quincunx33/personal-portfolio",
+    "description": "Interactive React/Vite portfolio for Tasfiya Tabassum — useful experiments, security tooling, systems work, and the modern web.",
+    "language": "TypeScript",
+    "fork": false,
+    "updated_at": "2026-08-15T10:56:40Z"
+  },
+  {
+    "name": "phishGard",
+    "html_url": "https://github.com/Quincunx33/phishGard",
+    "description": "Defensive server-side phishing URL analysis with headless auditing and Gemini supplemental intelligence",
+    "language": "TypeScript",
+    "fork": false,
+    "updated_at": "2026-08-14T16:55:34Z"
   },
   {
     "name": "re3",
+    "html_url": "https://github.com/Quincunx33/re3",
     "description": "..",
-    "url": "https://github.com/Quincunx33/re3",
-    "language": "Unspecified",
-    "updatedAt": "2025-12-26T19:27:29Z"
+    "language": null,
+    "fork": true,
+    "updated_at": "2025-12-26T19:27:29Z"
+  },
+  {
+    "name": "reVCDOS",
+    "html_url": "https://github.com/Quincunx33/reVCDOS",
+    "description": "Web-based port of GTA: Vice City running in browser via WebAssembly.",
+    "language": "Python",
+    "fork": false,
+    "updated_at": "2026-08-07T18:16:16Z"
+  },
+  {
+    "name": "solar-sclipse",
+    "html_url": "https://github.com/Quincunx33/solar-sclipse",
+    "description": "Interactive 3D total solar eclipse simulator with historical replay archive",
+    "language": "TypeScript",
+    "fork": false,
+    "updated_at": "2026-08-14T16:34:38Z"
+  },
+  {
+    "name": "stress-test-server",
+    "html_url": "https://github.com/Quincunx33/stress-test-server",
+    "description": "High-performance permanent HTTP test server & benchmarking target for stress-testing tools with live logging, scheduled cleanup, and synthetic discovery fixtures.",
+    "language": "TypeScript",
+    "fork": false,
+    "updated_at": "2026-08-14T09:02:44Z"
+  },
+  {
+    "name": "stressTest-landing",
+    "html_url": "https://github.com/Quincunx33/stressTest-landing",
+    "description": "Pipeline Stress Tester - focused HTTP load testing and API performance benchmarking",
+    "language": "TypeScript",
+    "fork": false,
+    "updated_at": "2026-08-14T09:01:46Z"
+  },
+  {
+    "name": "three.js",
+    "html_url": "https://github.com/Quincunx33/three.js",
+    "description": "JavaScript 3D Library.",
+    "language": "JavaScript",
+    "fork": true,
+    "updated_at": "2026-01-08T14:33:58Z"
   }
 ]
