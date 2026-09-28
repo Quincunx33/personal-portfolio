@@ -40,7 +40,7 @@ h1 em,h2 em,.large-statement em { font-weight:500; color:var(--amber); }
 .portrait-frame { border:1px solid rgba(232,225,213,.42); padding:9px; transform:rotate(2.5deg); background:rgba(17,17,16,.35); box-shadow:18px 22px 0 rgba(216,137,75,.1); }
 .portrait-frame img { display:block; width:100%; aspect-ratio:4/5; object-fit:cover; object-position:center; filter:saturate(.86) contrast(1.05); }
 .portrait-caption { display:flex; justify-content:space-between; gap:14px; color:var(--muted); margin-top:19px; }
-.hero-index { position:absolute; left:5vw; bottom:36px; display:flex; align-items:center; gap:13px; color:var(--muted); writing-mode:vertical-rl; transform:rotate(180deg); }
+.hero-index { position:absolute; left:3vw; bottom:36px; display:flex; align-items:center; gap:13px; color:var(--muted); writing-mode:vertical-rl; transform:rotate(180deg); pointer-events:none; z-index:0; }
 .index-line { height:70px; width:1px; background:var(--amber); }
 .manifesto-band { padding:125px 11vw 135px; display:grid; grid-template-columns:180px minmax(280px,690px) 1fr; gap:45px; background:var(--bone); color:var(--ink); position:relative; }
 .section-kicker { display:flex; gap:14px; color:var(--amber); align-items:flex-start; }
@@ -93,6 +93,10 @@ h1 em,h2 em,.large-statement em { font-weight:500; color:var(--amber); }
   body { background:#fff!important; color:#111!important; }
   .topbar,.footer,.grain,.hero,.manifesto-band,.arsenal-section,.timeline-section,.work-section,.connect-section { display:none!important; }
 }
+@media (max-width: 1200px) {
+  .hero-index { display: none !important; }
+}
+
 @media (max-width:900px) {
   .hero { padding-left:6vw; padding-right:6vw; grid-template-columns:1fr 290px; gap:30px; }
   .manifesto-band,.work-section,.connect-section,.arsenal-section,.timeline-section,.github-matrix-section { padding-left:6vw; padding-right:6vw; }

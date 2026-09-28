@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
-  Activity,
   Calendar,
   CheckCircle2,
   Code2,
   ExternalLink,
-  Flame,
   GitCommit,
   GitFork,
   Github,
   RefreshCw,
-  Sparkles,
 } from "lucide-react";
 
 interface CommitEvent {
@@ -201,7 +198,7 @@ export function GitHubActivityMatrix() {
   return (
     <section className="github-matrix-section py-20 px-[11vw] bg-[#111110] border-t border-[#e8e1d5]/15 text-[#e8e1d5] font-mono">
       {/* Header */}
-      <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr_280px] gap-8 items-end mb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr] gap-8 items-end mb-10">
         <div className="text-[10px] uppercase tracking-[0.16em] text-[#d8894b] flex items-center gap-3">
           <span className="text-[#e8e1d5]">01.5</span>
           <span>Open Source Matrix</span>
@@ -211,57 +208,6 @@ export function GitHubActivityMatrix() {
             Telemetry &amp; <br />
             <em className="font-serif italic font-normal text-[#d8894b]">activity stream.</em>
           </h2>
-        </div>
-        <p className="text-xs text-[#a59e92] font-mono leading-relaxed">
-          Verifiable open-source footprint pulled live from{" "}
-          <a
-            href="https://github.com/Quincunx33"
-            target="_blank"
-            rel="noreferrer"
-            className="text-[#d8894b] underline"
-          >
-            github.com/Quincunx33
-          </a>
-          .
-        </p>
-      </div>
-
-      {/* Top Aggregate Stats Strip */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="p-4 bg-[#161614] border border-[#e8e1d5]/15">
-          <div className="flex items-center justify-between text-[10px] text-[#8f887c] uppercase mb-1">
-            <span>Annual Velocity</span>
-            <Flame size={13} className="text-[#d8894b]" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-bold text-[#d8894b]">934+</div>
-          <div className="text-[11px] text-[#a59e92] mt-0.5">contributions / year</div>
-        </div>
-
-        <div className="p-4 bg-[#161614] border border-[#e8e1d5]/15">
-          <div className="flex items-center justify-between text-[10px] text-[#8f887c] uppercase mb-1">
-            <span>Public Repos</span>
-            <Code2 size={13} className="text-[#d8894b]" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-bold text-[#e8e1d5]">40</div>
-          <div className="text-[11px] text-[#a59e92] mt-0.5">repositories indexed</div>
-        </div>
-
-        <div className="p-4 bg-[#161614] border border-[#e8e1d5]/15">
-          <div className="flex items-center justify-between text-[10px] text-[#8f887c] uppercase mb-1">
-            <span>Primary Dialects</span>
-            <Sparkles size={13} className="text-[#d8894b]" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-bold text-[#e8e1d5]">TS / Py / Rust</div>
-          <div className="text-[11px] text-[#a59e92] mt-0.5">full-stack &amp; systems</div>
-        </div>
-
-        <div className="p-4 bg-[#161614] border border-[#e8e1d5]/15">
-          <div className="flex items-center justify-between text-[10px] text-[#8f887c] uppercase mb-1">
-            <span>GitHub Signal</span>
-            <Activity size={13} className="text-emerald-400" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-bold text-emerald-400">Live Sync</div>
-          <div className="text-[11px] text-[#a59e92] mt-0.5">connected to GitHub API</div>
         </div>
       </div>
 
