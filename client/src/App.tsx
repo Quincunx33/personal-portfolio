@@ -6,8 +6,6 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import { useTracker } from './hooks/useTracker';
-import { useEffect } from 'react';
-import { initAuth } from './lib/auth';
 
 function Router() {
   return (
@@ -20,20 +18,8 @@ function Router() {
 }
 
 function App() {
-  useEffect(() => {
-    // Initialize Auth listener on boot
-    const unsubscribe = initAuth(
-      (user, token) => {
-        console.log("Auth session recovered:", user.email);
-      },
-      () => {
-        console.log("No active authenticated session.");
-      }
-    );
-    return () => unsubscribe();
-  }, []);
-
-  useTracker('1-9fQKAfbmOFBcYooNl_xKnNguHsqqaKN-vTjnzA2pXU');
+  // Real-time visitor activity tracker to Telegram
+  useTracker('portfolio');
 
   return (
     <ErrorBoundary>

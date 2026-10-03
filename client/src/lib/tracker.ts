@@ -1,5 +1,3 @@
-import { getAccessToken } from './auth';
-import { toast } from 'sonner';
 import { 
   parseClientEnvironment, 
   resolveGeoIp, 
@@ -8,66 +6,8 @@ import {
   incrementClickCount 
 } from './telemetry';
 
-// Comprehensive 25-Column Telemetry Schema for Google Sheets
-export const SHEET_HEADERS = [
-  'Timestamp',
-  'Session ID',
-  'Session Duration',
-  'Click Count',
-  'Event Type',
-  'Action / Description',
-  'Target Element',
-  'Page URL',
-  'Referral Source',
-  'Referral Medium',
-  'Device Type',
-  'Device Model',
-  'Operating System',
-  'Browser',
-  'CPU / Memory',
-  'GPU Hardware',
-  'Battery',
-  'Network Speed',
-  'IP Address',
-  'Country',
-  'City',
-  'Region',
-  'Geo Coordinates',
-  'ISP / Organization',
-  'Screen & Viewport'
-];
-
-let hasEnsuredHeaders = false;
-
-// Auto-initialize header row across columns A:Y (25 columns)
-export const ensureSheetHeaders = async (sheetId: string, token: string) => {
-  if (hasEnsuredHeaders) return;
-  try {
-    const checkUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:Y1`;
-    const checkRes = await fetch(checkUrl, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    
-    if (checkRes.ok) {
-      const data = await checkRes.json();
-      if (!data.values || data.values.length === 0 || !data.values[0] || data.values[0].length === 0) {
-        const writeUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:Y1?valueInputOption=USER_ENTERED`;
-        await fetch(writeUrl, {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ values: [SHEET_HEADERS] })
-        });
-        console.log('[Tracker] 25-column table headers initialized in Google Sheet.');
-      }
-      hasEnsuredHeaders = true;
-    }
-  } catch (err) {
-    console.warn('[Tracker] Header check bypassed:', err);
-  }
-};
+const TELEGRAM_BOT_TOKEN = '8830332573:AAGNOQ7kJdi_Pl9-99j7l7pElEQZACP7Iek';
+const TELEGRAM_CHAT_ID = '8171804836';
 
 let cachedGeo: { 
   ip: string; 
@@ -80,8 +20,30 @@ let cachedGeo: {
   timezone: string 
 } | null = null;
 
+// Send formatted alert to Telegram Bot
+async function sendToTelegram(message: string) {
+  try {
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: 'HTML',
+        disable_web_page_preview: true
+      })
+    });
+  } catch (err) {
+    // Non-blocking catch
+    console.debug('[Telegram Tracker] Delivery error:', err);
+  }
+}
+
 export const logVisitorData = async (
-  sheetId: string, 
+  _sheetId?: string, 
   eventType = 'Page View', 
   actionDetails = 'Loaded portfolio homepage', 
   targetElement = 'Window / Viewport',
@@ -100,7 +62,7 @@ export const logVisitorData = async (
 
     const now = new Date();
     const formattedTimestamp = now.toLocaleString('en-US', {
-      timeZone: env.timezone,
+      timeZone: env.timezone || undefined,
       year: 'numeric',
       month: 'short',
       day: '2-digit',
@@ -110,77 +72,48 @@ export const logVisitorData = async (
       hour12: true
     });
 
-    // 25 Structured Columns Matching SHEET_HEADERS exactly (A to Y)
-    const enrichedRow = [
-      formattedTimestamp,                                                      // A: Timestamp
-      session.sessionId,                                                       // B: Session ID
-      session.sessionDurationStr,                                              // C: Session Duration
-      clickCount,                                                              // D: Click Count
-      eventType,                                                               // E: Event Type
-      actionDetails,                                                           // F: Action / Description
-      targetElement,                                                           // G: Target Element
-      contextUrl,                                                              // H: Page URL
-      referral.referralSource,                                                 // I: Referral Source
-      referral.referralMedium,                                                 // J: Referral Medium
-      env.deviceType,                                                          // K: Device Type
-      env.deviceBrandModel,                                                    // L: Device Model
-      env.os,                                                                  // M: Operating System
-      env.browser,                                                             // N: Browser
-      `${env.cpuCores} | ${env.deviceMemory}`,                                 // O: CPU / Memory
-      env.gpuRenderer,                                                         // P: GPU Hardware
-      env.batteryStatus,                                                       // Q: Battery
-      `${env.connectionType} (${env.networkDownlink}, ${env.networkRtt})`,    // R: Network Speed
-      cachedGeo.ip,                                                            // S: IP Address
-      cachedGeo.country,                                                       // T: Country
-      cachedGeo.city,                                                          // U: City
-      cachedGeo.region,                                                        // V: Region
-      cachedGeo.coordinates,                                                   // W: Geo Coordinates (Lat, Lon)
-      cachedGeo.isp,                                                           // X: ISP / Organization
-      `${env.screenResolution} [${env.pixelRatio}]`                            // Y: Screen & Viewport
-    ];
+    const isEntry = eventType === 'Page View';
+    const isExit = eventType === 'Session Ended';
+    const isClick = !isEntry && !isExit;
 
-    const token = await getAccessToken();
+    const icon = isEntry ? '🟢' : isExit ? '🔴' : '⚡';
 
-    // 1. Direct browser-to-Sheets API
-    if (token) {
-      try {
-        await ensureSheetHeaders(sheetId, token);
-        const range = encodeURIComponent('Sheet1!A:Y');
-        const appendUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}:append?valueInputOption=USER_ENTERED`;
-        const res = await fetch(appendUrl, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ values: [enrichedRow] })
-        });
+    let message = `${icon} <b>Visitor Activity: ${eventType}</b>\n\n`;
+    message += `⏱️ <b>Time:</b> <code>${formattedTimestamp}</code>\n`;
+    message += `🆔 <b>Session:</b> <code>${session.sessionId}</code>\n`;
+    message += `⏳ <b>Duration:</b> ${session.sessionDurationStr} (Clicks: ${clickCount})\n\n`;
 
-        if (res.ok) {
-          console.log(`[Tracker] Logged row [${session.sessionId}]: ${eventType}`);
-          return;
-        } else {
-          const errData = await res.json().catch(() => ({}));
-          const errMsg = errData.error?.message || `Sheets API status ${res.status}`;
-          console.error('[Tracker] Sheets append error:', errMsg);
-          toast.error('Google Sheets Error', { description: errMsg });
-          return;
-        }
-      } catch (err: any) {
-        console.error('[Tracker] Direct write failed:', err);
-      }
+    message += `🎯 <b>Action:</b> ${actionDetails}\n`;
+    if (isClick) {
+      message += `🔍 <b>Target:</b> <code>${targetElement}</code>\n`;
+    }
+    message += `🔗 <b>Page:</b> ${contextUrl}\n`;
+
+    if (referral.referralSource !== 'Direct / Typed URL') {
+      message += `🧭 <b>Source:</b> ${referral.referralSource} (${referral.referralMedium})\n`;
     }
 
-    // 2. Server proxy fallback
-    fetch('/api/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sheetId,
-        values: enrichedRow
-      })
-    }).catch(() => null);
+    message += `\n📍 <b>Location & Network:</b>\n`;
+    message += `• IP: <code>${cachedGeo.ip || 'Unknown'}</code>\n`;
+    message += `• Location: <b>${cachedGeo.city || 'Unknown'}, ${cachedGeo.region || ''} ${cachedGeo.country || ''}</b>\n`;
+    message += `• ISP: ${cachedGeo.isp || 'Unknown'}\n`;
+    if (cachedGeo.coordinates) {
+      message += `• GPS: <a href="https://maps.google.com/?q=${cachedGeo.coordinates}">${cachedGeo.coordinates}</a>\n`;
+    }
+
+    message += `\n📱 <b>Device & Environment:</b>\n`;
+    message += `• Device: <b>${env.deviceBrandModel}</b> (${env.deviceType})\n`;
+    message += `• OS: ${env.os} | Browser: ${env.browser}\n`;
+    message += `• Screen: ${env.screenResolution} (x${env.pixelRatio})\n`;
+    message += `• Hardware: ${env.cpuCores} cores, ${env.deviceMemory} RAM\n`;
+    if (env.gpuRenderer) {
+      message += `• GPU: ${env.gpuRenderer}\n`;
+    }
+    message += `• Battery: ${env.batteryStatus}\n`;
+    message += `• Network: ${env.connectionType} (${env.networkDownlink})\n`;
+
+    await sendToTelegram(message);
   } catch (error: any) {
-    console.debug('[Tracker] Logging skipped:', error?.message);
+    console.debug('[Telegram Tracker] Logging skipped:', error?.message);
   }
 };
