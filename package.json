@@ -46,6 +46,7 @@
     "cmdk": "^1.1.1",
     "embla-carousel-react": "^8.6.0",
     "express": "^4.21.2",
+    "firebase": "^12.19.0",
     "framer-motion": "^12.23.22",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.453.0",

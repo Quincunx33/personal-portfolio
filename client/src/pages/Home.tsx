@@ -26,6 +26,7 @@ import {
 import { QuickContactModal } from "@/components/QuickContactModal";
 import { ResumeModal } from "@/components/ResumeModal";
 import { TechnicalArsenal } from "@/components/TechnicalArsenal";
+import { logVisitorData } from "../lib/tracker";
 
 const portrait = "/assets/taaissu-portrait.jpg";
 const heroTexture = "/assets/taaissu-hero-texture.jpg";
@@ -776,12 +777,14 @@ export default function Home() {
       {/* Footer */}
       <footer className="footer">
         <span>© 2026 taaissu · Tasfiya Tabassum</span>
-        <span>
-          Built from the public lab of{" "}
-          <a href="https://github.com/Quincunx33" target="_blank" rel="noreferrer">
-            @Quincunx33
-          </a>
-        </span>
+        <div className="flex items-center gap-4">
+          <span>
+            Built from the public lab of{" "}
+            <a href="https://github.com/Quincunx33" target="_blank" rel="noreferrer">
+              @Quincunx33
+            </a>
+          </span>
+        </div>
         <button
           onClick={() => scrollTo("top")}
           className="hover:text-[#d8894b] transition-colors"
