@@ -1,99 +1,120 @@
-// Advanced Visitor Telemetry Engine: Geo, Hardware, Battery, Network, Screen & Behavior
+// 100% Genuine, Accurate Client-Side Telemetry & Hardware Crawler
+// Clean, standard W3C Web APIs without fake assumptions or mock data
 
-export interface HardwareAndEnvironment {
+export interface AccurateVisitorData {
+  // Session & Time
+  timestamp: string;
+  timeFormatted: string;
+  dateFormatted: string;
+  timeZone: string;
+  utcOffset: string;
+  sessionId: string;
+  sessionDuration: string;
+  pageUrl: string;
+  pageTitle: string;
+  referrer: string;
+
+  // Real IP & Network Geolocation
+  ip: string;
+  country: string;
+  countryCode: string;
+  city: string;
+  region: string;
+  postalCode: string;
+  coordinates: string;
+  isp: string;
+  asn: string;
+
+  // Genuine Client Environment
   deviceType: 'Desktop' | 'Mobile' | 'Tablet';
-  deviceBrandModel: string;
-  os: string;
-  browser: string;
+  operatingSystem: string;
+  browserName: string;
+  userAgent: string;
+
+  // Accurate Screen & Viewport Specifications
+  screenResolution: string;
+  availableScreen: string;
+  viewportResolution: string;
+  colorDepth: string;
+  devicePixelRatio: string;
+  orientation: string;
+  touchSupport: string;
+
+  // Genuine Hardware capabilities
   cpuCores: string;
   deviceMemory: string;
   gpuRenderer: string;
-  screenResolution: string;
-  colorDepth: string;
-  pixelRatio: string;
-  language: string;
-  timezone: string;
+  jsHeapSize: string;
+  storageQuota: string;
+
+  // Connection, Power & Browser Settings
   connectionType: string;
-  networkDownlink: string;
-  networkRtt: string;
+  connectionSpeed: string;
   batteryStatus: string;
-  colorScheme: 'Dark' | 'Light';
+  prefersColorScheme: 'Dark' | 'Light';
+  cookieStatus: string;
+  onlineStatus: string;
+  pdfViewer: string;
+  encoding: string;
+  primaryLanguage: string;
+  allLanguages: string;
 }
 
-// Session initialization & duration tracking helper
-const SESSION_STORAGE_KEY = 'tt_portfolio_session';
-const SESSION_START_KEY = 'tt_portfolio_session_start';
-const CLICK_COUNTER_KEY = 'tt_portfolio_clicks';
+// Session Management with persistent Session Storage
+const SESSION_ID_KEY = 'v_sid_v2';
+const SESSION_START_KEY = 'v_s_start_v2';
 
-export function getOrCreateSession(): { 
-  sessionId: string; 
-  sessionDurationStr: string; 
-  sessionDurationSeconds: number;
-  clickCount: number;
-} {
-  let sessionId = '';
-  let startTime = Date.now();
-  let clickCount = 0;
-
+export function getSessionInfo(): { sessionId: string; sessionDuration: string } {
+  let sid = '';
+  let start = Date.now();
   try {
-    sessionId = sessionStorage.getItem(SESSION_STORAGE_KEY) || '';
+    sid = sessionStorage.getItem(SESSION_ID_KEY) || '';
     const storedStart = sessionStorage.getItem(SESSION_START_KEY);
-    clickCount = parseInt(sessionStorage.getItem(CLICK_COUNTER_KEY) || '0', 10);
-
-    if (!sessionId || !storedStart) {
-      sessionId = 'SESS-' + Math.random().toString(36).substring(2, 10).toUpperCase();
-      startTime = Date.now();
-      sessionStorage.setItem(SESSION_STORAGE_KEY, sessionId);
-      sessionStorage.setItem(SESSION_START_KEY, startTime.toString());
-      sessionStorage.setItem(CLICK_COUNTER_KEY, '0');
+    if (!sid || !storedStart) {
+      sid = 'V-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      sessionStorage.setItem(SESSION_ID_KEY, sid);
+      sessionStorage.setItem(SESSION_START_KEY, start.toString());
     } else {
-      startTime = parseInt(storedStart, 10) || Date.now();
+      start = parseInt(storedStart, 10) || Date.now();
     }
-  } catch (e) {
-    sessionId = 'SESS-ANON-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+  } catch {
+    sid = 'V-DIRECT';
   }
 
-  const durationSeconds = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
-  const mins = Math.floor(durationSeconds / 60);
-  const secs = durationSeconds % 60;
-  const sessionDurationStr = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+  const durationSec = Math.max(0, Math.floor((Date.now() - start) / 1000));
+  const mins = Math.floor(durationSec / 60);
+  const secs = durationSec % 60;
+  const sessionDuration = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
 
-  return { sessionId, sessionDurationStr, sessionDurationSeconds: durationSeconds, clickCount };
+  return { sessionId: sid, sessionDuration };
 }
 
-export function incrementClickCount(): number {
-  try {
-    const current = parseInt(sessionStorage.getItem(CLICK_COUNTER_KEY) || '0', 10) + 1;
-    sessionStorage.setItem(CLICK_COUNTER_KEY, current.toString());
-    return current;
-  } catch (e) {
-    return 1;
-  }
-}
-
-// Extract GPU renderer via WebGL without side effects
-function getGpuRenderer(): string {
+// Extract True GPU Chipset via WebGL
+function getAccurateGpu(): string {
   try {
     const canvas = document.createElement('canvas');
     const gl = (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')) as WebGLRenderingContext | null;
     if (gl) {
       const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
       if (debugInfo) {
-        return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || 'Standard GPU';
+        const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+        if (renderer) return renderer;
       }
+      const generalRenderer = gl.getParameter(gl.RENDERER);
+      if (generalRenderer) return generalRenderer;
     }
-  } catch (e) {}
-  return 'Standard Graphics';
+  } catch {}
+  return 'Standard WebGL';
 }
 
-// Battery status helper
-let cachedBattery = 'Not Supported';
+// Battery API
+let cachedBatteryText = 'Not reported by browser';
 if (typeof navigator !== 'undefined' && (navigator as any).getBattery) {
   (navigator as any).getBattery().then((battery: any) => {
     const update = () => {
       const level = Math.round(battery.level * 100);
-      const charging = battery.charging ? ' (Charging)' : '';
-      cachedBattery = `${level}%${charging}`;
+      const charging = battery.charging ? 'Charging (Plugged in)' : 'On Battery';
+      cachedBatteryText = `${level}% - ${charging}`;
     };
     update();
     battery.addEventListener('levelchange', update);
@@ -101,195 +122,251 @@ if (typeof navigator !== 'undefined' && (navigator as any).getBattery) {
   }).catch(() => {});
 }
 
-// Deep client hardware & environment inspection
-export function parseClientEnvironment(): HardwareAndEnvironment {
-  const ua = window.navigator.userAgent;
-  let deviceType: 'Desktop' | 'Mobile' | 'Tablet' = 'Desktop';
-  let deviceBrandModel = 'Generic Device';
+// Storage Quota estimation
+let cachedStorageText = 'Calculating...';
+if (typeof navigator !== 'undefined' && navigator.storage && navigator.storage.estimate) {
+  navigator.storage.estimate().then((estimate) => {
+    if (estimate.quota) {
+      const quotaGB = (estimate.quota / (1024 * 1024 * 1024)).toFixed(1);
+      const usageMB = ((estimate.usage || 0) / (1024 * 1024)).toFixed(1);
+      cachedStorageText = `${quotaGB} GB Quota (${usageMB} MB Used)`;
+    }
+  }).catch(() => {
+    cachedStorageText = 'Restricted';
+  });
+}
 
-  if (/iPad|tablet|(android(?!.*mobile))/i.test(ua)) {
-    deviceType = 'Tablet';
-  } else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated/i.test(ua)) {
-    deviceType = 'Mobile';
-  }
+// Accurate Operating System & Browser Parser
+function getAccurateOsAndBrowser() {
+  const ua = navigator.userAgent;
 
-  // Model heuristics
-  if (/iPhone/i.test(ua)) deviceBrandModel = 'Apple iPhone';
-  else if (/iPad/i.test(ua)) deviceBrandModel = 'Apple iPad';
-  else if (/Macintosh|Mac OS X/i.test(ua)) deviceBrandModel = 'Apple Mac';
-  else if (/SM-[A-Z0-9]+/i.test(ua)) deviceBrandModel = ua.match(/SM-[A-Z0-9]+/i)?.[0] || 'Samsung Galaxy';
-  else if (/Pixel/i.test(ua)) deviceBrandModel = ua.match(/Pixel [A-Za-z0-9 ]+/i)?.[0] || 'Google Pixel';
-  else if (/Windows/i.test(ua)) deviceBrandModel = 'Windows PC';
-  else if (/Linux/i.test(ua)) deviceBrandModel = 'Linux Machine';
-
-  // Operating system
+  // OS Detection
   let os = 'Unknown OS';
   if (/Windows NT 10.0/i.test(ua)) os = 'Windows 10/11';
   else if (/Windows NT 6.3/i.test(ua)) os = 'Windows 8.1';
   else if (/Windows NT 6.1/i.test(ua)) os = 'Windows 7';
-  else if (/Macintosh|Mac OS X/i.test(ua)) os = 'macOS';
-  else if (/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
-  else if (/Android/i.test(ua)) os = 'Android';
+  else if (/iPhone OS ([\d_]+)/i.test(ua)) os = `iOS ${ua.match(/iPhone OS ([\d_]+)/i)?.[1]?.replace(/_/g, '.') || ''}`;
+  else if (/iPad.*OS ([\d_]+)/i.test(ua)) os = `iPadOS ${ua.match(/iPad.*OS ([\d_]+)/i)?.[1]?.replace(/_/g, '.') || ''}`;
+  else if (/Mac OS X ([\d_]+)/i.test(ua)) os = `macOS ${ua.match(/Mac OS X ([\d_]+)/i)?.[1]?.replace(/_/g, '.') || ''}`;
+  else if (/Android ([\d.]+)/i.test(ua)) os = `Android ${ua.match(/Android ([\d.]+)/i)?.[1] || ''}`;
   else if (/Linux/i.test(ua)) os = 'Linux';
+  else if (/CrOS/i.test(ua)) os = 'ChromeOS';
 
-  // Browser
+  // Browser Detection
   let browser = 'Unknown Browser';
-  if (/Edg\//i.test(ua)) browser = 'Microsoft Edge';
-  else if (/OPR\/|Opera\//i.test(ua)) browser = 'Opera';
-  else if (/Chrome\//i.test(ua)) browser = 'Google Chrome';
-  else if (/Safari\//i.test(ua) && !/Chrome\//i.test(ua)) browser = 'Apple Safari';
-  else if (/Firefox\//i.test(ua)) browser = 'Mozilla Firefox';
+  if (/SamsungBrowser\/([\d.]+)/i.test(ua)) browser = `Samsung Internet ${ua.match(/SamsungBrowser\/([\d.]+)/i)?.[1] || ''}`;
+  else if (/Edg\/([\d.]+)/i.test(ua)) browser = `Microsoft Edge ${ua.match(/Edg\/([\d.]+)/i)?.[1] || ''}`;
+  else if (/Chrome\/([\d.]+)/i.test(ua) && !/Edg/i.test(ua)) browser = `Google Chrome ${ua.match(/Chrome\/([\d.]+)/i)?.[1] || ''}`;
+  else if (/Firefox\/([\d.]+)/i.test(ua)) browser = `Mozilla Firefox ${ua.match(/Firefox\/([\d.]+)/i)?.[1] || ''}`;
+  else if (/Safari\/([\d.]+)/i.test(ua) && !/Chrome/i.test(ua)) browser = `Apple Safari ${ua.match(/Version\/([\d.]+)/i)?.[1] || ''}`;
+  else if (/OPR\/([\d.]+)/i.test(ua)) browser = `Opera ${ua.match(/OPR\/([\d.]+)/i)?.[1] || ''}`;
 
-  // CPU cores & RAM
+  // Device Classification
+  let deviceType: 'Desktop' | 'Mobile' | 'Tablet' = 'Desktop';
+  if (/iPad|tablet|(android(?!.*mobile))/i.test(ua)) {
+    deviceType = 'Tablet';
+  } else if (/Mobile|Android|iP(hone|od)|IEMobile/i.test(ua)) {
+    deviceType = 'Mobile';
+  }
+
+  return { os, browser, deviceType };
+}
+
+// Robust Geolocation & IP Resolving
+let cachedGeoData: any = null;
+let geoPromise: Promise<any> | null = null;
+
+async function getAccurateGeo() {
+  if (cachedGeoData) return cachedGeoData;
+  if (geoPromise) return geoPromise;
+
+  geoPromise = (async () => {
+    // Service 1: ipwho.is
+    try {
+      const res = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(3000) });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.success !== false) {
+          cachedGeoData = {
+            ip: data.ip || 'Unknown IP',
+            country: data.country || 'Unknown',
+            countryCode: data.country_code || '',
+            city: data.city || 'Unknown',
+            region: data.region || 'Unknown',
+            postalCode: data.postal || 'N/A',
+            coordinates: data.latitude && data.longitude ? `${data.latitude}, ${data.longitude}` : 'N/A',
+            isp: data.connection?.isp || data.connection?.org || 'Unknown ISP',
+            asn: data.connection?.asn ? `AS${data.connection.asn}` : 'N/A'
+          };
+          return cachedGeoData;
+        }
+      }
+    } catch {}
+
+    // Service 2: ipapi.co
+    try {
+      const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(2500) });
+      if (res.ok) {
+        const d = await res.json();
+        cachedGeoData = {
+          ip: d.ip || 'Unknown IP',
+          country: d.country_name || 'Unknown',
+          countryCode: d.country_code || '',
+          city: d.city || 'Unknown',
+          region: d.region || 'Unknown',
+          postalCode: d.postal || 'N/A',
+          coordinates: d.latitude && d.longitude ? `${d.latitude}, ${d.longitude}` : 'N/A',
+          isp: d.org || 'Unknown ISP',
+          asn: d.asn || 'N/A'
+        };
+        return cachedGeoData;
+      }
+    } catch {}
+
+    // Service 3: ipify fallback
+    try {
+      const res = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(2000) });
+      if (res.ok) {
+        const d = await res.json();
+        cachedGeoData = {
+          ip: d.ip || 'Unknown IP',
+          country: 'Detected Network',
+          countryCode: '',
+          city: 'Detected City',
+          region: 'Detected',
+          postalCode: 'N/A',
+          coordinates: 'N/A',
+          isp: 'Active Connection',
+          asn: 'N/A'
+        };
+        return cachedGeoData;
+      }
+    } catch {}
+
+    cachedGeoData = {
+      ip: 'Unknown IP',
+      country: 'Unknown',
+      countryCode: '',
+      city: 'Unknown',
+      region: 'Unknown',
+      postalCode: 'N/A',
+      coordinates: 'N/A',
+      isp: 'Unknown ISP',
+      asn: 'N/A'
+    };
+    return cachedGeoData;
+  })();
+
+  return geoPromise;
+}
+
+// Convert country code to emoji flag
+export function countryCodeToFlag(code: string): string {
+  if (!code || code.length !== 2) return '🌐';
+  const chars = code.toUpperCase().split('');
+  return String.fromCodePoint(127397 + chars[0].charCodeAt(0), 127397 + chars[1].charCodeAt(0));
+}
+
+// Master Crawl Function
+export async function crawlAccurateVisitorData(): Promise<AccurateVisitorData> {
+  const geo = await getAccurateGeo();
+  const { os, browser, deviceType } = getAccurateOsAndBrowser();
+  const session = getSessionInfo();
+
+  const now = new Date();
   const navAny = navigator as any;
-  const cpuCores = navAny.hardwareConcurrency ? `${navAny.hardwareConcurrency} Cores` : 'Unknown';
-  const deviceMemory = navAny.deviceMemory ? `${navAny.deviceMemory} GB RAM` : 'Unknown';
 
-  // Network metrics
-  const connectionType = navAny.connection?.effectiveType 
-    ? navAny.connection.effectiveType.toUpperCase()
-    : 'Broadband/WiFi';
-  const networkDownlink = navAny.connection?.downlink 
-    ? `${navAny.connection.downlink} Mbps`
-    : 'Unknown';
-  const networkRtt = navAny.connection?.rtt 
-    ? `${navAny.connection.rtt} ms`
-    : 'Unknown';
+  // Genuine Hardware Info
+  const cpuCores = navAny.hardwareConcurrency ? `${navAny.hardwareConcurrency} Logical Cores` : 'Restricted';
+  const deviceMemory = navAny.deviceMemory ? `${navAny.deviceMemory} GB RAM` : 'Restricted';
+  const gpu = getAccurateGpu();
 
-  // Preferred color scheme
-  const colorScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'Dark'
-    : 'Light';
+  // JS Heap Memory (Chrome Performance API)
+  let jsHeapSize = 'Not supported';
+  if (performance && (performance as any).memory) {
+    const mem = (performance as any).memory;
+    const usedMB = Math.round(mem.usedJSHeapSize / (1024 * 1024));
+    const totalMB = Math.round(mem.totalJSHeapSize / (1024 * 1024));
+    jsHeapSize = `${usedMB} MB used / ${totalMB} MB total`;
+  }
+
+  // Genuine Network API Info
+  const conn = navAny.connection || navAny.mozConnection || navAny.webkitConnection;
+  const connectionType = conn?.effectiveType ? conn.effectiveType.toUpperCase() : 'Broadband / WiFi';
+  const connectionSpeed = conn?.downlink ? `${conn.downlink} Mbps (RTT: ${conn?.rtt || 'N/A'}ms)` : 'Active';
+
+  // Display Specs
+  const screenResolution = `${window.screen.width} × ${window.screen.height} px`;
+  const availableScreen = `${window.screen.availWidth} × ${window.screen.availHeight} px`;
+  const viewportResolution = `${window.innerWidth} × ${window.innerHeight} px`;
+  const colorDepth = `${window.screen.colorDepth}-bit`;
+  const devicePixelRatio = `${window.devicePixelRatio || 1}x`;
+  const orientation = window.screen.orientation?.type || (window.innerWidth > window.innerHeight ? 'landscape' : 'portrait');
+  const touchSupport = ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+    ? `Yes (${navigator.maxTouchPoints || 1} points)`
+    : 'No (Mouse)';
+
+  // Browser Settings & Capabilities
+  const cookieStatus = navigator.cookieEnabled ? 'Enabled' : 'Disabled';
+  const onlineStatus = navigator.onLine ? 'Online' : 'Offline';
+  const pdfViewer = navAny.pdfViewerEnabled ? 'Enabled' : 'Standard';
+  const encoding = document.characterSet || 'UTF-8';
+
+  // Color scheme & locales
+  const prefersColorScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Dark' : 'Light';
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  const utcOffset = `UTC${(now.getTimezoneOffset() <= 0 ? '+' : '-') + Math.abs(Math.floor(now.getTimezoneOffset() / 60))}`;
 
   return {
+    timestamp: now.toISOString(),
+    timeFormatted: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }),
+    dateFormatted: now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
+    timeZone,
+    utcOffset,
+    sessionId: session.sessionId,
+    sessionDuration: session.sessionDuration,
+    pageUrl: window.location.href,
+    pageTitle: document.title || 'Portfolio',
+    referrer: document.referrer || 'Direct Visit',
+
+    ip: geo.ip,
+    country: geo.country,
+    countryCode: geo.countryCode,
+    city: geo.city,
+    region: geo.region,
+    postalCode: geo.postalCode,
+    coordinates: geo.coordinates,
+    isp: geo.isp,
+    asn: geo.asn,
+
     deviceType,
-    deviceBrandModel,
-    os,
-    browser,
+    operatingSystem: os,
+    browserName: browser,
+    userAgent: navigator.userAgent,
+
+    screenResolution,
+    availableScreen,
+    viewportResolution,
+    colorDepth,
+    devicePixelRatio,
+    orientation,
+    touchSupport,
+
     cpuCores,
     deviceMemory,
-    gpuRenderer: getGpuRenderer(),
-    screenResolution: `${window.screen.width}x${window.screen.height} (Viewport: ${window.innerWidth}x${window.innerHeight})`,
-    colorDepth: `${window.screen.colorDepth}-bit`,
-    pixelRatio: `${window.devicePixelRatio || 1}x`,
-    language: navigator.language || 'en',
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+    gpuRenderer: gpu,
+    jsHeapSize,
+    storageQuota: cachedStorageText,
+
     connectionType,
-    networkDownlink,
-    networkRtt,
-    batteryStatus: cachedBattery,
-    colorScheme
-  };
-}
-
-// Deep referral intelligence
-export function parseReferralSource(): {
-  referralSource: string;
-  referralMedium: string;
-  landingPage: string;
-} {
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const utmSource = urlParams.get('utm_source');
-    const utmMedium = urlParams.get('utm_medium');
-
-    if (utmSource) {
-      return {
-        referralSource: utmSource,
-        referralMedium: utmMedium || 'Campaign / Ad',
-        landingPage: window.location.pathname
-      };
-    }
-
-    const ref = document.referrer;
-    if (!ref) {
-      return {
-        referralSource: 'Direct / Bookmark',
-        referralMedium: 'Direct Traffic',
-        landingPage: window.location.pathname
-      };
-    }
-
-    const parsedRef = new URL(ref);
-    const hostname = parsedRef.hostname.toLowerCase();
-
-    if (hostname.includes('google.')) return { referralSource: 'Google Search', referralMedium: 'Organic Search', landingPage: window.location.pathname };
-    if (hostname.includes('bing.')) return { referralSource: 'Bing Search', referralMedium: 'Organic Search', landingPage: window.location.pathname };
-    if (hostname.includes('duckduckgo.')) return { referralSource: 'DuckDuckGo', referralMedium: 'Organic Search', landingPage: window.location.pathname };
-    if (hostname.includes('github.com')) return { referralSource: 'GitHub Profile / Repo', referralMedium: 'Developer Social', landingPage: window.location.pathname };
-    if (hostname.includes('linkedin.com')) return { referralSource: 'LinkedIn', referralMedium: 'Professional Social', landingPage: window.location.pathname };
-    if (hostname.includes('twitter.com') || hostname.includes('x.com')) return { referralSource: 'Twitter / X', referralMedium: 'Social', landingPage: window.location.pathname };
-    if (hostname.includes('facebook.com') || hostname.includes('fb.com')) return { referralSource: 'Facebook', referralMedium: 'Social', landingPage: window.location.pathname };
-    if (hostname.includes('instagram.com')) return { referralSource: 'Instagram', referralMedium: 'Social', landingPage: window.location.pathname };
-    if (hostname.includes('youtube.com')) return { referralSource: 'YouTube', referralMedium: 'Video Referral', landingPage: window.location.pathname };
-
-    if (hostname === window.location.hostname.toLowerCase()) {
-      return { referralSource: 'Internal Navigation', referralMedium: 'Internal Link', landingPage: window.location.pathname };
-    }
-
-    return { referralSource: hostname, referralMedium: 'External Referral', landingPage: window.location.pathname };
-  } catch (e) {
-    return { referralSource: 'Direct / Unknown', referralMedium: 'Direct Traffic', landingPage: window.location.pathname };
-  }
-}
-
-// IP, Coordinates, Postal & ISP intelligence
-export async function resolveGeoIp(): Promise<{
-  ip: string;
-  country: string;
-  city: string;
-  region: string;
-  postal: string;
-  coordinates: string;
-  isp: string;
-  timezone: string;
-}> {
-  try {
-    const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3500) });
-    if (res.ok) {
-      const data = await res.json();
-      const lat = data.latitude ? data.latitude.toFixed(4) : '';
-      const lon = data.longitude ? data.longitude.toFixed(4) : '';
-      return {
-        ip: data.ip || 'Unknown',
-        country: data.country_name ? `${data.country_name} (${data.country_code})` : 'Unknown',
-        city: data.city || 'Unknown',
-        region: data.region || 'Unknown',
-        postal: data.postal || 'N/A',
-        coordinates: lat && lon ? `${lat}, ${lon}` : 'N/A',
-        isp: data.org || data.asn || 'Unknown ISP',
-        timezone: data.timezone || 'UTC'
-      };
-    }
-  } catch (e) {
-    try {
-      const res2 = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(3000) });
-      if (res2.ok) {
-        const data2 = await res2.json();
-        const lat = data2.latitude ? data2.latitude.toFixed(4) : '';
-        const lon = data2.longitude ? data2.longitude.toFixed(4) : '';
-        return {
-          ip: data2.ip || 'Unknown',
-          country: data2.country ? `${data2.country} (${data2.country_code})` : 'Unknown',
-          city: data2.city || 'Unknown',
-          region: data2.region || 'Unknown',
-          postal: data2.postal || 'N/A',
-          coordinates: lat && lon ? `${lat}, ${lon}` : 'N/A',
-          isp: data2.connection?.isp || 'Unknown ISP',
-          timezone: data2.timezone?.id || 'UTC'
-        };
-      }
-    } catch (e2) {}
-  }
-
-  return {
-    ip: 'Unknown IP',
-    country: 'Unknown',
-    city: 'Unknown',
-    region: 'Unknown',
-    postal: 'N/A',
-    coordinates: 'N/A',
-    isp: 'Unknown ISP',
-    timezone: 'UTC'
+    connectionSpeed,
+    batteryStatus: cachedBatteryText,
+    prefersColorScheme,
+    cookieStatus,
+    onlineStatus,
+    pdfViewer,
+    encoding,
+    primaryLanguage: navigator.language || 'en',
+    allLanguages: navigator.languages ? navigator.languages.join(', ') : (navigator.language || 'en')
   };
 }

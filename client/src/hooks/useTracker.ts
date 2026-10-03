@@ -1,90 +1,123 @@
 import { useEffect, useRef } from 'react';
-import { logVisitorData } from '../lib/tracker';
-import { getOrCreateSession } from '../lib/telemetry';
+import { logVisitorData, ClickMetadata } from '../lib/tracker';
+import { getSessionInfo } from '../lib/telemetry';
 
-export const useTracker = (sheetId: string) => {
+// Global variable to ensure Page View fires ONLY ONCE across component lifecycles & mounts
+let globalPageViewLogged = false;
+
+export const useTracker = (_sheetId = 'portfolio') => {
   const hasLoggedPageView = useRef(false);
 
   useEffect(() => {
-    // 1. Initial Page View
-    if (!hasLoggedPageView.current) {
+    // 1. Initial Page View Tracking (Guaranteed strictly once per browser session/page load)
+    if (!hasLoggedPageView.current && !globalPageViewLogged) {
+      globalPageViewLogged = true;
+      hasLoggedPageView.current = true;
+
       logVisitorData(
-        sheetId, 
-        'Page View', 
-        `Visited portfolio landing: "${document.title || 'Tasfiya Tabassum'}"`, 
+        _sheetId,
+        'Page View',
+        `Visited portfolio: "${document.title || 'Tasfiya Tabassum'}"`,
         'Viewport / Main Entry',
         window.location.href,
         false
       );
-      hasLoggedPageView.current = true;
     }
 
-    // 2. Click tracking with cumulative click counter
-    const handleClick = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target) return;
+    // 2. Strict Real User Click Tracking
+    const handleGlobalClick = (event: MouseEvent) => {
+      try {
+        // Ignore synthetic, non-user events
+        if (event.isTrusted === false) return;
 
-      const interactiveEl = target.closest('button, a, [role="button"], .project-card, .tab-btn, input, textarea');
-      const elementToTrack = interactiveEl || target;
+        const target = event.target as HTMLElement;
+        if (!target) return;
 
-      const tagName = elementToTrack.tagName.toLowerCase();
-      const text = (elementToTrack.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 80);
-      const link = (elementToTrack as HTMLAnchorElement).href || '';
-      const id = elementToTrack.id || '';
-      const className = typeof elementToTrack.className === 'string' ? elementToTrack.className.slice(0, 50) : '';
+        // Extract real element tag
+        const targetTag = (target.tagName || 'DIV').toLowerCase();
 
-      let eventCategory = 'User Click';
-      let actionDetails = `Clicked <${tagName}> "${text}"`;
-
-      if (link) {
-        if (link.includes('github.com')) {
-          eventCategory = 'GitHub Repo Inspection';
-          actionDetails = `Opened GitHub repository: ${link}`;
-        } else if (link.startsWith('http') && !link.includes(window.location.host)) {
-          eventCategory = 'Outbound External Link';
-          actionDetails = `Visited external link: ${link}`;
-        } else {
-          eventCategory = 'Internal Anchor Navigation';
-          actionDetails = `Navigated to anchor/route: ${link}`;
+        // Extract class names safely
+        let targetClasses = '';
+        if (typeof target.className === 'string') {
+          targetClasses = target.className.trim();
+        } else if (typeof target.className === 'object' && target.className !== null && 'baseVal' in target.className) {
+          targetClasses = (target.className as any).baseVal || '';
         }
-      } else if (tagName === 'button') {
-        eventCategory = 'Button Action';
-        actionDetails = `Triggered button: "${text || id || 'Action'}"`;
+
+        // Extract text content cleanly
+        const rawText = target.innerText || target.textContent || '';
+        const targetText = rawText.trim().replace(/\s+/g, ' ').slice(0, 60);
+
+        // Check if user clicked an interactive element or inside one
+        const interactiveAncestor = target.closest('a, button, [role="button"], input, textarea, select');
+        const link = (interactiveAncestor as HTMLAnchorElement)?.href || (target as HTMLAnchorElement)?.href || '';
+        const targetId = target.id ? `#${target.id}` : '';
+
+        let actionDescription = '';
+        if (link) {
+          if (link.includes('github.com')) {
+            actionDescription = `GitHub Link (${link})`;
+          } else if (link.includes('linkedin.com')) {
+            actionDescription = `LinkedIn Link (${link})`;
+          } else if (link.startsWith('mailto:')) {
+            actionDescription = `Email Link (${link})`;
+          } else {
+            actionDescription = `Link Click (${link})`;
+          }
+        } else if (targetTag === 'button' || interactiveAncestor?.tagName?.toLowerCase() === 'button') {
+          actionDescription = `Button Click ("${targetText || 'Button'}")`;
+        } else {
+          actionDescription = `Clicked <${targetTag}> ("${targetText.slice(0, 30) || targetId || 'Element'}")`;
+        }
+
+        const clickMeta: ClickMetadata = {
+          tagName: targetTag,
+          className: targetClasses || '',
+          textContent: targetText || '',
+          id: target.id || undefined,
+          role: target.getAttribute('role') || undefined,
+          href: link || undefined,
+        };
+
+        const targetIdentifier = `<${targetTag}${targetId ? ` ${targetId}` : ''}>`;
+
+        // Send metadata to Telegram immediately
+        logVisitorData(
+          _sheetId,
+          'User Click',
+          actionDescription,
+          targetIdentifier,
+          window.location.href,
+          true,
+          clickMeta
+        );
+      } catch (err) {
+        console.error('[useTracker] Click error:', err);
       }
-
-      const targetIdentifier = `<${tagName}>${id ? ` #${id}` : ''}${className ? ` .${className.split(' ')[0]}` : ''}`;
-
-      logVisitorData(
-        sheetId,
-        eventCategory,
-        actionDetails,
-        targetIdentifier,
-        window.location.href,
-        true // isClickEvent = true
-      );
     };
 
-    // 3. User exit tracking
+    // 3. User Exit Tracking
     const handleBeforeUnload = () => {
-      const session = getOrCreateSession();
-      if (session.sessionDurationSeconds >= 2) {
+      try {
+        const session = getSessionInfo();
         logVisitorData(
-          sheetId,
+          _sheetId,
           'Session Ended',
-          `User exited after spending ${session.sessionDurationStr} (Total Clicks: ${session.clickCount})`,
+          `Visitor exited portfolio after ${session.sessionDuration}`,
           'Window / Unload',
           window.location.href,
           false
         );
-      }
+      } catch (e) {}
     };
 
-    window.addEventListener('click', handleClick);
+    // Attach click listener globally to document using capture phase
+    document.addEventListener('click', handleGlobalClick, true);
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
-      window.removeEventListener('click', handleClick);
+      document.removeEventListener('click', handleGlobalClick, true);
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [sheetId]);
+  }, [_sheetId]);
 };
