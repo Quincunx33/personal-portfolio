@@ -5,22 +5,216 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+      content="width=device-width, initial-scale=1.0, maximum-scale=5" />
     <title>taaissu — Useful experiments, shipped with intent.</title>
-    <meta name="description" content="taaissu — Tasfiya Tabassum's field notebook for full-stack development, security tooling, and experimental interfaces." />
+    <meta
+      name="description"
+      content="taaissu — Tasfiya Tabassum's field notebook for full-stack development, security tooling, and experimental interfaces." />
+    <meta name="author" content="Tasfiya Tabassum" />
+    <meta name="creator" content="Tasfiya Tabassum" />
+    <meta name="publisher" content="Tasfiya Tabassum" />
+    <meta
+      name="keywords"
+      content="Tasfiya Tabassum, taaissu, full-stack developer, security tooling, systems programming, web experiments, Khulna, Bangladesh, portfolio" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="theme-color" content="#111110" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://taissu.pages.dev/" />
+
+    <!-- Security Metadata Fallbacks -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; connect-src 'self' https: wss:; frame-src 'self' https:; object-src 'none'; base-uri 'self';" />
+
+    <!-- Open Graph / Facebook Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="taaissu" />
+    <meta property="og:url" content="https://taissu.pages.dev/" />
+    <meta property="og:title" content="taaissu — Useful experiments, shipped with intent." />
+    <meta
+      property="og:description"
+      content="taaissu — Tasfiya Tabassum's field notebook for full-stack development, security tooling, and experimental interfaces." />
+    <meta property="og:image" content="https://taissu.pages.dev/assets/taaissu-hero-texture.jpg" />
+    <meta property="og:image:secure_url" content="https://taissu.pages.dev/assets/taaissu-hero-texture.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="taaissu — Useful experiments, shipped with intent." />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter / X Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@taaissu" />
+    <meta name="twitter:creator" content="@taaissu" />
+    <meta name="twitter:title" content="taaissu — Useful experiments, shipped with intent." />
+    <meta
+      name="twitter:description"
+      content="taaissu — Tasfiya Tabassum's field notebook for full-stack development, security tooling, and experimental interfaces." />
+    <meta name="twitter:image" content="https://taissu.pages.dev/assets/taaissu-hero-texture.jpg" />
+    <meta name="twitter:image:alt" content="taaissu — Useful experiments, shipped with intent." />
+
+    <!-- Favicon and Brand Icons -->
     <link rel="icon" type="image/png" href="/assets/taaissu-mark.png" />
+    <link rel="apple-touch-icon" href="/assets/taaissu-mark.png" />
+
+    <!-- Schema.org JSON-LD Structured Data for AEO & E-E-A-T -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://taissu.pages.dev/#person",
+            "name": "Tasfiya Tabassum",
+            "alternateName": "taaissu",
+            "url": "https://taissu.pages.dev/",
+            "image": "https://taissu.pages.dev/assets/taaissu-portrait.jpg",
+            "jobTitle": "Full-Stack Developer & Systems Enthusiast",
+            "description": "Full-stack developer from Khulna, Bangladesh, building systems, security tooling, and experimental web interfaces.",
+            "homeLocation": {
+              "@type": "Place",
+              "name": "Khulna, Bangladesh"
+            },
+            "sameAs": [
+              "https://github.com/Quincunx33",
+              "https://taissu.pages.dev/"
+            ],
+            "knowsAbout": [
+              "Full-Stack Web Development",
+              "TypeScript & React",
+              "Linux Systems & Virtualization",
+              "Security Tooling & Pen Testing",
+              "Automation & Cron Workflows",
+              "Browser Simulations & UI/UX"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://taissu.pages.dev/#website",
+            "url": "https://taissu.pages.dev/",
+            "name": "taaissu",
+            "description": "Useful experiments, shipped with intent — Tasfiya Tabassum's portfolio and field notebook.",
+            "publisher": {
+              "@id": "https://taissu.pages.dev/#person"
+            },
+            "inLanguage": "en-US"
+          },
+          {
+            "@type": "ProfilePage",
+            "@id": "https://taissu.pages.dev/#profilepage",
+            "url": "https://taissu.pages.dev/",
+            "name": "taaissu — Useful experiments, shipped with intent.",
+            "isPartOf": {
+              "@id": "https://taissu.pages.dev/#website"
+            },
+            "about": {
+              "@id": "https://taissu.pages.dev/#person"
+            },
+            "primaryImageOfPage": {
+              "@type": "ImageObject",
+              "url": "https://taissu.pages.dev/assets/taaissu-hero-texture.jpg"
+            }
+          }
+        ]
+      }
+    </script>
   </head>
 
   <body>
     <div id="root">
-      <main aria-label="taaissu portfolio fallback" style="min-height:100vh;background:#111110;color:#f2eee6;padding:48px 24px;font-family:Georgia,serif">
-        <p style="margin:0 0 18px;color:#d98a52;font:12px/1.4 monospace;letter-spacing:.16em;text-transform:uppercase">Field notes / 2026</p>
-        <h1 style="max-width:720px;margin:0 0 18px;font-size:clamp(44px,8vw,92px);line-height:.95;font-weight:400">Useful experiments,<br /><em style="color:#d98a52">shipped with intent.</em></h1>
-        <p style="max-width:560px;margin:0 0 28px;color:#c7c0b5;font:15px/1.7 monospace">I’m Tasfiya Tabassum — a full-stack developer from Khulna, Bangladesh, exploring systems, security tooling, and the modern web.</p>
-        <a href="https://github.com/Quincunx33" style="display:inline-block;background:#d98a52;color:#111110;padding:14px 18px;font:700 12px monospace;letter-spacing:.08em;text-decoration:none;text-transform:uppercase">Open GitHub ↗</a>
+      <!-- Semantic Crawler & Pre-render Fallback with High Readability and Internal Navigation -->
+      <header style="background:#111110;color:#f2eee6;padding:24px 32px;border-bottom:1px solid #2a2a26">
+        <nav aria-label="Primary navigation" style="display:flex;gap:20px;flex-wrap:wrap;font-family:monospace;font-size:14px">
+          <a href="#work" style="color:#d98a52;text-decoration:none">Selected Work</a>
+          <a href="#activity" style="color:#c7c0b5;text-decoration:none">Activity</a>
+          <a href="#arsenal" style="color:#c7c0b5;text-decoration:none">Capabilities</a>
+          <a href="#trajectory" style="color:#c7c0b5;text-decoration:none">Trajectory</a>
+          <a href="#about" style="color:#c7c0b5;text-decoration:none">About</a>
+          <a href="#connect" style="color:#c7c0b5;text-decoration:none">Connect</a>
+        </nav>
+      </header>
+
+      <main style="background:#111110;color:#f2eee6;padding:48px 32px;font-family:Georgia,serif;max-width:960px;margin:0 auto;line-height:1.7">
+        <p style="margin:0 0 16px;color:#d98a52;font:12px/1.4 monospace;letter-spacing:.16em;text-transform:uppercase">
+          Field notes / 2026
+        </p>
+
+        <h1 style="margin:0 0 20px;font-size:clamp(36px,6vw,72px);line-height:1.05;font-weight:400">
+          Useful experiments, <em style="color:#d98a52;font-style:italic">shipped with intent.</em>
+        </h1>
+
+        <p style="font-size:18px;color:#ded8cc;margin:0 0 32px;max-width:760px">
+          I’m Tasfiya Tabassum — a full-stack developer and systems enthusiast from Khulna, Bangladesh. I explore the seam between low-level systems, security tooling, and experimental web interfaces.
+        </p>
+
+        <section id="work" style="margin:48px 0;padding-top:24px;border-top:1px solid #2a2a26">
+          <h2 style="font-size:24px;color:#d98a52;margin-bottom:16px;font-family:monospace">Featured Engineering Projects</h2>
+          <p style="color:#c7c0b5;margin-bottom:24px">
+            Explore verified open-source initiatives covering browser architecture, systems virtualization, penetration testing tooling, and automation:
+          </p>
+
+          <article style="margin-bottom:20px">
+            <h3 style="margin:0 0 6px;font-size:18px;color:#f2eee6">PS2 WebXperience</h3>
+            <p style="margin:0 0 8px;color:#a8a195">
+              An interactive PlayStation 2 browser interface simulation crafted with React, TypeScript, and modern animation physics.
+            </p>
+            <a href="https://github.com/Quincunx33/PS2-WebXperience" target="_blank" rel="noopener noreferrer" style="color:#d98a52;font-family:monospace;font-size:13px">View Repository &rarr;</a>
+          </article>
+
+          <article style="margin-bottom:20px">
+            <h3 style="margin:0 0 6px;font-size:18px;color:#f2eee6">ishkali VNC &amp; Hacker Lab</h3>
+            <p style="margin:0 0 8px;color:#a8a195">
+              Pre-built Alpine 3.14 x86 root filesystem for iSH on iOS featuring 925+ commands, security utilities, compilers, and an active VNC display server.
+            </p>
+            <a href="https://github.com/Quincunx33/ishkali-vnc" target="_blank" rel="noopener noreferrer" style="color:#d98a52;font-family:monospace;font-size:13px">View Repository &rarr;</a>
+          </article>
+
+          <article style="margin-bottom:20px">
+            <h3 style="margin:0 0 6px;font-size:18px;color:#f2eee6">Kali Minimal</h3>
+            <p style="margin:0 0 8px;color:#a8a195">
+              Terminal-focused minimal Kali Linux distributions for i386, ARM64, and x86_64 architectures optimized for QEMU and UTM SE hypervisors.
+            </p>
+            <a href="https://github.com/Quincunx33/kali-minimal" target="_blank" rel="noopener noreferrer" style="color:#d98a52;font-family:monospace;font-size:13px">View Repository &rarr;</a>
+          </article>
+
+          <article style="margin-bottom:20px">
+            <h3 style="margin:0 0 6px;font-size:18px;color:#f2eee6">Penbox CLI Suite</h3>
+            <p style="margin:0 0 8px;color:#a8a195">
+              Comprehensive 72-in-1 Python terminal utility covering network scanning, WPA2 handshake analysis, payload generation, and open-source intelligence.
+            </p>
+            <a href="https://github.com/Quincunx33/penbox" target="_blank" rel="noopener noreferrer" style="color:#d98a52;font-family:monospace;font-size:13px">View Repository &rarr;</a>
+          </article>
+        </section>
+
+        <section id="arsenal" style="margin:48px 0;padding-top:24px;border-top:1px solid #2a2a26">
+          <h2 style="font-size:24px;color:#d98a52;margin-bottom:16px;font-family:monospace">Technical Arsenal &amp; Disciplines</h2>
+          <p style="color:#c7c0b5">
+            Core specializations include TypeScript, React, Tailwind CSS, Node.js, Python, Linux kernel tooling, Shell scripting, Git workflows, Docker virtualization, and Cloudflare Pages deployment.
+          </p>
+        </section>
+
+        <section id="connect" style="margin:48px 0;padding-top:24px;border-top:1px solid #2a2a26">
+          <h2 style="font-size:24px;color:#d98a52;margin-bottom:16px;font-family:monospace">Direct Contact &amp; Code</h2>
+          <p style="color:#c7c0b5;margin-bottom:16px">
+            Open for software engineering opportunities, systems research, and security collaborations.
+          </p>
+          <div style="display:flex;gap:16px;flex-wrap:wrap">
+            <a href="https://github.com/Quincunx33" target="_blank" rel="noopener noreferrer" style="background:#d98a52;color:#111110;padding:12px 18px;font:700 13px monospace;text-decoration:none;letter-spacing:.08em;text-transform:uppercase">
+              Explore GitHub Profile ↗
+            </a>
+            <a href="mailto:taaissu@gmail.com" style="border:1px solid #d98a52;color:#d98a52;padding:12px 18px;font:700 13px monospace;text-decoration:none;letter-spacing:.08em;text-transform:uppercase">
+              Email Tasfiya ↗
+            </a>
+          </div>
+        </section>
       </main>
     </div>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 
