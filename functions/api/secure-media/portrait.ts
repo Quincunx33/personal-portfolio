@@ -1,0 +1,1 @@
+export { onRequestGet } from "../portrait";
