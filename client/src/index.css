@@ -36,9 +36,9 @@ h1 em,h2 em,.large-statement em { font-weight:500; color:var(--amber); }
 .signal-button:hover { transform:translateY(-3px); background:#e49b5d; }
 .signal-button:active { transform:scale(.97); }
 .text-button { display:flex; align-items:center; gap:8px; }
-.hero-portrait-wrap { position:relative; max-width:430px; justify-self:end; }
+.hero-portrait-wrap { position:relative; max-width:340px; justify-self:end; }
 .portrait-frame { border:1px solid rgba(232,225,213,.42); padding:9px; transform:rotate(2.5deg); background:rgba(17,17,16,.35); box-shadow:18px 22px 0 rgba(216,137,75,.1); }
-.portrait-frame img { display:block; width:100%; aspect-ratio:4/5; object-fit:cover; object-position:center; filter:saturate(.86) contrast(1.05); }
+.portrait-frame img { display:block; width:100%; aspect-ratio:24/43; object-fit:cover; object-position:center; filter:saturate(.86) contrast(1.05); }
 .portrait-caption { display:flex; justify-content:space-between; gap:14px; color:var(--muted); margin-top:19px; }
 .hero-index { position:absolute; left:3vw; bottom:36px; display:flex; align-items:center; gap:13px; color:var(--muted); writing-mode:vertical-rl; transform:rotate(180deg); pointer-events:none; z-index:0; }
 .index-line { height:70px; width:1px; background:var(--amber); }

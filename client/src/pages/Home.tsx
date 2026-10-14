@@ -28,7 +28,7 @@ import { ResumeModal } from "@/components/ResumeModal";
 import { TechnicalArsenal } from "@/components/TechnicalArsenal";
 import { logVisitorData } from "../lib/tracker";
 
-const portrait = "/assets/taaissu-portrait.jpg";
+const portrait = "/assets/taaissu-himalayan-guitar-portrait.webp";
 const heroTexture = "/assets/taaissu-hero-texture.jpg";
 const atlasTexture = "/assets/taaissu-project-atlas.jpg";
 const signalTexture = "/assets/taaissu-signal.jpg";
@@ -545,7 +545,7 @@ export default function Home() {
           <div className="portrait-frame">
             <img
               src={portrait}
-              alt="Tasfiya Tabassum playing guitar in the hills - software developer and systems researcher"
+              alt="Tasfiya Tabassum playing guitar on a wooden balcony in the Himalayan hills"
               width={340}
               height={420}
               loading="eager"
