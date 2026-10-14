@@ -119,6 +119,23 @@ async function startServer() {
     res.json({ status: "healthy", timestamp: new Date().toISOString() });
   });
 
+  // SEO Files: explicitly set MIME types & caching
+  app.get("/sitemap.xml", (_req, res) => {
+    res.setHeader("Content-Type", "application/xml; charset=utf-8");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.sendFile(path.join(staticPath, "sitemap.xml"));
+  });
+
+  app.get("/robots.txt", (_req, res) => {
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    res.sendFile(path.join(staticPath, "robots.txt"));
+  });
+
+  app.get("/404", (_req, res) => {
+    res.status(404).sendFile(path.join(staticPath, "404.html"));
+  });
+
   // Return a real 404 for unknown routes rather than serving the homepage shell.
   app.get("*", (_req, res) => {
     res.status(404).sendFile(path.join(staticPath, "404.html"));

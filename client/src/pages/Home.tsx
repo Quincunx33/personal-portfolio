@@ -21,7 +21,7 @@ import {
 } from "@/components/ProjectInspectorModal";
 import { QuickContactModal } from "@/components/QuickContactModal";
 import { SecurePortraitCanvas } from "@/components/SecurePortraitCanvas";
-import { TechnicalArsenal } from "@/components/TechnicalArsenal";
+import { useDocumentSeo } from "@/hooks/useDocumentSeo";
 import { logVisitorData } from "../lib/tracker";
 
 const heroTexture = "/assets/taaissu-hero-texture.jpg";
@@ -266,6 +266,13 @@ const filters = [
 ];
 
 export default function Home() {
+  useDocumentSeo({
+    title: "taaissu (Quincunx33) — Useful experiments, shipped with intent.",
+    description:
+      "taaissu (Quincunx33) — Tasfiya Tabassum's engineering field notebook for full-stack systems, offensive security tooling, Linux setups, and modern web apps.",
+    canonical: "https://taissu.pages.dev/",
+  });
+
   const [projects, setProjects] = useState<Project[]>(fallbackProjects);
   const [syncState, setSyncState] = useState<"live" | "fallback">("fallback");
   const [filter, setFilter] = useState("All work");
@@ -388,10 +395,6 @@ export default function Home() {
             <span>Activity &amp; Telemetry</span>
             <span className="text-[10px] text-[#d8894b] font-mono">01.5</span>
           </button>
-          <button onClick={() => scrollTo("arsenal")}>
-            <span>Capabilities</span>
-            <span className="text-[10px] text-[#d8894b] font-mono">02</span>
-          </button>
           <button onClick={() => scrollTo("about")}>
             <span>About</span>
             <span className="text-[10px] text-[#d8894b] font-mono">01</span>
@@ -477,9 +480,9 @@ export default function Home() {
           <span>About the maker</span>
         </div>
         <div className="manifesto-copy">
-          <p className="large-statement">
+          <h2 className="large-statement">
             Systems should feel <em>useful</em> before they feel impressive.
-          </p>
+          </h2>
           <p className="body-copy">
             My work moves across TypeScript, Python, real-time applications, browser APIs,
             userland x86 emulation, automation, and responsible security research. I like the
@@ -505,11 +508,6 @@ export default function Home() {
       {/* Live GitHub Telemetry & Heatmap Matrix */}
       <div id="activity">
         <GitHubActivityMatrix />
-      </div>
-
-      {/* Technical Arsenal Section */}
-      <div id="arsenal">
-        <TechnicalArsenal />
       </div>
 
       {/* Selected Work Section */}

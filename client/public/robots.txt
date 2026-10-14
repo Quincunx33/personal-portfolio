@@ -1,6 +1,10 @@
-# Public portfolio crawl policy; robots.txt is not access control.
+# Public portfolio crawl policy
+# Website: https://taissu.pages.dev
+
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /secure/
 
+# Sitemap location
 Sitemap: https://taissu.pages.dev/sitemap.xml

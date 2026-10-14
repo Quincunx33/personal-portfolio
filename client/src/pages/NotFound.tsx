@@ -1,49 +1,59 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle, Home } from "lucide-react";
+import { ArrowLeft, Home, Terminal } from "lucide-react";
 import { useLocation } from "wouter";
+import { useDocumentSeo } from "@/hooks/useDocumentSeo";
 
 export default function NotFound() {
   const [, setLocation] = useLocation();
+
+  useDocumentSeo({
+    title: "404: Page Not Found | taaissu (Quincunx33)",
+    description:
+      "This address does not match an entry in Tasfiya Tabassum's engineering field notebook and portfolio.",
+    canonical: "https://taissu.pages.dev/",
+    robots: "noindex, follow",
+  });
 
   const handleGoHome = () => {
     setLocation("/");
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-      <Card className="w-full max-w-lg mx-4 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-        <CardContent className="pt-8 pb-8 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-red-100 rounded-full animate-pulse" />
-              <AlertCircle className="relative h-16 w-16 text-red-500" />
-            </div>
+    <main className="min-h-screen w-full flex items-center justify-center bg-[#111110] text-[#e8e1d5] p-6 font-mono relative overflow-hidden">
+      <div className="grain" aria-hidden="true" />
+      <div className="w-full max-w-lg p-8 sm:p-10 border border-[#e8e1d5]/20 bg-[#161614]/90 backdrop-blur-sm shadow-2xl relative z-10 text-center">
+        <div className="flex justify-center mb-6">
+          <div className="w-16 h-16 rounded-full border border-[#d8894b]/40 flex items-center justify-center bg-[#d8894b]/10 text-[#d8894b]">
+            <Terminal className="h-8 w-8" />
           </div>
+        </div>
 
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">404</h1>
+        <p className="text-[11px] uppercase tracking-[0.2em] text-[#d8894b] mb-2">
+          HTTP 404 / Route Not Found
+        </p>
 
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">
-            Page Not Found
-          </h2>
+        <h1 className="font-serif text-5xl sm:text-6xl font-bold tracking-tight text-[#e8e1d5] mb-4">
+          404
+        </h1>
 
-          <p className="text-slate-600 mb-8 leading-relaxed">
-            Sorry, the page you are looking for doesn't exist.
-            <br />
-            It may have been moved or deleted.
-          </p>
+        <h2 className="text-sm font-mono uppercase tracking-wider text-[#a59e92] mb-4">
+          Missing Reference
+        </h2>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button
-              onClick={handleGoHome}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
-            >
-              <Home className="w-4 h-4 mr-2" />
-              Go Home
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+        <p className="text-xs sm:text-sm text-[#b5ada1] mb-8 leading-relaxed max-w-md mx-auto">
+          The requested coordinate does not exist in the current index. It may have been relocated, pruned, or never compiled.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <button
+            onClick={handleGoHome}
+            className="signal-button inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#d8894b] text-[#111110] font-mono text-xs font-semibold tracking-wider uppercase transition-all duration-200 hover:bg-[#e49b5d] active:scale-95"
+            aria-label="Return to portfolio homepage"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Return to Portfolio</span>
+          </button>
+        </div>
+      </div>
+    </main>
   );
 }

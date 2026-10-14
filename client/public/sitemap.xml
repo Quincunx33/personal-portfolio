@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://taissu.pages.dev/</loc>
     <lastmod>2026-10-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://taissu.pages.dev/assets/taaissu-hero-texture.jpg</image:loc>
+      <image:title>taaissu (Quincunx33) — Useful experiments, shipped with intent.</image:title>
+      <image:caption>Tasfiya Tabassum engineering field notebook and portfolio</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://taissu.pages.dev/assets/taaissu-mark.png</image:loc>
+      <image:title>taaissu insignia monogram</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://taissu.pages.dev/assets/taaissu-project-atlas.jpg</image:loc>
+      <image:title>Project Atlas systems documentation</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://taissu.pages.dev/assets/taaissu-signal.jpg</image:loc>
+      <image:title>Telemetry and systems signal</image:title>
+    </image:image>
   </url>
 </urlset>
