@@ -52,3 +52,10 @@ The portfolio source is maintained for personal presentation. Individual linked 
 [2]: https://vite.dev/ "Vite documentation"
 [3]: https://developers.cloudflare.com/pages/ "Cloudflare Pages documentation"
 [4]: https://github.com/Quincunx33 "Quincunx33 GitHub profile"
+
+
+## Encrypted portrait asset
+
+The hero portrait is stored as AES-256-GCM ciphertext at `client/public/secure/guitar-portrait.enc`. A Cloudflare Pages Function at `/api/portrait` decrypts it at request time. The key is not stored in this repository or sent to the browser as a key; the function reads the `PORTRAIT_IMAGE_KEY` Pages secret.
+
+Before deploying, open the Cloudflare dashboard and go to **Workers & Pages → your Pages project → Settings → Variables and Secrets**. Add an encrypted secret named `PORTRAIT_IMAGE_KEY` and use the base64 value from the separately delivered secret file. Set it for Production (and Preview too, if you want preview deployments to show the portrait), then deploy. The image response is sent with `Cache-Control: no-store`; visitors can still capture an image that their browser displays.

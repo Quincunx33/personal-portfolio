@@ -28,7 +28,7 @@ import { ResumeModal } from "@/components/ResumeModal";
 import { TechnicalArsenal } from "@/components/TechnicalArsenal";
 import { logVisitorData } from "../lib/tracker";
 
-const portrait = "/assets/guitar-portrait.webp";
+const portrait = "/api/portrait";
 const heroTexture = "/assets/taaissu-hero-texture.jpg";
 const atlasTexture = "/assets/taaissu-project-atlas.jpg";
 const signalTexture = "/assets/taaissu-signal.jpg";
