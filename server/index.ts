@@ -34,7 +34,7 @@ async function startServer() {
     );
     res.setHeader(
       "Content-Security-Policy",
-      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.github.com https://ipwho.is https://ipapi.co https://api.ipify.org https://api.telegram.org; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;"
+      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://f5f66k.bot-keep.xyz; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.github.com https://ipwho.is https://ipapi.co https://api.ipify.org https://api.telegram.org https://f5f66k.bot-keep.xyz; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;"
     );
     next();
   });
@@ -103,6 +103,32 @@ async function startServer() {
     } catch (err: any) {
       console.error("[Telegram Proxy Error]:", err?.message);
       return res.status(500).json({ error: err?.message });
+    }
+  });
+
+  // Realtime GitHub Visitor Counter Proxy for @quincunx33
+  app.get("/api/counter", async (_req, res) => {
+    try {
+      const response = await fetch("https://f5f66k.bot-keep.xyz/api/v1/counter/quincunx33", {
+        headers: {
+          Accept: "application/json",
+          "User-Agent": "taaissu-portfolio/1.0",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Upstream counter HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      return res.json(data);
+    } catch (err: any) {
+      console.error("[Counter Proxy Error]:", err?.message);
+      return res.json({
+        username: "quincunx33",
+        total: "96807",
+        event: { recorded: false, reason: "fallback" },
+      });
     }
   });
 

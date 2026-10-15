@@ -8,20 +8,23 @@
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://taissu.pages.dev/assets/taaissu-hero-texture.jpg</image:loc>
-      <image:title>taaissu (Quincunx33) — Useful experiments, shipped with intent.</image:title>
+      <image:title>taaissu (Quincunx33) — Useful experiments, shipped with intent</image:title>
       <image:caption>Tasfiya Tabassum engineering field notebook and portfolio</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://taissu.pages.dev/assets/taaissu-mark.png</image:loc>
       <image:title>taaissu insignia monogram</image:title>
+      <image:caption>Official monogram and brand mark of Tasfiya Tabassum</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://taissu.pages.dev/assets/taaissu-project-atlas.jpg</image:loc>
       <image:title>Project Atlas systems documentation</image:title>
+      <image:caption>Technical systems blueprint and open-source architecture</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://taissu.pages.dev/assets/taaissu-signal.jpg</image:loc>
       <image:title>Telemetry and systems signal</image:title>
+      <image:caption>Real-time security telemetry and activity matrix</image:caption>
     </image:image>
   </url>
 </urlset>

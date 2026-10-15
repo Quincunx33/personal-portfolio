@@ -1,0 +1,32 @@
+{
+  "name": "taaissu (Quincunx33) — Useful experiments, shipped with intent.",
+  "short_name": "taaissu",
+  "description": "Tasfiya Tabassum's engineering field notebook for full-stack systems, offensive security tooling, Linux setups, and modern web apps.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#111110",
+  "theme_color": "#111110",
+  "orientation": "portrait-primary",
+  "categories": [
+    "developer",
+    "security",
+    "technology",
+    "portfolio"
+  ],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/assets/taaissu-mark.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/taaissu-mark.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

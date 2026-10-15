@@ -1,10 +1,50 @@
-# Public portfolio crawl policy
+# Public portfolio crawl policy for taaissu (Quincunx33)
 # Website: https://taissu.pages.dev
+
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /secure/
+
+User-agent: Googlebot-Image
+Allow: /assets/
+Disallow: /secure/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /secure/
+
+User-agent: Applebot
+Allow: /
+Disallow: /api/
+Disallow: /secure/
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /api/
+Disallow: /secure/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+Disallow: /secure/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+Disallow: /secure/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+Disallow: /secure/
 
 User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /secure/
 
-# Sitemap location
+# Host and Sitemap locations
+Host: https://taissu.pages.dev
 Sitemap: https://taissu.pages.dev/sitemap.xml

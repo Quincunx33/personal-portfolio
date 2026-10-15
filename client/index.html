@@ -13,12 +13,28 @@
     <meta name="publisher" content="Tasfiya Tabassum (Quincunx33)" />
     <meta
       name="keywords"
-      content="Tasfiya Tabassum, Quincunx33, taaissu, full-stack developer, security researcher, React developer, TypeScript, Linux systems, security tooling, web development" />
+      content="Tasfiya Tabassum, Quincunx33, taaissu, security researcher, full-stack engineer, React, TypeScript, Linux kernel, Alpine x86, penetration testing, PS2 WebXperience, ishkali VNC, Kali Minimal, penbox, phishGard, software engineer Khulna Bangladesh, ethical hacking, cyber security" />
     <meta
       name="robots"
       content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="google-site-verification" content="4wvzD2JbYzFJ9kHngCx87Tzo0Q_L8ka77foEMYXZJQE" />
     <meta name="theme-color" content="#111110" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Web App & Mobile Capabilities -->
+    <meta name="application-name" content="taaissu" />
+    <meta name="apple-mobile-web-app-title" content="taaissu" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Geo Metadata for Local / Regional Search Authority -->
+    <meta name="geo.region" content="BD-27" />
+    <meta name="geo.placename" content="Khulna, Bangladesh" />
+    <meta name="geo.position" content="22.8456;89.5403" />
+    <meta name="ICBM" content="22.8456, 89.5403" />
 
     <!-- Resource Hints & Preconnect for Core Web Vitals (LCP & FCP) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,6 +47,9 @@
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://taissu.pages.dev/" />
+
+    <!-- Manifest -->
+    <link rel="manifest" href="/site.webmanifest" />
 
     <!-- Security Metadata Fallbacks -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -51,6 +70,7 @@
     <meta property="og:image:height" content="1012" />
     <meta property="og:image:alt" content="taaissu (Quincunx33) — Useful experiments, shipped with intent." />
     <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="bn_BD" />
 
     <!-- Twitter / X Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -67,7 +87,7 @@
     <link rel="icon" type="image/png" href="/assets/taaissu-mark.png" />
     <link rel="apple-touch-icon" href="/assets/taaissu-mark.png" />
 
-    <!-- Schema.org JSON-LD Structured Data for AEO, E-E-A-T & Rich Snippets -->
+    <!-- Schema.org JSON-LD Structured Data for Search Engine Optimization, Rich Snippets & AI Overviews -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -80,24 +100,34 @@
             "identifier": "Quincunx33",
             "url": "https://taissu.pages.dev/",
             "image": "https://taissu.pages.dev/assets/taaissu-hero-texture.jpg",
-            "jobTitle": "Full-Stack Developer & Security Researcher",
-            "description": "Full-stack developer and security researcher (Quincunx33) from Khulna, Bangladesh, building systems, security tooling, and experimental web interfaces.",
+            "jobTitle": "Security Researcher & Full-Stack Systems Engineer",
+            "description": "Security researcher and software engineer (Quincunx33) based in Khulna, Bangladesh, engineering resilient systems, offensive security tooling, Linux virtualization environments, and experimental web applications.",
+            "email": "mailto:liquiderror600@gmail.com",
             "homeLocation": {
               "@type": "Place",
-              "name": "Khulna, Bangladesh"
+              "name": "Khulna, Bangladesh",
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 22.8456,
+                "longitude": 89.5403
+              }
             },
             "sameAs": [
               "https://github.com/Quincunx33",
+              "https://instagram.com/tasfiya__tabassum__",
+              "https://facebook.com/taissuuu",
               "https://taissu.pages.dev/"
             ],
+            "knowsLanguage": ["English", "Bengali"],
             "knowsAbout": [
               "Full-Stack Web Development",
               "TypeScript & React",
               "Linux Systems & Virtualization",
+              "Alpine Linux & x86 Emulation",
               "Security Tooling & Penetration Testing",
               "Reverse Engineering & Systems Emulation",
               "Automation & Cron Workflows",
-              "Web Security & Defensive Auditing"
+              "Web Security & Defensive Threat Auditing"
             ]
           },
           {
@@ -105,12 +135,20 @@
             "@id": "https://taissu.pages.dev/#website",
             "url": "https://taissu.pages.dev/",
             "name": "taaissu (Quincunx33)",
-            "alternateName": "Tasfiya Tabassum Portfolio",
+            "alternateName": "Tasfiya Tabassum Engineering Field Notebook",
             "description": "taaissu (Quincunx33) — Tasfiya Tabassum's engineering field notebook for full-stack systems, offensive security tooling, Linux setups, and modern web apps.",
             "publisher": {
               "@id": "https://taissu.pages.dev/#person"
             },
-            "inLanguage": "en-US"
+            "inLanguage": ["en-US", "bn-BD"],
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://github.com/Quincunx33?tab=repositories&q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
           },
           {
             "@type": "ProfilePage",
@@ -140,14 +178,38 @@
                 "position": 1,
                 "name": "Home",
                 "item": "https://taissu.pages.dev/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Selected Work",
+                "item": "https://taissu.pages.dev/#work"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Telemetry & Activity",
+                "item": "https://taissu.pages.dev/#activity"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "About",
+                "item": "https://taissu.pages.dev/#about"
+              },
+              {
+                "@type": "ListItem",
+                "position": 5,
+                "name": "Connect",
+                "item": "https://taissu.pages.dev/#connect"
               }
             ]
           },
           {
             "@type": "ItemList",
             "@id": "https://taissu.pages.dev/#projects",
-            "name": "Featured Engineering Projects",
-            "description": "Open-source software projects and security tools authored by Tasfiya Tabassum (@Quincunx33)",
+            "name": "Featured Engineering Projects & Security Tools",
+            "description": "Open-source software systems, security tools, and virtual machine distributions authored by Tasfiya Tabassum (@Quincunx33)",
             "itemListElement": [
               {
                 "@type": "ListItem",
@@ -155,7 +217,7 @@
                 "item": {
                   "@type": "SoftwareSourceCode",
                   "name": "PS2 WebXperience",
-                  "description": "Interactive PlayStation 2 browser interface simulation crafted with React, TypeScript, and modern animation physics.",
+                  "description": "Interactive PlayStation 2 browser interface simulation crafted with React, TypeScript, Vite, Web Audio harmonic synthesis, and 60fps motion curves.",
                   "programmingLanguage": "TypeScript",
                   "codeRepository": "https://github.com/Quincunx33/PS2-WebXperience",
                   "author": {
@@ -169,7 +231,7 @@
                 "item": {
                   "@type": "SoftwareSourceCode",
                   "name": "ishkali VNC & Hacker Lab",
-                  "description": "Pre-built Alpine 3.14 x86 root filesystem for iSH on iOS featuring 925+ commands, security utilities, compilers, and an active VNC display server.",
+                  "description": "Pre-built Alpine 3.14 x86 root filesystem for iSH on iOS featuring 925+ commands, security utilities, compilers, and an active TigerVNC display server.",
                   "programmingLanguage": "Shell",
                   "codeRepository": "https://github.com/Quincunx33/ishkali-vnc",
                   "author": {
@@ -211,9 +273,23 @@
                 "item": {
                   "@type": "SoftwareSourceCode",
                   "name": "phishGard",
-                  "description": "Defensive server-side phishing URL analysis with headless auditing and threat verification heuristics.",
+                  "description": "Defensive server-side phishing URL analysis with headless DOM auditing, heuristic entropy scoring, and automated threat verification.",
                   "programmingLanguage": "TypeScript",
                   "codeRepository": "https://github.com/Quincunx33/phishGard",
+                  "author": {
+                    "@id": "https://taissu.pages.dev/#person"
+                  }
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 6,
+                "item": {
+                  "@type": "SoftwareSourceCode",
+                  "name": "Cronjob",
+                  "description": "Visual cron scheduling and HTTP heartbeat monitoring dashboard with execution history, jitter tracking, and alert deduplication.",
+                  "programmingLanguage": "TypeScript",
+                  "codeRepository": "https://github.com/Quincunx33/cronjob",
                   "author": {
                     "@id": "https://taissu.pages.dev/#person"
                   }
@@ -228,7 +304,7 @@
 
   <body>
     <div id="root">
-      <!-- Semantic Crawler & Pre-render Fallback with High Readability and Internal Navigation -->
+      <!-- Semantic Crawler & Pre-render Fallback with High Readability and SEO Indexability -->
       <header style="background:#111110;color:#f2eee6;padding:24px 32px;border-bottom:1px solid #2a2a26">
         <nav aria-label="Primary navigation" style="display:flex;gap:20px;flex-wrap:wrap;font-family:monospace;font-size:14px">
           <a href="#work" style="color:#d98a52;text-decoration:none">Selected Work</a>
@@ -248,7 +324,7 @@
         </h1>
 
         <p style="font-size:18px;color:#ded8cc;margin:0 0 32px;max-width:760px">
-          I’m Tasfiya Tabassum (@Quincunx33) — a full-stack developer and security researcher from Khulna, Bangladesh. I explore the seam between low-level systems, offensive security tooling, and experimental web interfaces.
+          I’m Tasfiya Tabassum (@Quincunx33) — a security researcher and systems developer from Khulna, Bangladesh. I explore the seam between low-level systems, offensive security tooling, Linux virtualization, and experimental web interfaces.
         </p>
 
         <section id="about" style="margin:48px 0;padding-top:24px;border-top:1px solid #2a2a26">
@@ -306,11 +382,12 @@
           <article style="margin-bottom:20px">
             <h3 style="margin:0 0 6px;font-size:18px;color:#f2eee6">phishGard</h3>
             <p style="margin:0 0 8px;color:#a8a195">
-              Defensive server-side phishing URL analysis with headless auditing and Gemini supplemental intelligence.
+              Defensive server-side phishing URL analysis with headless auditing and heuristic threat verification.
             </p>
             <a href="https://github.com/Quincunx33/phishGard" target="_blank" rel="noopener noreferrer" style="color:#d98a52;font-family:monospace;font-size:13px">View Repository &rarr;</a>
           </article>
         </section>
+
 
         <section id="connect" style="margin:48px 0;padding-top:24px;border-top:1px solid #2a2a26">
           <h2 style="font-size:24px;color:#d98a52;margin-bottom:16px;font-family:monospace">Direct Contact &amp; Code</h2>
@@ -321,7 +398,7 @@
             <a href="https://github.com/Quincunx33" target="_blank" rel="noopener noreferrer" style="background:#d98a52;color:#111110;padding:12px 18px;font:700 13px monospace;text-decoration:none;letter-spacing:.08em;text-transform:uppercase">
               Explore GitHub Profile ↗
             </a>
-            <a href="mailto:taaissu@gmail.com" style="border:1px solid #d98a52;color:#d98a52;padding:12px 18px;font:700 13px monospace;text-decoration:none;letter-spacing:.08em;text-transform:uppercase">
+            <a href="mailto:liquiderror600@gmail.com" style="border:1px solid #d98a52;color:#d98a52;padding:12px 18px;font:700 13px monospace;text-decoration:none;letter-spacing:.08em;text-transform:uppercase">
               Email Tasfiya ↗
             </a>
           </div>

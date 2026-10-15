@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   ArrowUpRight,
   Check,
-  ChevronDown,
   Copy,
   ExternalLink,
   Github,
@@ -10,9 +9,11 @@ import {
   MapPin,
   Menu,
   Send,
+  Terminal,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
+import { DeveloperConsole } from "@/components/DeveloperConsole";
 import { GitHubActivityMatrix } from "@/components/GitHubActivityMatrix";
 import {
   ProjectDetail,
@@ -21,8 +22,8 @@ import {
 } from "@/components/ProjectInspectorModal";
 import { QuickContactModal } from "@/components/QuickContactModal";
 import { SecurePortraitCanvas } from "@/components/SecurePortraitCanvas";
+import { HangingPendantLamp } from "@/components/HangingPendantLamp";
 import { useDocumentSeo } from "@/hooks/useDocumentSeo";
-import { logVisitorData } from "../lib/tracker";
 
 const heroTexture = "/assets/taaissu-hero-texture.jpg";
 const atlasTexture = "/assets/taaissu-project-atlas.jpg";
@@ -214,46 +215,49 @@ const readableName = (name: string) =>
   name.replace(/[-_]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 
 const classifyRepository = (repo: GithubRepository): string => {
-  const text = `${repo.name} ${repo.description ?? ""}`.toLowerCase();
+  const name = (repo.name || "").toLowerCase();
+  const desc = (repo.description || "").toLowerCase();
+  const text = `${name} ${desc}`;
+
+  if (name.includes("portfolio") || desc.includes("portfolio")) return "Portfolio";
   if (/jailbreak|ai safety|red-team/.test(text)) return "AI safety research";
   if (
-    /phish|stress|hacking|pentest|penetration|kali|security|wpa2|osint|shellcode/.test(
+    /phish|stress|hacking|pentest|penetration|kali|security|wpa2|osint|shellcode|codeshield|bot-guard|onion/.test(
       text
     )
   )
     return "Security tooling";
-  if (/cron|schedule|automation|http ping/.test(text)) return "Automation tooling";
-  if (/portfolio/.test(text)) return "Portfolio";
-  if (/media|iptv|tv/.test(text)) return "Media workflow";
+  if (/cron|schedule|automation|http ping|downloader|bomber/.test(text)) return "Automation tooling";
   if (
-    /browser|webassembly|web os|webos|ipad|playstation|ps2|simulator|simulation|hand tracking/.test(
+    /browser|webassembly|wasm|web os|webos|ipad|playstation|ps2|simulator|simulation|hand tracking|game|fastroads/.test(
       text
     )
   )
     return "Interactive experience";
-  if (/share|file|p2p/.test(text)) return "File workflow";
-  if (/api|server|http/.test(text)) return "API laboratory";
-  if (
-    /three\.js|ammo|bullet|engine|library|linux|rootfs|virtual|vnc|iso|qemu|operating system|os experiment/.test(
-      text
-    )
-  )
-    return "Systems library";
   return "Systems experiment";
 };
 
-const mapRepository = (repo: GithubRepository, index: number): Project => ({
-  name: repo.name,
-  displayName: readableName(repo.name),
-  type: classifyRepository(repo),
-  language: repo.language ?? "Unspecified",
-  description:
-    repo.description ?? "Public repository on GitHub; description not provided.",
-  stat: repo.fork ? "public fork / reference" : "public repository",
-  url: repo.html_url,
-  image: projectImages[index % projectImages.length],
-  isFork: repo.fork,
-});
+const mapRepository = (repo: GithubRepository, index: number): Project => {
+  const customDetail = PROJECT_DETAILS_MAP[repo.name];
+  return {
+    name: repo.name,
+    displayName: customDetail?.displayName ?? readableName(repo.name),
+    type: customDetail?.type ?? classifyRepository(repo),
+    language: customDetail?.language ?? repo.language ?? "Unspecified",
+    description:
+      customDetail?.description ??
+      repo.description ??
+      "Public repository on GitHub; description not provided.",
+    stat: repo.fork ? "public fork / reference" : "public repository",
+    url: repo.html_url,
+    image: customDetail?.image ?? projectImages[index % projectImages.length],
+    isFork: repo.fork,
+    architectureNotes: customDetail?.architectureNotes,
+    highlights: customDetail?.highlights,
+    techStack: customDetail?.techStack,
+    solvedChallenges: customDetail?.solvedChallenges,
+  };
+};
 
 const filters = [
   "All work",
@@ -265,7 +269,15 @@ const filters = [
   "Portfolio",
 ];
 
+const NAV_ITEMS = [
+  { id: "work", label: "Selected work" },
+  { id: "activity", label: "Activity" },
+  { id: "about", label: "About" },
+  { id: "connect", label: "Connect" },
+];
+
 export default function Home() {
+  // Static SEO configuration
   useDocumentSeo({
     title: "taaissu (Quincunx33) — Useful experiments, shipped with intent.",
     description:
@@ -278,11 +290,74 @@ export default function Home() {
   const [filter, setFilter] = useState("All work");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
   // Modals state
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [inspectingProject, setInspectingProject] = useState<ProjectDetail | null>(null);
   const [emailCopied, setEmailCopied] = useState(false);
+  const [isDevConsoleOpen, setIsDevConsoleOpen] = useState(false);
+  const [lampAngle, setLampAngle] = useState(0);
+  const [lampIsOn, setLampIsOn] = useState(true);
+
+  // Scroll spy effect to highlight active section in navbar
+  useEffect(() => {
+    const sectionIds = ["about", "activity", "work", "connect"];
+
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 20);
+
+      // If close to bottom of document, activate connect
+      const totalHeight = document.documentElement.scrollHeight;
+      const windowHeight = window.innerHeight;
+      if (scrollY + windowHeight >= totalHeight - 80) {
+        setActiveSection("connect");
+        return;
+      }
+
+      // If near top of page, clear active nav highlight
+      if (scrollY < 260) {
+        setActiveSection("");
+        return;
+      }
+
+      const triggerPosition = 160;
+      let currentSection = "";
+
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= triggerPosition && rect.bottom > triggerPosition) {
+            currentSection = id;
+            break;
+          }
+        }
+      }
+
+      if (currentSection) {
+        setActiveSection(currentSection);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.code === "KeyD") {
+        e.preventDefault();
+        setIsDevConsoleOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -327,30 +402,35 @@ export default function Home() {
     [filter, projects]
   );
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
-  };
+  const filterCounts = useMemo(() => {
+    const counts: Record<string, number> = { "All work": projects.length };
+    filters.forEach((f) => {
+      if (f !== "All work") {
+        counts[f] = projects.filter((p) => p.type === f).length;
+      }
+    });
+    return counts;
+  }, [projects]);
 
-  const handleOpenProjectByName = (projectName: string) => {
-    const found = projects.find(
-      (p) =>
-        p.name.toLowerCase() === projectName.toLowerCase() ||
-        p.name.toLowerCase().includes(projectName.toLowerCase())
-    );
-    if (found) {
-      setInspectingProject(found);
-    } else {
-      setInspectingProject({
-        name: projectName,
-        displayName: readableName(projectName),
-        type: "Systems experiment",
-        language: "Unspecified",
-        description: `Project experiment ${projectName}`,
-        stat: "public repository",
-        url: `https://github.com/Quincunx33/${projectName}`,
-        image: atlasTexture,
+  const scrollTo = (id: string) => {
+    setMenuOpen(false);
+    if (id === "top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setActiveSection("");
+      return;
+    }
+
+    const element = document.getElementById(id);
+    if (element) {
+      const topbarHeight = 78;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - topbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
       });
+      setActiveSection(id);
     }
   };
 
@@ -371,14 +451,16 @@ export default function Home() {
       <div className="grain" aria-hidden="true" />
 
       {/* Top Header Navigation */}
-      <header className="topbar">
-        <button className="brand" onClick={() => scrollTo("top")} aria-label="Back to top">
+      <header className={isScrolled ? "topbar scrolled" : "topbar"}>
+        <button className="brand" onClick={() => scrollTo("top")} aria-label="taaissu homepage - back to top">
           <img
             src={logoMark}
             alt="taaissu monogram insignia logo"
             width={32}
             height={32}
             className="brand-mark"
+            loading="eager"
+            decoding="async"
           />
           <span>taaissu</span>
         </button>
@@ -387,22 +469,16 @@ export default function Home() {
           className={menuOpen ? "nav-links nav-open" : "nav-links"}
           aria-label="Primary navigation"
         >
-          <button onClick={() => scrollTo("work")}>
-            <span>Selected work</span>
-            <span className="text-[10px] text-[#d8894b] font-mono">04</span>
-          </button>
-          <button onClick={() => scrollTo("activity")}>
-            <span>Activity &amp; Telemetry</span>
-            <span className="text-[10px] text-[#d8894b] font-mono">01.5</span>
-          </button>
-          <button onClick={() => scrollTo("about")}>
-            <span>About</span>
-            <span className="text-[10px] text-[#d8894b] font-mono">01</span>
-          </button>
-          <button onClick={() => scrollTo("connect")}>
-            <span>Connect</span>
-            <span className="text-[10px] text-[#d8894b] font-mono">05</span>
-          </button>
+          {NAV_ITEMS.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => scrollTo(item.id)}
+              className={activeSection === item.id ? "active" : ""}
+              aria-current={activeSection === item.id ? "page" : undefined}
+            >
+              <span>{item.label}</span>
+            </button>
+          ))}
         </nav>
         <button
           className="menu-button"
@@ -412,24 +488,42 @@ export default function Home() {
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
 
-        <a
-          className="top-github"
-          href="https://github.com/Quincunx33"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Github size={16} /> GitHub <ArrowUpRight size={14} />
-        </a>
+        <div className="flex items-center gap-3">
+          <a
+            className="top-github"
+            href="https://github.com/Quincunx33"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open Tasfiya Tabassum GitHub profile @Quincunx33"
+          >
+            <Github size={16} /> GitHub <ArrowUpRight size={14} />
+          </a>
+        </div>
       </header>
 
       {/* Hero Section */}
       <section
         id="top"
-        className="hero"
+        className="hero relative overflow-hidden"
         style={{
           backgroundImage: `linear-gradient(90deg, rgba(12,12,11,.92) 0%, rgba(12,12,11,.6) 44%, rgba(12,12,11,.15) 100%), url(${heroTexture})`,
         }}
       >
+        <HangingPendantLamp
+          onSwayChange={setLampAngle}
+          onStateChange={({ angle, isOn }) => {
+            setLampAngle(angle);
+            setLampIsOn(isOn);
+          }}
+        />
+        {/* Subtle Ambient Warmth matching the lamp beam position */}
+        <div
+          className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-10"
+          style={{
+            opacity: lampIsOn ? 1 : 0,
+            background: `radial-gradient(ellipse 60% 50% at ${65 + lampAngle * 0.9}% 45%, rgba(216, 137, 75, 0.08) 0%, rgba(216, 137, 75, 0.02) 50%, transparent 80%)`,
+          }}
+        />
         <div className="hero-3d-scene" aria-hidden="true">
           <span className="hero-orb hero-orb-one" />
           <span className="hero-orb hero-orb-two" />
@@ -446,8 +540,8 @@ export default function Home() {
             <em>shipped with intent.</em>
           </h1>
           <p className="hero-deck">
-            I’m Tasfiya Tabassum (@Quincunx33) — a full-stack developer and security researcher,
-            exploring the seam between systems, security tooling, and the modern web.
+            I’m Tasfiya Tabassum (@Quincunx33) — a security researcher and systems developer from Khulna, Bangladesh,
+            exploring the seam between low-level virtualization, security tooling, and the modern web.
           </p>
           <div className="hero-actions flex flex-wrap gap-4 items-center mt-8">
             <button className="signal-button" onClick={() => scrollTo("work")}>
@@ -457,12 +551,19 @@ export default function Home() {
         </div>
 
         <div className="hero-portrait-wrap">
+          <div className="portrait-lighting-halo" aria-hidden="true" />
           <div className="portrait-frame">
-            <SecurePortraitCanvas className="h-full w-full object-cover" />
+            <span className="portrait-light-accent portrait-light-tl" aria-hidden="true" />
+            <span className="portrait-light-accent portrait-light-tr" aria-hidden="true" />
+            <span className="portrait-light-accent portrait-light-bl" aria-hidden="true" />
+            <span className="portrait-light-accent portrait-light-br" aria-hidden="true" />
+            <div className="portrait-canvas-stage">
+              <SecurePortraitCanvas className="h-full w-full object-cover" />
+              <div className="portrait-lens-vignette" aria-hidden="true" />
+            </div>
           </div>
           <div className="portrait-caption">
             <span>Tasfiya Tabassum</span>
-            <span>Worldwide / Remote</span>
           </div>
         </div>
 
@@ -521,30 +622,41 @@ export default function Home() {
             From the<br />
             <em>workbench.</em>
           </h2>
-          <p>
-            Systems, interfaces, and small provocations pulled from the public lab.
-          </p>
-          <div className="font-mono text-[10px] text-[#787268] uppercase tracking-wider">
-            GitHub index / {syncState === "live" ? "live synchronized" : "bundled fallback"}
-          </div>
+          <div />
+          <div />
         </div>
 
         <div className="filter-row" role="tablist" aria-label="Filter projects">
-          {filters.map((item) => (
-            <button
-              key={item}
-              className={filter === item ? "filter active" : "filter"}
-              onClick={() => setFilter(item)}
-              role="tab"
-              aria-selected={filter === item}
-            >
-              {item}
-            </button>
-          ))}
+          {filters.map((item) => {
+            const count = filterCounts[item] ?? 0;
+            return (
+              <button
+                key={item}
+                className={filter === item ? "filter active" : "filter"}
+                onClick={() => setFilter(item)}
+                role="tab"
+                aria-selected={filter === item}
+              >
+                <span>{item}</span>
+                <span className="ml-1 opacity-70 font-mono text-[9px]">({count})</span>
+              </button>
+            );
+          })}
         </div>
 
         <div className="project-list">
-          {visibleProjects.map((project, index) => (
+          {visibleProjects.length === 0 ? (
+            <div className="py-16 text-center text-[#a59e92] font-mono text-xs border border-dashed border-[#e8e1d5]/15 my-6 p-8">
+              <p>No repositories found under &ldquo;{filter}&rdquo;.</p>
+              <button
+                onClick={() => setFilter("All work")}
+                className="inline-block mt-3 px-3 py-1.5 border border-[#d8894b] text-[#d8894b] uppercase tracking-wider text-[10px] hover:bg-[#d8894b] hover:text-[#111110] transition-colors"
+              >
+                Show all work ({projects.length})
+              </button>
+            </div>
+          ) : (
+            visibleProjects.map((project, index) => (
             <article
               key={project.name}
               className={
@@ -572,6 +684,7 @@ export default function Home() {
                       setInspectingProject(project);
                     }}
                     className="project-inspect-btn font-mono"
+                    aria-label={`Inspect architectural blueprint for ${project.displayName}`}
                   >
                     <span>Inspect Architecture</span>
                     <ArrowUpRight size={12} />
@@ -583,8 +696,9 @@ export default function Home() {
                       <a
                         href={project.url}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                         onClick={(event) => event.stopPropagation()}
+                        aria-label={`Open repository for ${project.displayName} on GitHub`}
                       >
                         Open repository <ArrowUpRight size={15} />
                       </a>
@@ -601,13 +715,22 @@ export default function Home() {
                   e.stopPropagation();
                   setInspectingProject(project);
                 }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Inspect ${project.displayName} system details`}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.stopPropagation();
+                    setInspectingProject(project);
+                  }
+                }}
               >
                 <span>
                   Inspect <ArrowUpRight size={16} />
                 </span>
               </div>
             </article>
-          ))}
+          )))}
         </div>
       </section>
 
@@ -640,6 +763,7 @@ export default function Home() {
                 onClick={handleCopyEmail}
                 className="top-action-btn py-3 px-4 font-mono text-xs"
                 title="Copy email to clipboard"
+                aria-label="Copy email address liquiderror600@gmail.com"
               >
                 {emailCopied ? (
                   <Check size={14} className="text-[#d8894b]" />
@@ -654,21 +778,24 @@ export default function Home() {
               <a
                 href="https://github.com/Quincunx33"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
+                aria-label="Visit Tasfiya Tabassum GitHub Profile"
               >
                 GitHub <ArrowUpRight size={14} />
               </a>
               <a
                 href="https://instagram.com/tasfiya__tabassum__"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
+                aria-label="Visit Tasfiya Tabassum Instagram Profile"
               >
                 Instagram <ArrowUpRight size={14} />
               </a>
               <a
                 href="https://facebook.com/taissuuu"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
+                aria-label="Visit Tasfiya Tabassum Facebook Profile"
               >
                 Facebook <ArrowUpRight size={14} />
               </a>
@@ -678,17 +805,17 @@ export default function Home() {
 
         <div className="location-note">
           <MapPin size={15} /> 22°48′N 89°32′E{" "}
-          <span>—</span> available for high-impact engineering problems
+          <span>—</span> Khulna, Bangladesh · available for high-impact engineering problems
         </div>
       </section>
 
       {/* Footer */}
       <footer className="footer">
-        <span>© 2026 taaissu · Tasfiya Tabassum</span>
+        <span>© 2026 taaissu · Tasfiya Tabassum (@Quincunx33)</span>
         <div className="flex items-center gap-4">
           <span>
             Built from the public lab of{" "}
-            <a href="https://github.com/Quincunx33" target="_blank" rel="noreferrer">
+            <a href="https://github.com/Quincunx33" target="_blank" rel="noopener noreferrer">
               @Quincunx33
             </a>
           </span>
@@ -696,6 +823,7 @@ export default function Home() {
         <button
           onClick={() => scrollTo("top")}
           className="hover:text-[#d8894b] transition-colors"
+          aria-label="Scroll back to top of page"
         >
           ↑ back to top
         </button>
@@ -705,9 +833,10 @@ export default function Home() {
       <div className="md:hidden fixed bottom-3 left-4 right-4 z-40 bg-[#161614]/95 backdrop-blur-md border border-[#d8894b]/35 shadow-xl shadow-black p-2 flex items-center justify-between gap-2">
         <button
           onClick={() => setIsContactOpen(true)}
-          className="flex-1 py-2 px-2.5 bg-[#d8894b] text-[#111110] font-semibold text-[11px] font-mono flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+          className="w-full py-2.5 px-3 bg-[#d8894b] text-[#111110] font-semibold text-[12px] font-mono flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+          aria-label="Open contact form"
         >
-          <Mail size={13} />
+          <Mail size={14} />
           <span>Contact</span>
         </button>
       </div>
@@ -721,6 +850,12 @@ export default function Home() {
       <QuickContactModal
         isOpen={isContactOpen}
         onClose={() => setIsContactOpen(false)}
+      />
+
+      <DeveloperConsole
+        isOpen={isDevConsoleOpen}
+        onClose={() => setIsDevConsoleOpen(false)}
+        onOpenContact={() => setIsContactOpen(true)}
       />
     </main>
   );

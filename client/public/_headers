@@ -9,7 +9,7 @@
   Cross-Origin-Resource-Policy: cross-origin
   X-Permitted-Cross-Domain-Policies: none
   X-XSS-Protection: 1; mode=block
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.github.com https://ipwho.is https://ipapi.co https://api.ipify.org https://api.telegram.org; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://f5f66k.bot-keep.xyz; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.github.com https://ipwho.is https://ipapi.co https://api.ipify.org https://api.telegram.org https://f5f66k.bot-keep.xyz; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;
 
 /index.html
   Cache-Control: no-cache, no-store, must-revalidate
@@ -24,7 +24,7 @@
   Cross-Origin-Resource-Policy: cross-origin
   X-Permitted-Cross-Domain-Policies: none
   X-XSS-Protection: 1; mode=block
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.github.com https://ipwho.is https://ipapi.co https://api.ipify.org https://api.telegram.org; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://f5f66k.bot-keep.xyz; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.github.com https://ipwho.is https://ipapi.co https://api.ipify.org https://api.telegram.org https://f5f66k.bot-keep.xyz; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;
 
 /404.html
   Cache-Control: no-cache, no-store, must-revalidate
@@ -42,6 +42,11 @@
   Cache-Control: public, max-age=86400
   X-Content-Type-Options: nosniff
 
+/site.webmanifest
+  Content-Type: application/manifest+json; charset=utf-8
+  Cache-Control: public, max-age=86400
+  X-Content-Type-Options: nosniff
+
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
   Cloudflare-CDN-Cache-Control: no-cache
@@ -55,7 +60,7 @@
   Cross-Origin-Resource-Policy: cross-origin
   X-Permitted-Cross-Domain-Policies: none
   X-XSS-Protection: 1; mode=block
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.github.com https://ipwho.is https://ipapi.co https://api.ipify.org https://api.telegram.org; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://f5f66k.bot-keep.xyz; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.github.com https://ipwho.is https://ipapi.co https://api.ipify.org https://api.telegram.org https://f5f66k.bot-keep.xyz; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
