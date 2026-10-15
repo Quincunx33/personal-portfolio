@@ -3,7 +3,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-:root { --ink:#111110; --ink-soft:#191917; --bone:#e8e1d5; --muted:#a59e92; --amber:#d8894b; --copper:#845d46; --line:rgba(232,225,213,.18); --ease-out:cubic-bezier(.23,1,.32,1); }
+:root { --ink:#111110; --ink-soft:#191917; --bone:#e8e1d5; --muted:#a59e92; --amber:#d8894b; --copper:#845d46; --line:rgba(232,225,213,.18); --ease-out:cubic-bezier(.23,1,.32,1); --lamp-fallback-right: calc(10vw + 45px); }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
 body { margin:0; background:var(--ink); color:var(--bone); font-family:'IBM Plex Mono', monospace; }
@@ -304,6 +304,7 @@ h1 em,h2 em,.large-statement em { font-weight:500; color:var(--amber); }
 }
 
 @media (max-width:900px) {
+  :root { --lamp-fallback-right: calc(6vw + 20px); }
   .hero { padding-left:6vw; padding-right:6vw; grid-template-columns:1fr 290px; gap:30px; }
   .manifesto-band,.work-section,.connect-section,.arsenal-section,.timeline-section,.github-matrix-section { padding-left:6vw; padding-right:6vw; }
   .manifesto-band { grid-template-columns:120px 1fr; }

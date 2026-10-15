@@ -1,11 +1,22 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 interface HangingPendantLampProps {
   onSwayChange?: (angle: number) => void;
   onStateChange?: (state: { angle: number; isOn: boolean; intensity: number }) => void;
+  centerX?: number;
+  topOffset?: number;
+  portraitWidth?: number;
+  isReady?: boolean;
 }
 
-export function HangingPendantLamp({ onSwayChange, onStateChange }: HangingPendantLampProps) {
+export function HangingPendantLamp({
+  onSwayChange,
+  onStateChange,
+  centerX,
+  topOffset,
+  portraitWidth,
+  isReady,
+}: HangingPendantLampProps) {
   const [swayAngle, setSwayAngle] = useState(0);
   const [isOn, setIsOn] = useState(true);
   const [chainPull, setChainPull] = useState(false);
@@ -200,14 +211,31 @@ export function HangingPendantLamp({ onSwayChange, onStateChange }: HangingPenda
     }
   };
 
+  // Dynamic cord length: shade rim hovers gracefully right above/at the top edge of the portrait frame
+  const cordHeight = useMemo(() => {
+    if (topOffset && topOffset > 100) {
+      // Clamped between 50px and 115px for pristine visual balance
+      return Math.max(50, Math.min(115, Math.round(topOffset - 96)));
+    }
+    return 75; // Default aesthetic cord length
+  }, [topOffset]);
+
   return (
     <div
       ref={containerRef}
-      /* Positioned safely over the right-hand margin & portrait, safely away from left text */
-      className="absolute top-0 right-4 sm:right-8 md:right-12 lg:right-20 xl:right-28 z-20 pointer-events-none select-none"
+      /* Positioned directly and precisely centered over the portrait in both tablet and desktop view */
+      className="absolute top-0 z-20 pointer-events-none select-none max-[680px]:hidden transition-[left] duration-150 ease-out"
       style={{
         width: "250px",
         height: "820px",
+        ...(isReady && centerX && centerX > 0
+          ? {
+              left: `${centerX}px`,
+              transform: "translateX(-50%)",
+            }
+          : {
+              right: "var(--lamp-fallback-right, calc(10vw + 45px))",
+            }),
       }}
     >
       {/* Heavy-duty Cast Iron Ceiling Canopy with Hex Bolts */}
@@ -247,12 +275,12 @@ export function HangingPendantLamp({ onSwayChange, onStateChange }: HangingPenda
         }}
       >
         {/* 
-          TEXTURE ENHANCEMENT: VINTAGE TWISTED CLOTH-WRAPPED BRAIDED CORD (150px)
+          TEXTURE ENHANCEMENT: VINTAGE TWISTED CLOTH-WRAPPED BRAIDED CORD
           Features realistic diagonal woven herringbone fabric texture
         */}
         <div
-          className="w-[3px] mx-auto relative cursor-grab active:cursor-grabbing pointer-events-auto"
-          style={{ height: "150px" }}
+          className="w-[3px] mx-auto relative cursor-grab active:cursor-grabbing pointer-events-auto transition-[height] duration-200"
+          style={{ height: `${cordHeight}px` }}
           onPointerDown={handlePointerDown}
           onMouseEnter={handleHoverNudge}
           title="Drag to swing • Reacts to phone gyroscope tilt"
