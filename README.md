@@ -1,4 +1,4 @@
-# taaissu — Interactive Developer Portfolio
+# simple  Portfolio 🫠
 
 > A field notebook for useful experiments, security tooling, systems work, and the modern web.
 
