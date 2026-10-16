@@ -3,17 +3,17 @@
 
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>taaissu (Quincunx33) — Useful experiments, shipped with intent.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>taaissu (Quincunx33) — Systems Engineer &amp; Security Researcher</title>
     <meta
       name="description"
-      content="taaissu (Quincunx33) — Tasfiya Tabassum's engineering field notebook for full-stack systems, offensive security tooling, Linux setups, and modern web apps." />
+      content="Engineering field notebook and portfolio of Tasfiya Tabassum (Quincunx33): Full-stack systems, offensive security tooling, Alpine Linux x86 rootfs, and modern web applications." />
     <meta name="author" content="Tasfiya Tabassum (Quincunx33)" />
     <meta name="creator" content="Tasfiya Tabassum (Quincunx33)" />
     <meta name="publisher" content="Tasfiya Tabassum (Quincunx33)" />
     <meta
       name="keywords"
-      content="Tasfiya Tabassum, Quincunx33, taaissu, security researcher, full-stack engineer, React, TypeScript, Linux kernel, Alpine x86, penetration testing, PS2 WebXperience, ishkali VNC, Kali Minimal, penbox, phishGard, software engineer Khulna Bangladesh, ethical hacking, cyber security" />
+      content="Tasfiya Tabassum, Quincunx33, taaissu, security researcher, full-stack engineer, React, TypeScript, Linux kernel, Alpine x86, penetration testing, PS2 WebXperience, ishkali VNC, Kali Minimal, penbox, phishGard, software engineer Khulna Bangladesh, ethical hacking, cyber security, WebAssembly, QEMU, UTM SE, reverse engineering, web security" />
     <meta
       name="robots"
       content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
@@ -23,6 +23,8 @@
     <meta name="theme-color" content="#111110" />
     <meta name="color-scheme" content="dark" />
     <meta name="format-detection" content="telephone=no" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="rating" content="general" />
 
     <!-- Web App & Mobile Capabilities -->
     <meta name="application-name" content="taaissu" />
@@ -35,6 +37,11 @@
     <meta name="geo.placename" content="Khulna, Bangladesh" />
     <meta name="geo.position" content="22.8456;89.5403" />
     <meta name="ICBM" content="22.8456, 89.5403" />
+
+    <!-- Internationalization / Alternate Language References -->
+    <link rel="alternate" hreflang="x-default" href="https://taissu.pages.dev/" />
+    <link rel="alternate" hreflang="en" href="https://taissu.pages.dev/" />
+    <link rel="alternate" hreflang="bn" href="https://taissu.pages.dev/" />
 
     <!-- Resource Hints & Preconnect for Core Web Vitals (LCP & FCP) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -59,16 +66,16 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="taaissu (Quincunx33)" />
     <meta property="og:url" content="https://taissu.pages.dev/" />
-    <meta property="og:title" content="taaissu (Quincunx33) — Useful experiments, shipped with intent." />
+    <meta property="og:title" content="taaissu (Quincunx33) — Systems Engineer &amp; Security Researcher" />
     <meta
       property="og:description"
-      content="taaissu (Quincunx33) — Tasfiya Tabassum's engineering field notebook for full-stack systems, offensive security tooling, Linux setups, and modern web apps." />
+      content="Engineering field notebook and portfolio of Tasfiya Tabassum (Quincunx33): Full-stack systems, offensive security tooling, Alpine Linux x86 rootfs, and modern web applications." />
     <meta property="og:image" content="https://taissu.pages.dev/assets/taaissu-hero-texture.jpg" />
     <meta property="og:image:secure_url" content="https://taissu.pages.dev/assets/taaissu-hero-texture.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1800" />
     <meta property="og:image:height" content="1012" />
-    <meta property="og:image:alt" content="taaissu (Quincunx33) — Useful experiments, shipped with intent." />
+    <meta property="og:image:alt" content="taaissu (Quincunx33) — Systems Engineer &amp; Security Researcher" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="bn_BD" />
 
@@ -76,12 +83,12 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@taaissu" />
     <meta name="twitter:creator" content="@taaissu" />
-    <meta name="twitter:title" content="taaissu (Quincunx33) — Useful experiments, shipped with intent." />
+    <meta name="twitter:title" content="taaissu (Quincunx33) — Systems Engineer &amp; Security Researcher" />
     <meta
       name="twitter:description"
-      content="taaissu (Quincunx33) — Tasfiya Tabassum's engineering field notebook for full-stack systems, offensive security tooling, Linux setups, and modern web apps." />
+      content="Engineering field notebook and portfolio of Tasfiya Tabassum (Quincunx33): Full-stack systems, offensive security tooling, Alpine Linux x86 rootfs, and modern web applications." />
     <meta name="twitter:image" content="https://taissu.pages.dev/assets/taaissu-hero-texture.jpg" />
-    <meta name="twitter:image:alt" content="taaissu (Quincunx33) — Useful experiments, shipped with intent." />
+    <meta name="twitter:image:alt" content="taaissu (Quincunx33) — Systems Engineer &amp; Security Researcher" />
 
     <!-- Favicon and Brand Icons -->
     <link rel="icon" type="image/png" href="/assets/taaissu-mark.png" />
@@ -96,10 +103,14 @@
             "@type": "Person",
             "@id": "https://taissu.pages.dev/#person",
             "name": "Tasfiya Tabassum",
-            "alternateName": ["taaissu", "Quincunx33", "quincunx33"],
+            "alternateName": ["taaissu", "Quincunx33", "quincunx33", "তাসফিয়া তাবাসসুম"],
             "identifier": "Quincunx33",
             "url": "https://taissu.pages.dev/",
-            "image": "https://taissu.pages.dev/assets/taaissu-hero-texture.jpg",
+            "image": {
+              "@type": "ImageObject",
+              "url": "https://taissu.pages.dev/assets/taaissu-hero-texture.jpg",
+              "caption": "Tasfiya Tabassum (@Quincunx33) Engineering Portfolio"
+            },
             "jobTitle": "Security Researcher & Full-Stack Systems Engineer",
             "description": "Security researcher and software engineer (Quincunx33) based in Khulna, Bangladesh, engineering resilient systems, offensive security tooling, Linux virtualization environments, and experimental web applications.",
             "email": "mailto:liquiderror600@gmail.com",
@@ -112,6 +123,12 @@
                 "longitude": 89.5403
               }
             },
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Khulna",
+              "addressRegion": "Khulna Division",
+              "addressCountry": "BD"
+            },
             "sameAs": [
               "https://github.com/Quincunx33",
               "https://instagram.com/tasfiya__tabassum__",
@@ -121,13 +138,15 @@
             "knowsLanguage": ["English", "Bengali"],
             "knowsAbout": [
               "Full-Stack Web Development",
-              "TypeScript & React",
+              "TypeScript & React Ecosystem",
+              "Offensive Security Tooling",
+              "Penetration Testing & Security Auditing",
               "Linux Systems & Virtualization",
-              "Alpine Linux & x86 Emulation",
-              "Security Tooling & Penetration Testing",
+              "Alpine Linux & Userland x86 Emulation",
               "Reverse Engineering & Systems Emulation",
+              "WebAssembly & High-Performance Runtimes",
               "Automation & Cron Workflows",
-              "Web Security & Defensive Threat Auditing"
+              "Defensive Threat Intelligence & Heuristic Phishing Verification"
             ]
           },
           {
@@ -136,8 +155,11 @@
             "url": "https://taissu.pages.dev/",
             "name": "taaissu (Quincunx33)",
             "alternateName": "Tasfiya Tabassum Engineering Field Notebook",
-            "description": "taaissu (Quincunx33) — Tasfiya Tabassum's engineering field notebook for full-stack systems, offensive security tooling, Linux setups, and modern web apps.",
+            "description": "Engineering field notebook and portfolio of Tasfiya Tabassum (Quincunx33): Full-stack systems, offensive security tooling, Alpine Linux x86 rootfs, and modern web applications.",
             "publisher": {
+              "@id": "https://taissu.pages.dev/#person"
+            },
+            "author": {
               "@id": "https://taissu.pages.dev/#person"
             },
             "inLanguage": ["en-US", "bn-BD"],
@@ -154,7 +176,7 @@
             "@type": "ProfilePage",
             "@id": "https://taissu.pages.dev/#profilepage",
             "url": "https://taissu.pages.dev/",
-            "name": "taaissu (Quincunx33) — Useful experiments, shipped with intent.",
+            "name": "taaissu (Quincunx33) — Systems Engineer & Security Researcher",
             "isPartOf": {
               "@id": "https://taissu.pages.dev/#website"
             },
@@ -164,6 +186,9 @@
             "mainEntity": {
               "@id": "https://taissu.pages.dev/#person"
             },
+            "dateCreated": "2024-01-01",
+            "dateModified": "2026-10-16",
+            "inLanguage": ["en-US", "bn-BD"],
             "primaryImageOfPage": {
               "@type": "ImageObject",
               "url": "https://taissu.pages.dev/assets/taaissu-hero-texture.jpg"
@@ -194,7 +219,7 @@
               {
                 "@type": "ListItem",
                 "position": 4,
-                "name": "About",
+                "name": "About the Maker",
                 "item": "https://taissu.pages.dev/#about"
               },
               {
@@ -294,6 +319,80 @@
                     "@id": "https://taissu.pages.dev/#person"
                   }
                 }
+              },
+              {
+                "@type": "ListItem",
+                "position": 7,
+                "item": {
+                  "@type": "SoftwareSourceCode",
+                  "name": "StressTest-wasm",
+                  "description": "High-performance WebAssembly and Rust compute benchmark harness evaluating SIMD throughput and memory stability inside modern browsers.",
+                  "programmingLanguage": "Rust",
+                  "codeRepository": "https://github.com/Quincunx33/StressTest-wasm",
+                  "author": {
+                    "@id": "https://taissu.pages.dev/#person"
+                  }
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 8,
+                "item": {
+                  "@type": "SoftwareSourceCode",
+                  "name": "MyCat Companion",
+                  "description": "Cross-platform desktop virtual companion featuring trigonometric eye-tracking algorithms, Pomodoro productivity timers, and zero-idle CPU overhead.",
+                  "programmingLanguage": "Python",
+                  "codeRepository": "https://github.com/Quincunx33/mycat-companion",
+                  "author": {
+                    "@id": "https://taissu.pages.dev/#person"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://taissu.pages.dev/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Who is Tasfiya Tabassum (Quincunx33)?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Tasfiya Tabassum (@Quincunx33) is a security researcher, software engineer, and systems developer based in Khulna, Bangladesh. She builds resilient full-stack systems, offensive security tooling, userland Linux virtualization setups, and experimental web interfaces."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What open-source security tools has Tasfiya Tabassum built?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Tasfiya has created widely referenced security projects including ishkali VNC (a full Alpine 3.14 x86 pentest rootfs for iOS iSH), Penbox (a 72-in-1 Python command-line pentesting toolbox), phishGard (an automated phishing URL detection engine), and kali-minimal (sub-500MB headless Kali Linux ISOs for UTM SE and QEMU)."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is PS2 WebXperience?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "PS2 WebXperience is an interactive browser recreation of Sony's PlayStation 2 interface, engineered with React, TypeScript, Framer Motion, and procedural Web Audio harmonic synthesis with 60fps hardware-accelerated animations."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What technologies and programming languages does Tasfiya Tabassum use?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Tasfiya works across TypeScript, React, Node.js, Python, Rust, WebAssembly (WASM), Shell/Bash, Alpine Linux, Kali Linux, QEMU, and low-level socket and virtualization architectures."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I contact or hire Tasfiya Tabassum?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "You can reach Tasfiya Tabassum via email at liquiderror600@gmail.com, review her code and repositories on GitHub at https://github.com/Quincunx33, or connect via Instagram (@tasfiya__tabassum__) and Facebook."
+                }
               }
             ]
           }
@@ -310,6 +409,7 @@
           <a href="#work" style="color:#d98a52;text-decoration:none">Selected Work</a>
           <a href="#activity" style="color:#c7c0b5;text-decoration:none">Activity</a>
           <a href="#about" style="color:#c7c0b5;text-decoration:none">About</a>
+          <a href="#faq" style="color:#c7c0b5;text-decoration:none">FAQ</a>
           <a href="#connect" style="color:#c7c0b5;text-decoration:none">Connect</a>
         </nav>
       </header>
@@ -386,8 +486,55 @@
             </p>
             <a href="https://github.com/Quincunx33/phishGard" target="_blank" rel="noopener noreferrer" style="color:#d98a52;font-family:monospace;font-size:13px">View Repository &rarr;</a>
           </article>
+
+          <article style="margin-bottom:20px">
+            <h3 style="margin:0 0 6px;font-size:18px;color:#f2eee6">StressTest-wasm</h3>
+            <p style="margin:0 0 8px;color:#a8a195">
+              High-performance WebAssembly and Rust compute benchmark harness evaluating SIMD throughput and browser memory stability.
+            </p>
+            <a href="https://github.com/Quincunx33/StressTest-wasm" target="_blank" rel="noopener noreferrer" style="color:#d98a52;font-family:monospace;font-size:13px">View Repository &rarr;</a>
+          </article>
         </section>
 
+        <!-- Search Engine Frequently Asked Questions (FAQ) Section for Rich Snippets -->
+        <section id="faq" style="margin:48px 0;padding-top:24px;border-top:1px solid #2a2a26">
+          <h2 style="font-size:24px;color:#d98a52;margin-bottom:16px;font-family:monospace">Frequently Asked Questions (Real bokchodi)</h2>
+          
+          <details style="margin-bottom:16px;padding:12px;background:#161614;border:1px solid #2a2a26">
+            <summary style="cursor:pointer;font-weight:600;color:#f2eee6">Tui eto code kos theke copy maros, naki nijer theke baniye bokachoda haw?</summary>
+            <p style="margin:8px 0 0;color:#c7c0b5;font-size:14px">
+              Bokachoda naki re vai? Shob code GitHub-e open-source, tor baaper bank na! Ekta line code likhte giye matha nosto hoye jay, copy marle ekhon aiso keno? Nijer kaj kor giye!
+            </p>
+          </details>
+
+          <details style="margin-bottom:16px;padding:12px;background:#161614;border:1px solid #2a2a26">
+            <summary style="cursor:pointer;font-weight:600;color:#f2eee6">What open-source security tools has Tasfiya Tabassum built?</summary>
+            <p style="margin:8px 0 0;color:#c7c0b5;font-size:14px">
+              Tasfiya has created widely referenced security projects including ishkali VNC (a full Alpine 3.14 x86 pentest rootfs for iOS iSH), Penbox (a 72-in-1 Python command-line pentesting toolbox), phishGard (an automated phishing URL detection engine), and kali-minimal (sub-500MB headless Kali Linux ISOs for UTM SE and QEMU).
+            </p>
+          </details>
+
+          <details style="margin-bottom:16px;padding:12px;background:#161614;border:1px solid #2a2a26">
+            <summary style="cursor:pointer;font-weight:600;color:#f2eee6">What is PS2 WebXperience?</summary>
+            <p style="margin:8px 0 0;color:#c7c0b5;font-size:14px">
+              PS2 WebXperience is an interactive browser recreation of Sony's PlayStation 2 interface, engineered with React, TypeScript, Framer Motion, and procedural Web Audio harmonic synthesis with 60fps hardware-accelerated animations.
+            </p>
+          </details>
+
+          <details style="margin-bottom:16px;padding:12px;background:#161614;border:1px solid #2a2a26">
+            <summary style="cursor:pointer;font-weight:600;color:#f2eee6">What technologies and programming languages does Tasfiya Tabassum use?</summary>
+            <p style="margin:8px 0 0;color:#c7c0b5;font-size:14px">
+              Tasfiya works across TypeScript, React, Node.js, Python, Rust, WebAssembly (WASM), Shell/Bash, Alpine Linux, Kali Linux, QEMU, and low-level socket and virtualization architectures.
+            </p>
+          </details>
+
+          <details style="margin-bottom:16px;padding:12px;background:#161614;border:1px solid #2a2a26">
+            <summary style="cursor:pointer;font-weight:600;color:#f2eee6">How can I contact or hire Tasfiya Tabassum?</summary>
+            <p style="margin:8px 0 0;color:#c7c0b5;font-size:14px">
+              You can reach Tasfiya Tabassum via email at liquiderror600@gmail.com, review her code and repositories on GitHub at https://github.com/Quincunx33, or connect via Instagram (@tasfiya__tabassum__) and Facebook.
+            </p>
+          </details>
+        </section>
 
         <section id="connect" style="margin:48px 0;padding-top:24px;border-top:1px solid #2a2a26">
           <h2 style="font-size:24px;color:#d98a52;margin-bottom:16px;font-family:monospace">Direct Contact &amp; Code</h2>
@@ -404,6 +551,9 @@
           </div>
         </section>
       </main>
+      <footer style="background:#111110;color:#7e776d;padding:24px 32px;border-top:1px solid #2a2a26;font-family:monospace;font-size:12px;text-align:center">
+        © 2026 taaissu · Tasfiya Tabassum (@Quincunx33) · Khulna, Bangladesh
+      </footer>
     </div>
 
     <script type="module" src="/src/main.tsx"></script>

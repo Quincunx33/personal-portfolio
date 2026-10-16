@@ -1,9 +1,10 @@
 {
-  "name": "taaissu (Quincunx33) — Useful experiments, shipped with intent.",
+  "name": "taaissu (Quincunx33) — Systems Engineer & Security Researcher",
   "short_name": "taaissu",
   "description": "Tasfiya Tabassum's engineering field notebook for full-stack systems, offensive security tooling, Linux setups, and modern web apps.",
   "start_url": "/",
   "scope": "/",
+  "id": "taaissu-portfolio",
   "display": "standalone",
   "background_color": "#111110",
   "theme_color": "#111110",
@@ -12,7 +13,8 @@
     "developer",
     "security",
     "technology",
-    "portfolio"
+    "portfolio",
+    "utilities"
   ],
   "lang": "en",
   "icons": [
@@ -27,6 +29,29 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Selected Work",
+      "short_name": "Work",
+      "description": "Browse engineering projects and open-source repositories",
+      "url": "/#work",
+      "icons": [{ "src": "/assets/taaissu-mark.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Activity Matrix",
+      "short_name": "Activity",
+      "description": "View live GitHub telemetry and annual contributions",
+      "url": "/#activity",
+      "icons": [{ "src": "/assets/taaissu-mark.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Connect with Tasfiya",
+      "short_name": "Connect",
+      "description": "Direct contact and collaboration channel",
+      "url": "/#connect",
+      "icons": [{ "src": "/assets/taaissu-mark.png", "sizes": "192x192" }]
     }
   ]
 }

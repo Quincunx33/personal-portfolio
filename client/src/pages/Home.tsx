@@ -10,6 +10,7 @@ import {
   Menu,
   Send,
   Terminal,
+  HelpCircle,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -25,6 +26,12 @@ import { SecurePortraitCanvas } from "@/components/SecurePortraitCanvas";
 import { HangingPendantLamp } from "@/components/HangingPendantLamp";
 import { ProjectBentoGrid } from "@/components/ProjectBentoGrid";
 import { useDocumentSeo } from "@/hooks/useDocumentSeo";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const heroTexture = "/assets/taaissu-hero-texture.jpg";
 const atlasTexture = "/assets/taaissu-project-atlas.jpg";
@@ -270,22 +277,43 @@ const filters = [
   "Portfolio",
 ];
 
+const FAQ_ITEMS = [
+  {
+    question: "Tui eto code kos theke copy maros, naki nijer theke baniye bokachoda haw?",
+    answer:
+      "Bokachoda naki re vai? Shob code GitHub-e open-source, tor baaper bank na! Ekta line code likhte giye matha nosto hoye jay, copy marle ekhon aiso keno? Nijer kaj kor giye!",
+  },
+  {
+    question: "Why do you live in Khulna? Eto gorom-e matha ki nosto hoye geche?",
+    answer:
+      "Khulnars don't sweat, we compile. Gorom thakle matha thanda thake, tor moto faltu kothay dim bhaja jay na. Khulnar mishti kheye matha thanda rakh!",
+  },
+  {
+    question: "Is PS2 WebXperience a real OS or pure bakchodi?",
+    answer:
+      "Pure 128-bit Emotion Engine bakchodi mishran! Tui ekbar browser-e giye sound ar motion dekh, tor PC hang na korle amar nam o bolbo na, sala!",
+  },
+  {
+    question: "Can I ask for free code or free freelancing, bal?",
+    answer:
+      "Free code paabi tor baper dukan theke? GitHub profile link dewa ache, giye repo fork kore bose thak, matha khabi na amar!",
+  },
+  {
+    question: "Why is this portfolio so dark and mysterious, sala?",
+    answer:
+      "White theme use korle ankh andho hoye jay, ar tor moto chor-chocchora ghumai porishkar aloy. Dark mode is supreme, sala!",
+  },
+];
+
 const NAV_ITEMS = [
   { id: "work", label: "Selected work" },
   { id: "activity", label: "Activity" },
   { id: "about", label: "About" },
+  { id: "faq", label: "FAQ" },
   { id: "connect", label: "Connect" },
 ];
 
 export default function Home() {
-  // Static SEO configuration
-  useDocumentSeo({
-    title: "taaissu (Quincunx33) — Useful experiments, shipped with intent.",
-    description:
-      "taaissu (Quincunx33) — Tasfiya Tabassum's engineering field notebook for full-stack systems, offensive security tooling, Linux setups, and modern web apps.",
-    canonical: "https://taissu.pages.dev/",
-  });
-
   const [projects, setProjects] = useState<Project[]>(fallbackProjects);
   const [syncState, setSyncState] = useState<"live" | "fallback">("fallback");
   const [filter, setFilter] = useState("All work");
@@ -301,9 +329,55 @@ export default function Home() {
   const [isDevConsoleOpen, setIsDevConsoleOpen] = useState(false);
   const [lampIsOn, setLampIsOn] = useState(true);
 
+  // Master-level dynamic SEO configuration
+  const currentSeo = useMemo(() => {
+    if (inspectingProject) {
+      const enriched = {
+        ...inspectingProject,
+        ...PROJECT_DETAILS_MAP[inspectingProject.name],
+      };
+      const title = `${enriched.displayName || enriched.name} — Engineering Architecture | Tasfiya Tabassum (Quincunx33)`;
+      const description = `${enriched.description} Authored by Tasfiya Tabassum (@Quincunx33) with ${enriched.language}.`;
+      const canonical = `https://taissu.pages.dev/#${enriched.name}`;
+      const ogImage = enriched.image.startsWith("http")
+        ? enriched.image
+        : `https://taissu.pages.dev${enriched.image}`;
+
+      return {
+        title,
+        description,
+        canonical,
+        ogImage,
+        jsonLd: {
+          "@context": "https://schema.org",
+          "@type": "SoftwareSourceCode",
+          "name": enriched.displayName || enriched.name,
+          "description": enriched.description,
+          "programmingLanguage": enriched.language,
+          "codeRepository": enriched.url,
+          "author": {
+            "@type": "Person",
+            "name": "Tasfiya Tabassum",
+            "url": "https://taissu.pages.dev/"
+          }
+        }
+      };
+    }
+
+    return {
+      title: "taaissu (Quincunx33) — Systems Engineer & Security Researcher",
+      description:
+        "Engineering field notebook and portfolio of Tasfiya Tabassum (Quincunx33): Full-stack systems, offensive security tooling, Alpine Linux x86 rootfs, and modern web applications.",
+      canonical: "https://taissu.pages.dev/",
+      ogImage: "https://taissu.pages.dev/assets/taaissu-hero-texture.jpg",
+    };
+  }, [inspectingProject]);
+
+  useDocumentSeo(currentSeo);
+
   // Scroll spy effect to highlight active section in navbar
   useEffect(() => {
-    const sectionIds = ["about", "activity", "work", "connect"];
+    const sectionIds = ["about", "activity", "work", "faq", "connect"];
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -635,10 +709,51 @@ export default function Home() {
         />
       </section>
 
+      {/* Frequently Asked Questions (FAQ) Section for Search Engine Authority & Rich Snippets */}
+      <section className="faq-section" id="faq">
+        <div className="faq-heading">
+          <div className="section-kicker">
+            <span>05</span>
+            <span>Knowledge Base</span>
+          </div>
+          <div>
+            <h2 className="large-statement">
+              Frequently asked<br />
+              <em>questions (Real bokchodi).</em>
+            </h2>
+            <p className="body-copy !mt-4">
+              Synthesized field answers regarding systems architecture, open-source security toolchains, and collaborative engineering.
+            </p>
+          </div>
+        </div>
+
+        <div className="faq-grid">
+          <Accordion type="single" collapsible className="w-full space-y-3">
+            {FAQ_ITEMS.map((item, idx) => (
+              <AccordionItem
+                key={idx}
+                value={`faq-${idx}`}
+                className="border border-[#e8e1d5]/15 bg-[#161614]/80 px-5 py-2 transition-colors hover:border-[#d8894b]/40 rounded-none"
+              >
+                <AccordionTrigger className="text-sm font-mono text-[#e8e1d5] hover:text-[#d8894b] text-left hover:no-underline">
+                  <div className="flex items-center gap-3">
+                    <span className="text-[#d8894b] text-xs font-mono">0{idx + 1}</span>
+                    <span>{item.question}</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-xs leading-relaxed text-[#b5ada1] font-mono pt-3 pb-4 border-t border-[#e8e1d5]/10">
+                  {item.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
       {/* Connect Section */}
       <section className="connect-section" id="connect">
         <div className="section-kicker">
-          <span>05</span>
+          <span>06</span>
           <span>Connect</span>
         </div>
         <div className="connect-layout">

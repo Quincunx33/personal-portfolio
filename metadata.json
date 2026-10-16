@@ -1,5 +1,7 @@
 {
   "name": "taaissu — Tasfiya Tabassum Portfolio",
   "description": "Engineering field notebook and portfolio of Tasfiya Tabassum (Quincunx33), featuring full-stack systems, offensive security tooling, and interactive dynamic laboratory lamp lighting.",
-  "capabilities": []
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

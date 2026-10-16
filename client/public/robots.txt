@@ -1,26 +1,67 @@
 # Public portfolio crawl policy for taaissu (Quincunx33)
-# Website: https://taissu.pages.dev
+# Canonical Origin: https://taissu.pages.dev
 
 User-agent: Googlebot
 Allow: /
 Disallow: /api/
 Disallow: /secure/
+Disallow: /*.enc$
 
 User-agent: Googlebot-Image
 Allow: /assets/
+Disallow: /secure/
+Disallow: /*.enc$
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /api/
 Disallow: /secure/
 
 User-agent: Bingbot
 Allow: /
 Disallow: /api/
 Disallow: /secure/
+Disallow: /*.enc$
 
 User-agent: Applebot
 Allow: /
 Disallow: /api/
 Disallow: /secure/
+Disallow: /*.enc$
 
 User-agent: DuckDuckBot
+Allow: /
+Disallow: /api/
+Disallow: /secure/
+
+User-agent: Baiduspider
+Allow: /
+Disallow: /api/
+Disallow: /secure/
+
+User-agent: YandexBot
+Allow: /
+Disallow: /api/
+Disallow: /secure/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+Disallow: /secure/
+Disallow: /*.enc$
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+Disallow: /secure/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+Disallow: /secure/
+Disallow: /*.enc$
+
+User-agent: Anthropic-AI
 Allow: /
 Disallow: /api/
 Disallow: /secure/
@@ -30,20 +71,19 @@ Allow: /
 Disallow: /api/
 Disallow: /secure/
 
-User-agent: ClaudeBot
-Allow: /
-Disallow: /api/
-Disallow: /secure/
-
-User-agent: GPTBot
+User-agent: CCBot
 Allow: /
 Disallow: /api/
 Disallow: /secure/
 
 User-agent: *
 Allow: /
+Allow: /assets/
+Allow: /site.webmanifest
+Allow: /sitemap.xml
 Disallow: /api/
 Disallow: /secure/
+Disallow: /*.enc$
 
 # Host and Sitemap locations
 Host: https://taissu.pages.dev

@@ -1,30 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://taissu.pages.dev/</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://taissu.pages.dev/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://taissu.pages.dev/" />
+    <xhtml:link rel="alternate" hreflang="bn" href="https://taissu.pages.dev/" />
     <image:image>
       <image:loc>https://taissu.pages.dev/assets/taaissu-hero-texture.jpg</image:loc>
       <image:title>taaissu (Quincunx33) — Useful experiments, shipped with intent</image:title>
-      <image:caption>Tasfiya Tabassum engineering field notebook and portfolio</image:caption>
+      <image:caption>Tasfiya Tabassum engineering field notebook, systems development, and cybersecurity portfolio</image:caption>
+      <image:geo_location>Khulna, Bangladesh</image:geo_location>
     </image:image>
     <image:image>
       <image:loc>https://taissu.pages.dev/assets/taaissu-mark.png</image:loc>
       <image:title>taaissu insignia monogram</image:title>
-      <image:caption>Official monogram and brand mark of Tasfiya Tabassum</image:caption>
+      <image:caption>Official monogram and brand mark of Tasfiya Tabassum (@Quincunx33)</image:caption>
+      <image:geo_location>Khulna, Bangladesh</image:geo_location>
     </image:image>
     <image:image>
       <image:loc>https://taissu.pages.dev/assets/taaissu-project-atlas.jpg</image:loc>
       <image:title>Project Atlas systems documentation</image:title>
-      <image:caption>Technical systems blueprint and open-source architecture</image:caption>
+      <image:caption>Technical systems blueprint and open-source software architecture</image:caption>
+      <image:geo_location>Khulna, Bangladesh</image:geo_location>
     </image:image>
     <image:image>
       <image:loc>https://taissu.pages.dev/assets/taaissu-signal.jpg</image:loc>
       <image:title>Telemetry and systems signal</image:title>
-      <image:caption>Real-time security telemetry and activity matrix</image:caption>
+      <image:caption>Real-time security telemetry and GitHub contribution matrix</image:caption>
+      <image:geo_location>Khulna, Bangladesh</image:geo_location>
     </image:image>
+  </url>
+  <url>
+    <loc>https://taissu.pages.dev/#work</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://taissu.pages.dev/#work" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://taissu.pages.dev/#work" />
+    <xhtml:link rel="alternate" hreflang="bn" href="https://taissu.pages.dev/#work" />
+  </url>
+  <url>
+    <loc>https://taissu.pages.dev/#activity</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://taissu.pages.dev/#activity" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://taissu.pages.dev/#activity" />
+    <xhtml:link rel="alternate" hreflang="bn" href="https://taissu.pages.dev/#activity" />
+  </url>
+  <url>
+    <loc>https://taissu.pages.dev/#about</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://taissu.pages.dev/#about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://taissu.pages.dev/#about" />
+    <xhtml:link rel="alternate" hreflang="bn" href="https://taissu.pages.dev/#about" />
+  </url>
+  <url>
+    <loc>https://taissu.pages.dev/#connect</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://taissu.pages.dev/#connect" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://taissu.pages.dev/#connect" />
+    <xhtml:link rel="alternate" hreflang="bn" href="https://taissu.pages.dev/#connect" />
   </url>
 </urlset>

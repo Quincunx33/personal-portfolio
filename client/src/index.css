@@ -267,6 +267,12 @@ h1 em,h2 em,.large-statement em { font-weight:500; color:var(--amber); }
 .project-visual span { font-size:10px; text-transform:uppercase; letter-spacing:.1em; display:flex; align-items:center; gap:6px; color:var(--bone); }
 .project-detail { display:flex; align-items:center; gap:23px; margin-top:22px; font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:var(--amber); }
 .project-detail a { display:inline-flex; align-items:center; gap:5px; color:var(--bone); border-bottom:1px solid var(--amber); padding-bottom:3px; }
+/* FAQ Section for Search Engine Authority & Rich Snippets */
+.faq-section { padding:110px 11vw 120px; background:var(--ink-soft); border-top:1px solid var(--line); position:relative; }
+.faq-heading { display:grid; grid-template-columns:180px 1fr; gap:45px; margin-bottom:48px; }
+.faq-heading h2 { font-size:clamp(48px,6vw,84px); line-height:.88; }
+.faq-grid { margin-left:225px; }
+
 .connect-section { padding:125px 11vw 90px; background:var(--bone); color:var(--ink); }
 .connect-layout { display:grid; grid-template-columns:1.2fr 1fr; gap:12vw; margin-top:52px; }
 .connect-layout h2 { font-size:clamp(62px,8vw,120px); line-height:.78; }
@@ -307,11 +313,13 @@ h1 em,h2 em,.large-statement em { font-weight:500; color:var(--amber); }
 @media (max-width:900px) {
   :root { --lamp-fallback-right: calc(6vw + 20px); }
   .hero { padding-left:6vw; padding-right:6vw; grid-template-columns:1fr 290px; gap:30px; }
-  .manifesto-band,.work-section,.connect-section,.arsenal-section,.timeline-section,.github-matrix-section { padding-left:6vw; padding-right:6vw; }
+  .manifesto-band,.work-section,.connect-section,.arsenal-section,.timeline-section,.github-matrix-section,.faq-section { padding-left:6vw; padding-right:6vw; }
   .manifesto-band { grid-template-columns:120px 1fr; }
   .stats-strip { grid-column:2; flex-direction:row; border-left:0; border-top:1px solid rgba(17,17,16,.22); padding:22px 0 0; }
   .work-heading { grid-template-columns:120px 1fr 180px; gap:28px; }
   .filter-row,.project-list { margin-left:148px; }
+  .faq-heading { grid-template-columns:120px 1fr; gap:28px; }
+  .faq-grid { margin-left:148px; }
 }
 
 @media (max-width:680px) {
@@ -396,6 +404,12 @@ h1 em,h2 em,.large-statement em { font-weight:500; color:var(--amber); }
   .project-visual { min-height:120px; margin-top:6px; }
   .project-detail { flex-wrap:wrap; gap:12px; margin-top:16px; }
   
+  .faq-section { padding:60px 5vw 70px; }
+  .faq-heading { display:block; margin-bottom:28px; }
+  .faq-heading h2 { font-size:clamp(40px, 11vw, 56px); }
+  .faq-heading .section-kicker { margin-bottom:16px; }
+  .faq-grid { margin-left:0; }
+
   .connect-section { padding:60px 5vw 80px; }
   .connect-layout { display:block; margin-top:24px; }
   .connect-layout h2 { font-size:clamp(48px, 13vw, 76px); }
