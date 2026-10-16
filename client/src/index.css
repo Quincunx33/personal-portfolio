@@ -314,6 +314,7 @@ h1 em,h2 em,.large-statement em { font-weight:500; color:var(--amber); }
 }
 
 @media (max-width:680px) {
+  :root { --lamp-fallback-right: calc(10vw - 12px); }
   .topbar { height:62px; padding:0 5vw; background:rgba(17,17,16,0.92); backdrop-filter:blur(8px); }
   .brand { font-size:22px; gap:8px; }
   .brand-mark { width:22px; height:22px; }
