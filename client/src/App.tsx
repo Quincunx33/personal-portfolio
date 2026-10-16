@@ -8,6 +8,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import { useTracker } from './hooks/useTracker';
 import { ConsoleShield } from "./components/ConsoleShield";
+import { AntiCaptureShield } from "./components/AntiCaptureShield";
 import { ClickGlitchEffect } from "./components/ClickGlitchEffect";
 import { PageLoadingProgressBar } from "./components/PageLoadingProgressBar";
 
@@ -57,6 +58,7 @@ function App() {
           <PageLoadingProgressBar />
           <Toaster />
           <ConsoleShield />
+          <AntiCaptureShield />
           <ClickGlitchEffect />
           <Router />
         </TooltipProvider>

@@ -23,6 +23,7 @@ import {
 import { QuickContactModal } from "@/components/QuickContactModal";
 import { SecurePortraitCanvas } from "@/components/SecurePortraitCanvas";
 import { HangingPendantLamp } from "@/components/HangingPendantLamp";
+import { ProjectBentoGrid } from "@/components/ProjectBentoGrid";
 import { useDocumentSeo } from "@/hooks/useDocumentSeo";
 
 const heroTexture = "/assets/taaissu-hero-texture.jpg";
@@ -619,116 +620,19 @@ export default function Home() {
             From the<br />
             <em>workbench.</em>
           </h2>
-          <div />
-          <div />
+          <p>
+            Curated engineering artifacts across systems virtualization, defensive & offensive security tooling, and browser experiments.
+          </p>
         </div>
 
-        <div className="filter-row" role="tablist" aria-label="Filter projects">
-          {filters.map((item) => {
-            const count = filterCounts[item] ?? 0;
-            return (
-              <button
-                key={item}
-                className={filter === item ? "filter active" : "filter"}
-                onClick={() => setFilter(item)}
-                role="tab"
-                aria-selected={filter === item}
-              >
-                <span>{item}</span>
-                <span className="ml-1 opacity-70 font-mono text-[9px]">({count})</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="project-list">
-          {visibleProjects.length === 0 ? (
-            <div className="py-16 text-center text-[#a59e92] font-mono text-xs border border-dashed border-[#e8e1d5]/15 my-6 p-8">
-              <p>No repositories found under &ldquo;{filter}&rdquo;.</p>
-              <button
-                onClick={() => setFilter("All work")}
-                className="inline-block mt-3 px-3 py-1.5 border border-[#d8894b] text-[#d8894b] uppercase tracking-wider text-[10px] hover:bg-[#d8894b] hover:text-[#111110] transition-colors"
-              >
-                Show all work ({projects.length})
-              </button>
-            </div>
-          ) : (
-            visibleProjects.map((project, index) => (
-            <article
-              key={project.name}
-              className={
-                expanded === project.name ? "project-card expanded" : "project-card"
-              }
-              onClick={() =>
-                setExpanded(expanded === project.name ? null : project.name)
-              }
-            >
-              <div className="project-number">
-                {String(index + 1).padStart(2, "0")}
-              </div>
-              <div className="project-main">
-                <div className="project-meta">
-                  <span>{project.type}</span>
-                  <span className="language">{project.language}</span>
-                  {project.isFork && <span className="fork-tag">fork</span>}
-                </div>
-                <h3>{project.displayName || project.name}</h3>
-                <p>{project.description}</p>
-                <div className="flex flex-wrap items-center gap-4 mt-3">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setInspectingProject(project);
-                    }}
-                    className="project-inspect-btn font-mono"
-                    aria-label={`Inspect architectural blueprint for ${project.displayName}`}
-                  >
-                    <span>Inspect Architecture</span>
-                    <ArrowUpRight size={12} />
-                  </button>
-
-                  {expanded === project.name && (
-                    <div className="project-detail">
-                      <span>{project.stat}</span>
-                      <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(event) => event.stopPropagation()}
-                        aria-label={`Open repository for ${project.displayName} on GitHub`}
-                      >
-                        Open repository <ArrowUpRight size={15} />
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div
-                className="project-visual"
-                style={{
-                  backgroundImage: `linear-gradient(130deg, rgba(18,18,17,.32), rgba(18,18,17,.75)), url(${project.image})`,
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setInspectingProject(project);
-                }}
-                role="button"
-                tabIndex={0}
-                aria-label={`Inspect ${project.displayName} system details`}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.stopPropagation();
-                    setInspectingProject(project);
-                  }
-                }}
-              >
-                <span>
-                  Inspect <ArrowUpRight size={16} />
-                </span>
-              </div>
-            </article>
-          )))}
-        </div>
+        <ProjectBentoGrid
+          projects={projects}
+          filter={filter}
+          setFilter={setFilter}
+          filters={filters}
+          filterCounts={filterCounts}
+          onInspect={(project) => setInspectingProject(project)}
+        />
       </section>
 
       {/* Connect Section */}
