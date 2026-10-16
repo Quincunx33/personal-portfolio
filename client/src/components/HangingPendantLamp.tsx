@@ -1,25 +1,23 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 interface HangingPendantLampProps {
   onSwayChange?: (angle: number) => void;
   onStateChange?: (state: { angle: number; isOn: boolean; intensity: number }) => void;
-  centerX?: number;
-  topOffset?: number;
-  portraitWidth?: number;
-  isReady?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 export function HangingPendantLamp({
   onSwayChange,
   onStateChange,
-  centerX,
-  topOffset,
-  portraitWidth,
-  isReady,
+  className = "",
+  style,
 }: HangingPendantLampProps) {
-  const [swayAngle, setSwayAngle] = useState(0);
   const [isOn, setIsOn] = useState(true);
   const [chainPull, setChainPull] = useState(false);
+
+  // Direct DOM ref for zero-re-render physics updates
+  const pendulumRef = useRef<HTMLDivElement>(null);
 
   // Physics simulation references
   const angleRef = useRef(0);
@@ -84,7 +82,6 @@ export function HangingPendantLamp({
 
     const handleOrientation = (e: DeviceOrientationEvent) => {
       if (!mounted) return;
-      // gamma is the left-to-right tilt in degrees [-90, 90]
       if (e.gamma !== null && e.gamma !== undefined) {
         hasGyroRef.current = true;
         const clampedGamma = Math.max(-20, Math.min(20, e.gamma));
@@ -96,11 +93,18 @@ export function HangingPendantLamp({
       window.addEventListener("deviceorientation", handleOrientation, true);
     }
 
-    // Parallax sway for desktop cursor movement
+    // Parallax sway for desktop cursor movement (lightweight)
+    let moveTicking = false;
     const handleMouseMove = (e: MouseEvent) => {
       if (hasGyroRef.current || isDraggingRef.current) return;
-      const normX = (e.clientX / window.innerWidth) * 2 - 1; // -1 to 1
-      gyroAngleRef.current = normX * 2.0;
+      if (!moveTicking) {
+        window.requestAnimationFrame(() => {
+          const normX = (e.clientX / window.innerWidth) * 2 - 1; // -1 to 1
+          gyroAngleRef.current = normX * 1.8;
+          moveTicking = false;
+        });
+        moveTicking = true;
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
@@ -114,7 +118,7 @@ export function HangingPendantLamp({
     };
   }, []);
 
-  // Smooth Pendulum Physics Loop (Visibly and gently swings in a natural wave)
+  // Smooth Pendulum Physics Loop (Hardware accelerated direct DOM transform - zero React re-renders)
   useEffect(() => {
     let startTime = performance.now();
 
@@ -124,7 +128,7 @@ export function HangingPendantLamp({
 
       if (!isDraggingRef.current) {
         const elapsed = (now - startTime) / 1000;
-        // Visible, gentle, hypnotic pendulum sway (~5.5 deg amplitude, ~2.5s cadence)
+        // Visible, gentle pendulum sway (~5.2 deg amplitude, ~2.5s cadence)
         const ambientDraft = Math.sin(elapsed * 1.35) * 5.2 + Math.sin(elapsed * 0.7) * 1.8;
         const targetAngle = ambientDraft + gyroAngleRef.current;
 
@@ -136,16 +140,13 @@ export function HangingPendantLamp({
         velocityRef.current *= Math.exp(-damping * dt);
         angleRef.current += velocityRef.current * dt;
 
-        // Bounded gently so it stays strictly within the right portrait sector
+        // Bounded gently
         angleRef.current = Math.max(-9.5, Math.min(9.5, angleRef.current));
 
-        setSwayAngle(angleRef.current);
-        onSwayChange?.(angleRef.current);
-        onStateChange?.({
-          angle: angleRef.current,
-          isOn,
-          intensity: isOn ? 1 : 0,
-        });
+        // Directly manipulate DOM transform without triggering React re-renders
+        if (pendulumRef.current) {
+          pendulumRef.current.style.transform = `translateX(-50%) rotate(${angleRef.current.toFixed(2)}deg)`;
+        }
       }
 
       animFrameRef.current = requestAnimationFrame(loop);
@@ -155,7 +156,7 @@ export function HangingPendantLamp({
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [isOn, onStateChange, onSwayChange]);
+  }, []);
 
   // Pointer drag & click handling
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -174,13 +175,9 @@ export function HangingPendantLamp({
         const deltaAngle = (dx / 220) * 18;
         const targetAngle = Math.max(-9.5, Math.min(9.5, dragStartAngleRef.current + deltaAngle));
         angleRef.current = targetAngle;
-        setSwayAngle(targetAngle);
-        onSwayChange?.(targetAngle);
-        onStateChange?.({
-          angle: targetAngle,
-          isOn,
-          intensity: isOn ? 1 : 0,
-        });
+        if (pendulumRef.current) {
+          pendulumRef.current.style.transform = `translateX(-50%) rotate(${targetAngle.toFixed(2)}deg)`;
+        }
       }
     };
 
@@ -211,31 +208,14 @@ export function HangingPendantLamp({
     }
   };
 
-  // Dynamic cord length: shade rim hovers gracefully right above/at the top edge of the portrait frame
-  const cordHeight = useMemo(() => {
-    if (topOffset && topOffset > 100) {
-      // Clamped between 50px and 115px for pristine visual balance
-      return Math.max(50, Math.min(115, Math.round(topOffset - 96)));
-    }
-    return 75; // Default aesthetic cord length
-  }, [topOffset]);
-
   return (
     <div
       ref={containerRef}
-      /* Positioned directly and precisely centered over the portrait in both tablet and desktop view */
-      className="absolute top-0 z-20 pointer-events-none select-none max-[680px]:hidden transition-[left] duration-150 ease-out"
+      className={`pendant-lamp-root absolute top-0 z-20 pointer-events-none select-none ${className}`}
       style={{
         width: "250px",
         height: "820px",
-        ...(isReady && centerX && centerX > 0
-          ? {
-              left: `${centerX}px`,
-              transform: "translateX(-50%)",
-            }
-          : {
-              right: "var(--lamp-fallback-right, calc(10vw + 45px))",
-            }),
+        ...style,
       }}
     >
       {/* Heavy-duty Cast Iron Ceiling Canopy with Hex Bolts */}
@@ -264,23 +244,23 @@ export function HangingPendantLamp({
 
       {/* 
         PENDULUM ASSEMBLY:
-        Directly driven by requestAnimationFrame (no CSS transition conflict).
+        Directly driven by requestAnimationFrame on pendulumRef (zero React re-renders).
       */}
       <div
+        ref={pendulumRef}
         className="absolute top-4 left-1/2 origin-top"
         style={{
-          transform: `translateX(-50%) rotate(${swayAngle}deg)`,
+          transform: "translateX(-50%) rotate(0deg)",
           transformOrigin: "top center",
           willChange: "transform",
         }}
       >
         {/* 
-          TEXTURE ENHANCEMENT: VINTAGE TWISTED CLOTH-WRAPPED BRAIDED CORD
+          TEXTURE ENHANCEMENT: VINTAGE TWISTED CLOTH-WRAPPED BRAIDED CORD (150px)
           Features realistic diagonal woven herringbone fabric texture
         */}
         <div
-          className="w-[3px] mx-auto relative cursor-grab active:cursor-grabbing pointer-events-auto transition-[height] duration-200"
-          style={{ height: `${cordHeight}px` }}
+          className="pendant-cord w-[3px] mx-auto relative cursor-grab active:cursor-grabbing pointer-events-auto"
           onPointerDown={handlePointerDown}
           onMouseEnter={handleHoverNudge}
           title="Drag to swing • Reacts to phone gyroscope tilt"
@@ -502,12 +482,12 @@ export function HangingPendantLamp({
 
           {/* 
             ATMOSPHERIC SOFT VOLUMETRIC LIGHT BEAM
-            - Feathered Gaussian blur SVG spotlight
-            - Perfectly aligned with lamp sway and gyroscope
-            - Naturally falls into the right-hand portrait area, zero overlap on text
+            - Hardware-accelerated CSS conical gradients & soft falloff
+            - Perfectly aligned with lamp sway and zero SVG filter rasterization overhead
+            - Naturally illuminates the portrait area
           */}
           <div
-            className="relative pointer-events-none transition-opacity duration-500 ease-out flex justify-center"
+            className="relative pointer-events-none transition-opacity duration-500 ease-out flex justify-center overflow-visible"
             style={{
               width: "440px",
               height: "640px",
@@ -515,63 +495,38 @@ export function HangingPendantLamp({
               opacity: isOn ? 1 : 0,
             }}
           >
-            <svg
-              viewBox="0 0 440 640"
-              className="w-full h-full pointer-events-none overflow-visible"
-              style={{ mixBlendMode: "screen" }}
-            >
-              <defs>
-                <filter id="softVolumetricGlow" x="-30%" y="-20%" width="160%" height="150%">
-                  <feGaussianBlur stdDeviation="24" />
-                </filter>
-                <filter id="coreGlow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="12" />
-                </filter>
-
-                <linearGradient id="primaryBeamGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-                  <stop offset="0%" stopColor="#fff3d6" stopOpacity="0.45" />
-                  <stop offset="18%" stopColor="#f5af64" stopOpacity="0.25" />
-                  <stop offset="50%" stopColor="#d8894b" stopOpacity="0.10" />
-                  <stop offset="82%" stopColor="#d8894b" stopOpacity="0.03" />
-                  <stop offset="100%" stopColor="#d8894b" stopOpacity="0" />
-                </linearGradient>
-
-                <linearGradient id="coreBeamGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-                  <stop offset="0%" stopColor="#ffffff" stopOpacity="0.6" />
-                  <stop offset="15%" stopColor="#fed7aa" stopOpacity="0.3" />
-                  <stop offset="45%" stopColor="#f59e0b" stopOpacity="0.1" />
-                  <stop offset="85%" stopColor="#d97706" stopOpacity="0" />
-                </linearGradient>
-
-                <radialGradient id="floorPoolGrad" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#fed7aa" stopOpacity="0.22" />
-                  <stop offset="42%" stopColor="#f59e0b" stopOpacity="0.10" />
-                  <stop offset="78%" stopColor="#d97706" stopOpacity="0.02" />
-                  <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
-                </radialGradient>
-              </defs>
-
-              <path
-                d="M 195 0 L 245 0 L 400 600 L 40 600 Z"
-                fill="url(#primaryBeamGrad)"
-                filter="url(#softVolumetricGlow)"
-              />
-
-              <path
-                d="M 206 0 L 234 0 L 320 540 L 120 540 Z"
-                fill="url(#coreBeamGrad)"
-                filter="url(#coreGlow)"
-              />
-
-              <ellipse
-                cx="220"
-                cy="585"
-                rx="165"
-                ry="40"
-                fill="url(#floorPoolGrad)"
-                filter="url(#softVolumetricGlow)"
-              />
-            </svg>
+            {/* Outer soft ambient light cone */}
+            <div
+              className="absolute top-0 w-full h-full pointer-events-none"
+              style={{
+                clipPath: "polygon(44% 0%, 56% 0%, 94% 96%, 6% 96%)",
+                background:
+                  "linear-gradient(180deg, rgba(255,243,214,0.38) 0%, rgba(245,175,100,0.2) 20%, rgba(216,137,75,0.08) 55%, rgba(216,137,75,0.01) 85%, transparent 100%)",
+                filter: "blur(14px)",
+                transform: "translateZ(0)",
+              }}
+            />
+            {/* Inner focused core light cone */}
+            <div
+              className="absolute top-0 w-3/4 h-5/6 pointer-events-none"
+              style={{
+                clipPath: "polygon(46% 0%, 54% 0%, 82% 92%, 18% 92%)",
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(254,215,170,0.28) 18%, rgba(245,158,11,0.08) 50%, transparent 90%)",
+                filter: "blur(8px)",
+                transform: "translateZ(0)",
+              }}
+            />
+            {/* Floor light pool */}
+            <div
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 w-80 h-20 rounded-[100%] pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(ellipse at center, rgba(254,215,170,0.22) 0%, rgba(245,158,11,0.08) 45%, transparent 75%)",
+                filter: "blur(12px)",
+                transform: "translateZ(0)",
+              }}
+            />
           </div>
         </div>
       </div>

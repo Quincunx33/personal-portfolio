@@ -9,7 +9,6 @@ import Home from "./pages/Home";
 import { useTracker } from './hooks/useTracker';
 import { ConsoleShield } from "./components/ConsoleShield";
 import { ClickGlitchEffect } from "./components/ClickGlitchEffect";
-import { PageLoadingProgressBar } from "./components/PageLoadingProgressBar";
 
 function Router() {
   return (
@@ -54,7 +53,6 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
-          <PageLoadingProgressBar />
           <Toaster />
           <ConsoleShield />
           <ClickGlitchEffect />

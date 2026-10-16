@@ -72,39 +72,7 @@ async function startServer() {
     res.status(403).type("text").send("Direct Access Blocked")
   );
 
-  // Reliable Server-Side Telegram Dispatcher (0% CORS issue, 100% Guaranteed Delivery)
-  app.post("/api/telegram-log", async (req, res) => {
-    try {
-      const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN?.trim();
-      const telegramChatId = process.env.TELEGRAM_CHAT_ID?.trim();
-      if (!telegramBotToken || !telegramChatId) {
-        console.error("[Telegram Proxy Error]: Telegram secrets are not configured");
-        return res.status(503).json({ error: "Telegram service unavailable" });
-      }
-      const { text } = req.body;
-      if (!text) {
-        return res.status(400).json({ error: "Missing text" });
-      }
 
-      const telegramUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
-      const response = await fetch(telegramUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: telegramChatId,
-          text: text,
-          parse_mode: "HTML",
-          disable_web_page_preview: true,
-        }),
-      });
-
-      const result = await response.json();
-      return res.json(result);
-    } catch (err: any) {
-      console.error("[Telegram Proxy Error]:", err?.message);
-      return res.status(500).json({ error: err?.message });
-    }
-  });
 
   // Realtime GitHub Visitor Counter Proxy for @quincunx33
   app.get("/api/counter", async (_req, res) => {

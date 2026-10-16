@@ -23,6 +23,7 @@ import {
 import { QuickContactModal } from "@/components/QuickContactModal";
 import { SecurePortraitCanvas } from "@/components/SecurePortraitCanvas";
 import { HangingPendantLamp } from "@/components/HangingPendantLamp";
+import { TelegramContactForm } from "@/components/TelegramContactForm";
 import { useDocumentSeo } from "@/hooks/useDocumentSeo";
 
 const heroTexture = "/assets/taaissu-hero-texture.jpg";
@@ -509,23 +510,21 @@ export default function Home() {
           backgroundImage: `linear-gradient(90deg, rgba(12,12,11,.92) 0%, rgba(12,12,11,.6) 44%, rgba(12,12,11,.15) 100%), url(${heroTexture})`,
         }}
       >
-        <div className="md:hidden">
-          <HangingPendantLamp
-            onSwayChange={setLampAngle}
-            onStateChange={({ angle, isOn }) => {
-              setLampAngle(angle);
-              setLampIsOn(isOn);
-            }}
-          />
-          {/* Subtle Ambient Warmth matching the lamp beam position */}
-          <div
-            className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-10"
-            style={{
-              opacity: lampIsOn ? 1 : 0,
-              background: `radial-gradient(ellipse 60% 50% at ${65 + lampAngle * 0.9}% 45%, rgba(216, 137, 75, 0.08) 0%, rgba(216, 137, 75, 0.02) 50%, transparent 80%)`,
-            }}
-          />
-        </div>
+        <HangingPendantLamp
+          onSwayChange={setLampAngle}
+          onStateChange={({ angle, isOn }) => {
+            setLampAngle(angle);
+            setLampIsOn(isOn);
+          }}
+        />
+        {/* Subtle Ambient Warmth matching the lamp beam position */}
+        <div
+          className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-10"
+          style={{
+            opacity: lampIsOn ? 1 : 0,
+            background: `radial-gradient(ellipse 60% 50% at ${65 + lampAngle * 0.9}% 45%, rgba(216, 137, 75, 0.08) 0%, rgba(216, 137, 75, 0.02) 50%, transparent 80%)`,
+          }}
+        />
         <div className="hero-3d-scene" aria-hidden="true">
           <span className="hero-orb hero-orb-one" />
           <span className="hero-orb hero-orb-two" />
@@ -753,27 +752,8 @@ export default function Home() {
               conversation about what browsers and low-level tools can become.
             </p>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                className="signal-button"
-                onClick={() => setIsContactOpen(true)}
-              >
-                Transmit Signal <Send size={15} />
-              </button>
-
-              <button
-                onClick={handleCopyEmail}
-                className="top-action-btn py-3 px-4 font-mono text-xs"
-                title="Copy email to clipboard"
-                aria-label="Copy email address liquiderror600@gmail.com"
-              >
-                {emailCopied ? (
-                  <Check size={14} className="text-[#d8894b]" />
-                ) : (
-                  <Copy size={14} />
-                )}
-                <span>{emailCopied ? "Copied!" : "Copy Email"}</span>
-              </button>
+            <div className="mt-4">
+              <TelegramContactForm showMailboxHeader={true} />
             </div>
 
             <div className="social-links mt-8">
