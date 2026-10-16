@@ -520,13 +520,11 @@ export function FirstLaunchSequence({ onComplete, isManualReplay = false }: Firs
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full h-1.5 bg-[#1a1a18] border border-[#e8e1d5]/15 overflow-hidden relative">
+        <div className="w-full h-1 bg-[#1a1a18] border border-[#e8e1d5]/15 overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-[#85491c] via-[#d8894b] via-[#f5af64] to-[#ffeed8] bg-[length:240%_100%] animate-progress-flow transition-all duration-150 ease-out relative overflow-hidden shadow-[0_0_8px_rgba(216,137,75,0.7)]"
+            className="h-full bg-gradient-to-r from-[#d8894b] to-[#f4b37f] transition-all duration-150 ease-out"
             style={{ width: `${progress}%` }}
-          >
-            <div className="absolute inset-y-0 w-20 -left-20 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-progress-shimmer pointer-events-none" />
-          </div>
+          />
         </div>
 
         <div className="flex items-center justify-between text-[9px] uppercase tracking-widest text-[#7a7469]">

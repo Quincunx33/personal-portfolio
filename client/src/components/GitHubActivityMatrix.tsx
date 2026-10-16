@@ -31,7 +31,7 @@ export function GitHubActivityMatrix() {
     { name: "Other / Shell", count: 6, percentage: 15, color: "#8f887c" },
     { name: "Rust / C", count: 2, percentage: 6, color: "#dea584" },
   ]);
-  const [selectedDay, setSelectedDay] = useState<{ date: string; count: number } | null>(null);
+  const [activeDayIndex, setActiveDayIndex] = useState<number | null>(null);
 
   // Generate a procedural 52-week realistic contribution heatmap resembling Tasfiya's 934+ annual activity
   const heatmapWeeks = React.useMemo(() => {
@@ -133,8 +133,8 @@ export function GitHubActivityMatrix() {
             </div>
           </div>
 
-          {/* Scrollable Heatmap Grid with smooth touch scrolling */}
-          <div className="overflow-x-auto pb-2 -webkit-overflow-scrolling-touch scrollbar-thin">
+          {/* Scrollable Heatmap Grid */}
+          <div className="overflow-x-auto pb-2">
             <div className="flex gap-[3px] min-w-[620px]">
               {heatmapWeeks.map((week, wIdx) => (
                 <div key={wIdx} className="flex flex-col gap-[3px]">
@@ -142,31 +142,15 @@ export function GitHubActivityMatrix() {
                     <div
                       key={dIdx}
                       title={`${day.date}: ${day.count} contributions`}
-                      onClick={() => setSelectedDay(day)}
-                      className={`w-[9px] h-[9px] rounded-[1px] transition-transform hover:scale-125 active:scale-150 cursor-pointer ${levelColor(
+                      className={`w-[9px] h-[9px] rounded-[1px] transition-transform hover:scale-125 cursor-pointer ${levelColor(
                         day.level
-                      )} ${selectedDay?.date === day.date ? "ring-2 ring-white scale-125 z-10" : ""}`}
+                      )}`}
                     />
                   ))}
                 </div>
               ))}
             </div>
           </div>
-
-          {selectedDay && (
-            <div className="mt-3 p-2.5 bg-[#1f1e1b] border border-[#d8894b]/40 flex items-center justify-between text-xs font-mono animate-in fade-in duration-150">
-              <span className="text-[#e8e1d5]">
-                <strong className="text-[#d8894b]">{selectedDay.date}</strong>:{" "}
-                {selectedDay.count} contribution{selectedDay.count === 1 ? "" : "s"} logged
-              </span>
-              <button
-                onClick={() => setSelectedDay(null)}
-                className="text-[10px] text-[#a59e92] hover:text-[#e8e1d5] uppercase tracking-wider"
-              >
-                Dismiss ✕
-              </button>
-            </div>
-          )}
 
           <div className="mt-4 pt-4 border-t border-[#e8e1d5]/10 flex flex-wrap items-center justify-between text-xs text-[#a59e92]">
             <span>Regular daily cadences (GMT+6)</span>
