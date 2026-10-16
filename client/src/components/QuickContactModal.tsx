@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ArrowUpRight, Check, Clock, Copy, Mail, X } from "lucide-react";
+import { Check, Copy, Send, X } from "lucide-react";
 import { toast } from "sonner";
 
 interface QuickContactModalProps {
@@ -7,34 +7,19 @@ interface QuickContactModalProps {
   onClose: () => void;
 }
 
-const TOPICS = [
-  {
-    id: "collab",
-    label: "Systems & Web Project Collaboration",
-    subject: "Collaboration Inquiry — Systems & Web Architecture",
-  },
-  {
-    id: "security",
-    label: "Security & Systems Consulting",
-    subject: "Systems & Security Tooling Inquiry",
-  },
-  {
-    id: "role",
-    label: "Engineering Role / Opportunity",
-    subject: "Engineering Opportunity for Tasfiya Tabassum",
-  },
-  {
-    id: "chat",
-    label: "Coffee Chat / Tech Discussion",
-    subject: "Hello from a fellow engineer / collaborator",
-  },
-];
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
 
 export function QuickContactModal({ isOpen, onClose }: QuickContactModalProps) {
-  const [selectedTopic, setSelectedTopic] = useState(TOPICS[0]);
   const [senderName, setSenderName] = useState("");
+  const [replyContact, setReplyContact] = useState("");
   const [message, setMessage] = useState("");
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const email = "liquiderror600@gmail.com";
 
@@ -61,18 +46,70 @@ export function QuickContactModal({ isOpen, onClose }: QuickContactModalProps) {
     }
   };
 
-  const handleSendMail = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    const mailtoUrl = `mailto:${email}?subject=${encodeURIComponent(
-      selectedTopic.subject
-    )}&body=${encodeURIComponent(
-      `Hello Tasfiya,\n\n${
-        message.trim() || "I came across your portfolio and would love to connect."
-      }\n\nBest regards,\n${senderName.trim() || "A collaborator"}`
-    )}`;
-    window.location.href = mailtoUrl;
-    toast.success("Opening mail client...");
-    onClose();
+    const trimmedName = senderName.trim();
+    const trimmedMessage = message.trim();
+    const trimmedContact = replyContact.trim();
+
+    if (!trimmedName) {
+      toast.error("Please enter your name");
+      return;
+    }
+    if (!trimmedMessage) {
+      toast.error("Please enter your message");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const formattedHtml =
+      `⚡ <b>DIRECT TELEGRAM RELAY MESSAGE</b>\n\n` +
+      `👤 <b>Sender Name:</b> <code>${escapeHtml(trimmedName)}</code>\n` +
+      `💬 <b>Reply Contact:</b> <code>${escapeHtml(trimmedContact || "Not provided")}</code>\n` +
+      `🕒 <b>Time:</b> ${new Date().toLocaleTimeString()} (GMT+6)\n` +
+      `🌐 <b>Origin:</b> taissu.pages.dev\n\n` +
+      `📝 <b>Message:</b>\n` +
+      `${escapeHtml(trimmedMessage)}`;
+
+    try {
+      const response = await fetch("/api/telegram-log", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: formattedHtml,
+          name: trimmedName,
+          replyContact: trimmedContact,
+          message: trimmedMessage,
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok && data.ok !== false) {
+        toast.success("Signal beamed to Telegram!", {
+          description: "Your message has been relayed directly to Tasfiya's Telegram bot.",
+        });
+        setSenderName("");
+        setReplyContact("");
+        setMessage("");
+        setTimeout(() => {
+          onClose();
+        }, 1200);
+      } else {
+        const errorDetail = data?.error || data?.description || `HTTP ${response.status}`;
+        throw new Error(errorDetail);
+      }
+    } catch (err: any) {
+      console.error("[Telegram Relay Error]:", err);
+      toast.error("Failed to beam message to Telegram", {
+        description: err?.message || "Please copy the email address above to reach out directly.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -83,21 +120,16 @@ export function QuickContactModal({ isOpen, onClose }: QuickContactModalProps) {
       aria-modal="true"
     >
       <div
-        className="relative w-full max-w-lg bg-[#151513] border border-[#2e2d29] text-[#e8e1d5] p-5 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.85)] font-mono my-auto"
+        className="relative w-full max-w-lg bg-[#141412] border border-[#2e2d29] text-[#e8e1d5] p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] font-mono my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Bar */}
         <div className="flex items-center justify-between pb-4 border-b border-[#2a2926] mb-5">
           <div className="flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-[#d8894b] shrink-0" />
-            <div className="flex flex-wrap items-baseline gap-x-2">
-              <span className="text-xs uppercase tracking-widest text-[#f0eade] font-semibold">
-                Transmit Signal
-              </span>
-              <span className="text-[10px] text-[#8e877c] uppercase tracking-wider font-normal">
-                / Direct Connect
-              </span>
-            </div>
+            <span className="w-2 h-2 rounded-full bg-[#d8894b] shrink-0 shadow-[0_0_8px_rgba(216,137,75,0.6)]" />
+            <span className="text-xs uppercase tracking-widest text-[#f0eade] font-bold">
+              SEND MSG
+            </span>
           </div>
           <button
             onClick={onClose}
@@ -109,98 +141,86 @@ export function QuickContactModal({ isOpen, onClose }: QuickContactModalProps) {
         </div>
 
         {/* Direct Mailbox Card */}
-        <div className="bg-[#1b1a18] border border-[#2e2d29] p-3.5 sm:p-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="min-w-0 flex-1">
+        <div className="bg-[#1b1a18] border border-[#2e2d29] p-4 mb-5 flex flex-col gap-3">
+          <div>
             <span className="text-[10px] uppercase tracking-wider text-[#8e877c] block mb-1 font-medium">
-              Direct Mailbox
+              DIRECT MAILBOX
             </span>
-            <span className="text-xs sm:text-sm font-semibold text-[#f0eade] select-all block truncate">
+            <span className="text-sm font-semibold text-[#f0eade] select-all block truncate font-mono">
               {email}
             </span>
           </div>
           <button
             type="button"
             onClick={handleCopyEmail}
-            className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-3.5 py-2 text-xs font-semibold bg-[#d8894b] text-[#111110] hover:bg-[#e49b5d] active:scale-[0.98] transition-all"
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-3.5 text-xs font-semibold bg-[#d8894b] text-[#111110] hover:bg-[#e49b5d] active:scale-[0.98] transition-all"
           >
             {copiedEmail ? <Check size={14} /> : <Copy size={14} />}
-            <span>{copiedEmail ? "Copied" : "Copy Email"}</span>
+            <span>{copiedEmail ? "Copied Email" : "Copy Email"}</span>
           </button>
         </div>
 
-        {/* Form Body */}
-        <form onSubmit={handleSendMail} className="space-y-4 text-xs">
-          {/* Inquiry Context */}
-          <div>
-            <label className="block text-[#8e877c] uppercase tracking-wider text-[10px] mb-2 font-medium">
-              Select Inquiry Context
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {TOPICS.map((topic) => {
-                const isSelected = selectedTopic.id === topic.id;
-                return (
-                  <button
-                    type="button"
-                    key={topic.id}
-                    onClick={() => setSelectedTopic(topic)}
-                    className={`p-2.5 sm:p-3 text-left border text-[11px] leading-snug transition-all flex items-start gap-2.5 ${
-                      isSelected
-                        ? "border-[#d8894b] bg-[#d8894b]/10 text-[#f0eade] font-medium"
-                        : "border-[#2a2926] bg-[#1a1917] text-[#a59e92] hover:border-[#3d3b36] hover:text-[#e8e1d5]"
-                    }`}
-                  >
-                    <span
-                      className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 transition-colors ${
-                        isSelected ? "bg-[#d8894b]" : "bg-[#45423b]"
-                      }`}
-                    />
-                    <span className="flex-1">{topic.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Name Field */}
+        {/* Telegram Direct Relay Form */}
+        <form onSubmit={handleSendMessage} className="space-y-4 text-xs">
+          {/* Sender Name Field (Required) */}
           <div>
             <label className="block text-[#8e877c] uppercase tracking-wider text-[10px] mb-1.5 font-medium">
-              Your Name / Organization <span className="text-[#5a554c]">(Optional)</span>
+              YOUR NAME (REQUIRED)
             </label>
             <input
               type="text"
+              required
               value={senderName}
               onChange={(e) => setSenderName(e.target.value)}
-              placeholder="e.g. Alex / Engineering Team"
-              className="w-full px-3.5 py-2.5 bg-[#1b1a18] border border-[#2e2d29] text-[#f0eade] placeholder-[#5a554c] outline-none focus:border-[#d8894b] transition-colors text-xs"
+              placeholder="e.g. Tasfia"
+              className="w-full px-3.5 py-2.5 bg-[#1b1a18] border border-[#2e2d29] text-[#f0eade] placeholder-[#5a554c] outline-none focus:border-[#d8894b] transition-colors text-xs font-mono"
+            />
+          </div>
+
+          {/* Reply Contact Field */}
+          <div>
+            <label className="block text-[#8e877c] uppercase tracking-wider text-[10px] mb-1.5 font-medium">
+              REPLY CONTACT
+            </label>
+            <input
+              type="text"
+              value={replyContact}
+              onChange={(e) => setReplyContact(e.target.value)}
+              placeholder="e.g. @your_handle or email"
+              className="w-full px-3.5 py-2.5 bg-[#1b1a18] border border-[#2e2d29] text-[#f0eade] placeholder-[#5a554c] outline-none focus:border-[#d8894b] transition-colors text-xs font-mono"
             />
           </div>
 
           {/* Message Field */}
           <div>
-            <label className="block text-[#8e877c] uppercase tracking-wider text-[10px] mb-1.5 font-medium">
-              Brief Note <span className="text-[#5a554c]">(Optional)</span>
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-[#8e877c] uppercase tracking-wider text-[10px] font-medium">
+                TYPE YOUR MESSAGE *
+              </label>
+              <span className="text-[10px] text-[#8e877c] font-mono">
+                {message.length}/1000
+              </span>
+            </div>
             <textarea
-              rows={3}
+              required
+              rows={4}
+              maxLength={1000}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="What problem or opportunity are you exploring?"
-              className="w-full px-3.5 py-2.5 bg-[#1b1a18] border border-[#2e2d29] text-[#f0eade] placeholder-[#5a554c] outline-none focus:border-[#d8894b] transition-colors resize-none text-xs leading-relaxed"
+              placeholder="Type your message......."
+              className="w-full px-3.5 py-2.5 bg-[#1b1a18] border border-[#2e2d29] text-[#f0eade] placeholder-[#5a554c] outline-none focus:border-[#d8894b] transition-colors resize-none text-xs leading-relaxed font-mono"
             />
           </div>
 
-          {/* Footer Controls */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-3 border-t border-[#2a2926] gap-3">
-            <div className="flex items-center gap-1.5 text-[10px] text-[#8e877c]">
-              <Clock size={12} className="text-[#d8894b] shrink-0" />
-              <span>Response time: &lt; 24h (GMT+6)</span>
-            </div>
+          {/* Submit Action Button */}
+          <div className="pt-2">
             <button
               type="submit"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-[#d8894b] text-[#111110] font-bold hover:bg-[#e49b5d] active:scale-[0.98] transition-all text-xs"
+              disabled={isSubmitting || !senderName.trim() || !message.trim()}
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#d8894b] text-[#111110] font-bold text-xs uppercase tracking-wider hover:bg-[#e49b5d] active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <span>Compose</span>
-              <ArrowUpRight size={14} />
+              <Send size={15} className={isSubmitting ? "animate-pulse" : ""} />
+              <span>{isSubmitting ? "Sending..." : "Send Msg"}</span>
             </button>
           </div>
         </form>

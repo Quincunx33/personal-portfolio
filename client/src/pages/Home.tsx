@@ -758,7 +758,7 @@ export default function Home() {
                 className="signal-button"
                 onClick={() => setIsContactOpen(true)}
               >
-                Transmit Signal <Send size={15} />
+                Send Anonymous msg <Send size={15} />
               </button>
 
               <button

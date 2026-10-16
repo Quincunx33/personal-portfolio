@@ -81,9 +81,14 @@ async function startServer() {
         console.error("[Telegram Proxy Error]: Telegram secrets are not configured");
         return res.status(503).json({ error: "Telegram service unavailable" });
       }
-      const { text } = req.body;
-      if (!text) {
-        return res.status(400).json({ error: "Missing text" });
+      let outgoingText = typeof req.body?.text === "string" ? req.body.text.trim() : "";
+      if (!outgoingText && typeof req.body?.message === "string" && req.body.message.trim()) {
+        const name = req.body?.name?.trim() || "Anonymous";
+        const contact = req.body?.replyContact?.trim() || "Not provided";
+        outgoingText = `⚡ <b>DIRECT TELEGRAM RELAY MESSAGE</b>\n\n👤 <b>Name:</b> ${name}\n💬 <b>Contact:</b> ${contact}\n\n📝 <b>Message:</b>\n${req.body.message.trim()}`;
+      }
+      if (!outgoingText) {
+        return res.status(400).json({ error: "Missing message text" });
       }
 
       const telegramUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
@@ -92,7 +97,7 @@ async function startServer() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chat_id: telegramChatId,
-          text: text,
+          text: outgoingText,
           parse_mode: "HTML",
           disable_web_page_preview: true,
         }),
