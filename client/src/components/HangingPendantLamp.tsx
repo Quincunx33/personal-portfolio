@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { trackLampInteraction } from "@/lib/tracker";
 
 interface HangingPendantLampProps {
   onSwayChange?: (angle: number) => void;
@@ -66,6 +67,7 @@ export function HangingPendantLamp({
   const toggleLight = useCallback(() => {
     setIsOn((prev) => {
       const next = !prev;
+      trackLampInteraction(next ? "toggle_on" : "toggle_off");
       onStateChange?.({ angle: angleRef.current, isOn: next, intensity: next ? 1 : 0 });
       return next;
     });

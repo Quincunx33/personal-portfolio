@@ -23,33 +23,8 @@ function Router() {
 }
 
 function App() {
-  // Real-time visitor activity tracker to Telegram
+  // Real-time visitor activity tracker to Telegram (Intelligence, Milestones, Security)
   useTracker('portfolio');
-
-  useEffect(() => {
-    const blockCommonDevToolsShortcuts = (event: KeyboardEvent) => {
-      const key = event.key.toLowerCase();
-      const modifier = event.ctrlKey || event.metaKey;
-      const devToolsShortcut =
-        event.key === "F12" ||
-        ((event.ctrlKey || event.metaKey) && event.shiftKey && ["i", "j", "c", "k"].includes(key)) ||
-        (event.metaKey && event.altKey && ["i", "j", "c"].includes(key)) ||
-        (modifier && key === "u");
-
-      if (devToolsShortcut) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      }
-    };
-    const blockInspectContextMenu = (event: MouseEvent) => event.preventDefault();
-
-    window.addEventListener("keydown", blockCommonDevToolsShortcuts, true);
-    document.addEventListener("contextmenu", blockInspectContextMenu);
-    return () => {
-      window.removeEventListener("keydown", blockCommonDevToolsShortcuts, true);
-      document.removeEventListener("contextmenu", blockInspectContextMenu);
-    };
-  }, []);
 
   return (
     <ErrorBoundary>

@@ -78,8 +78,8 @@ async function startServer() {
       const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN?.trim();
       const telegramChatId = process.env.TELEGRAM_CHAT_ID?.trim();
       if (!telegramBotToken || !telegramChatId) {
-        console.error("[Telegram Proxy Error]: Telegram secrets are not configured");
-        return res.status(503).json({ error: "Telegram service unavailable" });
+        console.log("[Dev Telegram Relay] Message logged (Configure TELEGRAM_BOT_TOKEN & TELEGRAM_CHAT_ID in .env for live Telegram bot forwarding):", (req.body?.text || req.body?.message)?.slice(0, 100));
+        return res.status(200).json({ ok: true, devMode: true, message: "Logged locally in dev mode" });
       }
       let outgoingText = typeof req.body?.text === "string" ? req.body.text.trim() : "";
       if (!outgoingText && typeof req.body?.message === "string" && req.body.message.trim()) {

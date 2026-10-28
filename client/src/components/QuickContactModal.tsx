@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Check, Copy, Send, X } from "lucide-react";
 import { toast } from "sonner";
+import { trackContactInteraction } from "@/lib/tracker";
 
 interface QuickContactModalProps {
   isOpen: boolean;
@@ -20,8 +21,19 @@ export function QuickContactModal({ isOpen, onClose }: QuickContactModalProps) {
   const [message, setMessage] = useState("");
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const trackedOpenRef = useRef(false);
 
   const email = "liquiderror600@gmail.com";
+
+  useEffect(() => {
+    if (isOpen && !trackedOpenRef.current) {
+      trackedOpenRef.current = true;
+      trackContactInteraction("opened_modal");
+    }
+    if (!isOpen) {
+      trackedOpenRef.current = false;
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -39,6 +51,7 @@ export function QuickContactModal({ isOpen, onClose }: QuickContactModalProps) {
     try {
       await navigator.clipboard.writeText(email);
       setCopiedEmail(true);
+      trackContactInteraction("copied_email", email);
       toast.success("Email copied to clipboard", { description: email });
       setTimeout(() => setCopiedEmail(false), 2000);
     } catch {

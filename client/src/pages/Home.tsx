@@ -9,12 +9,10 @@ import {
   MapPin,
   Menu,
   Send,
-  Terminal,
   HelpCircle,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
-import { DeveloperConsole } from "@/components/DeveloperConsole";
 import { GitHubActivityMatrix } from "@/components/GitHubActivityMatrix";
 import {
   ProjectDetail,
@@ -326,7 +324,6 @@ export default function Home() {
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [inspectingProject, setInspectingProject] = useState<ProjectDetail | null>(null);
   const [emailCopied, setEmailCopied] = useState(false);
-  const [isDevConsoleOpen, setIsDevConsoleOpen] = useState(false);
   const [lampIsOn, setLampIsOn] = useState(true);
 
   // Master-level dynamic SEO configuration
@@ -420,17 +417,6 @@ export default function Home() {
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.code === "KeyD") {
-        e.preventDefault();
-        setIsDevConsoleOpen((prev) => !prev);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   useEffect(() => {
@@ -866,12 +852,6 @@ export default function Home() {
       <QuickContactModal
         isOpen={isContactOpen}
         onClose={() => setIsContactOpen(false)}
-      />
-
-      <DeveloperConsole
-        isOpen={isDevConsoleOpen}
-        onClose={() => setIsDevConsoleOpen(false)}
-        onOpenContact={() => setIsContactOpen(true)}
       />
     </main>
   );

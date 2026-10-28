@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Shield, EyeOff, Lock } from "lucide-react";
+import { trackSecurityAlert } from "@/lib/tracker";
 
 export function AntiCaptureShield() {
   const [isCloaked, setIsCloaked] = useState(false);
@@ -32,6 +33,13 @@ export function AntiCaptureShield() {
         e.preventDefault();
         setIsBlackout(true);
 
+        trackSecurityAlert("Screen Capture Intercepted", {
+          trigger: "PrintScreen Keypress Trapped",
+          shortcut: "PrintScreen (PrtScn)",
+          severity: "high",
+          extra: "Clipboard buffer immediately purged to null to prevent visual memory leak."
+        });
+
         // Instantly scrub clipboard so no screenshot is retained
         try {
           if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -50,6 +58,12 @@ export function AntiCaptureShield() {
       // Cmd+Shift+3, 4, 5 (Mac Screenshot combos)
       if (e.metaKey && e.shiftKey && ["3", "4", "5"].includes(e.key)) {
         setIsBlackout(true);
+        trackSecurityAlert("macOS Screenshot Combo Intercepted", {
+          trigger: `macOS Capture Combo (Cmd+Shift+${e.key})`,
+          shortcut: `Cmd+Shift+${e.key}`,
+          severity: "high",
+          extra: "User attempted native macOS selective or fullscreen screengrab."
+        });
         setTimeout(() => setIsBlackout(false), 2200);
       }
     };
@@ -74,6 +88,12 @@ export function AntiCaptureShield() {
       originalGetDisplayMedia = navigator.mediaDevices.getDisplayMedia;
       navigator.mediaDevices.getDisplayMedia = async () => {
         setIsBlackout(true);
+        trackSecurityAlert("Screen Recording API Blocked", {
+          trigger: "navigator.mediaDevices.getDisplayMedia invocation trapped",
+          shortcut: "WebRTC / Screen Cast Stream",
+          severity: "critical",
+          extra: "An extension, screen recorder, or script attempted to stream the browser canvas."
+        });
         throw new Error("Screen capture restricted by security policy.");
       };
     }

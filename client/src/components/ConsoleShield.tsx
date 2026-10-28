@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef } from "react";
+import { trackSecurityAlert } from "@/lib/tracker";
 
 export function ConsoleShield() {
   const [devToolsOpen, setDevToolsOpen] = useState(false);
   const audioPlayedRef = useRef(false);
+  const alertSentRef = useRef(false);
 
   useEffect(() => {
     const originalConsole = {
@@ -46,9 +48,19 @@ export function ConsoleShield() {
       }
     };
 
-    const triggerRedirect = () => {
+    const triggerRedirect = (reason = "DevTools Console Evaluation / Inspection", shortcut?: string) => {
       setDevToolsOpen(true);
       playWarningBeep();
+
+      if (!alertSentRef.current) {
+        alertSentRef.current = true;
+        trackSecurityAlert("DevTools & Inspection Attempt", {
+          trigger: reason,
+          shortcut: shortcut || "Console REPL / DOM Probe",
+          severity: "critical",
+          extra: "User attempted to inspect DOM, evaluate console commands, or trigger DevTools shortcuts."
+        });
+      }
 
       try {
         document.body.style.overflow = "hidden";
@@ -173,13 +185,30 @@ export function ConsoleShield() {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
-        triggerRedirect();
+
+        const shortcutName = isF12
+          ? "F12"
+          : isViewSource
+          ? (e.metaKey ? "Cmd+Opt+U" : "Ctrl+U")
+          : isSaveSource
+          ? (e.metaKey ? "Cmd+S" : "Ctrl+S")
+          : isMacDevTools
+          ? `Cmd+Opt+${key.toUpperCase()}`
+          : `Ctrl+Shift+${key.toUpperCase()}`;
+
+        triggerRedirect(`Keyboard DevTools Shortcut Trapped: ${shortcutName}`, shortcutName);
       }
     };
 
     // Right-Click Context Menu Suppression (prevents right-click -> "Inspect element")
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
+      trackSecurityAlert("Right-Click Context Menu / Inspect Attempt", {
+        trigger: "Mouse Contextmenu Event Suppressed",
+        shortcut: "Right-Click (Mouse 2)",
+        severity: "warning",
+        extra: "User attempted to open context menu to inspect DOM elements or view page source."
+      });
     };
 
     window.addEventListener("keydown", handleKeyDown, true);

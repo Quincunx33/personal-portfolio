@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { ArrowUpRight, Check, Copy, ExternalLink, GitBranch, Github, Layers, Shield, Terminal, X } from "lucide-react";
 import { toast } from "sonner";
+import { trackProjectInspection } from "@/lib/tracker";
 
 export interface ProjectDetail {
   name: string;
@@ -158,6 +159,22 @@ interface ProjectInspectorModalProps {
 
 export function ProjectInspectorModal({ project, onClose }: ProjectInspectorModalProps) {
   const [copied, setCopied] = React.useState(false);
+  const lastTrackedProject = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (project && project.name !== lastTrackedProject.current) {
+      lastTrackedProject.current = project.name;
+      trackProjectInspection(
+        {
+          name: project.displayName || project.name,
+          language: project.language,
+          type: project.type,
+          url: project.url,
+        },
+        "viewed"
+      );
+    }
+  }, [project]);
 
   if (!project) return null;
 
@@ -170,6 +187,15 @@ export function ProjectInspectorModal({ project, onClose }: ProjectInspectorModa
     try {
       await navigator.clipboard.writeText(project.url);
       setCopied(true);
+      trackProjectInspection(
+        {
+          name: project.displayName || project.name,
+          language: project.language,
+          type: project.type,
+          url: project.url,
+        },
+        "copied_url"
+      );
       toast.success("Repository URL copied to clipboard", {
         description: project.url,
       });
@@ -299,6 +325,17 @@ export function ProjectInspectorModal({ project, onClose }: ProjectInspectorModa
               href={enriched.url}
               target="_blank"
               rel="noreferrer"
+              onClick={() => {
+                trackProjectInspection(
+                  {
+                    name: project.displayName || project.name,
+                    language: project.language,
+                    type: project.type,
+                    url: project.url,
+                  },
+                  "github_click"
+                );
+              }}
               className="flex items-center gap-2 px-4 py-2 bg-[#d8894b] text-[#111110] font-mono text-xs font-bold hover:bg-[#e49b5d] transition-colors"
             >
               <Github size={15} />

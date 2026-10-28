@@ -1,5 +1,13 @@
 import { useEffect, useRef } from 'react';
-import { logVisitorData, ClickMetadata } from '../lib/tracker';
+import {
+  trackPageView,
+  trackScrollMilestone,
+  trackEngagementMilestone,
+  trackClipboardCopy,
+  trackTabFocusChange,
+  logVisitorData,
+  ClickMetadata
+} from '../lib/tracker';
 import { getSessionInfo } from '../lib/telemetry';
 
 // Global variable to ensure Page View fires ONLY ONCE across component lifecycles & mounts
@@ -7,65 +15,142 @@ let globalPageViewLogged = false;
 
 export const useTracker = (_sheetId = 'portfolio') => {
   const hasLoggedPageView = useRef(false);
+  const scrollMilestonesReached = useRef<Set<number>>(new Set());
+  const engagementMilestonesReached = useRef<Set<number>>(new Set());
+  const blurTimestampRef = useRef<number>(0);
+  const lastClickTimeRef = useRef<number>(0);
 
   useEffect(() => {
     // 1. Initial Page View Tracking (Guaranteed strictly once per browser session/page load)
     if (!hasLoggedPageView.current && !globalPageViewLogged) {
       globalPageViewLogged = true;
       hasLoggedPageView.current = true;
-
-      logVisitorData(
-        _sheetId,
-        'Page View',
-        `Visited portfolio: "${document.title || 'Tasfiya Tabassum'}"`,
-        'Viewport / Main Entry',
-        window.location.href,
-        false
-      );
+      trackPageView(document.title || 'Tasfiya Tabassum Portfolio');
     }
 
-    // 2. Strict Real User Click Tracking
+    // 2. Scroll Depth Milestones (25%, 50%, 75%, 100%)
+    let scrollTimeout: NodeJS.Timeout | null = null;
+    const handleScroll = () => {
+      if (scrollTimeout) return;
+      scrollTimeout = setTimeout(() => {
+        scrollTimeout = null;
+        try {
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          if (docHeight <= 0) return;
+          const currentScroll = window.scrollY || window.pageYOffset;
+          const percent = Math.min(100, Math.round((currentScroll / docHeight) * 100));
+
+          const milestones = [25, 50, 75, 100];
+          for (const m of milestones) {
+            if (percent >= m && !scrollMilestonesReached.current.has(m)) {
+              scrollMilestonesReached.current.add(m);
+              trackScrollMilestone(m);
+            }
+          }
+        } catch {}
+      }, 300);
+    };
+
+    // 3. Engagement Milestones (30 seconds, 2 minutes, 5 minutes)
+    const engagementTimes = [30, 120, 300];
+    const timers = engagementTimes.map((secs) => {
+      return setTimeout(() => {
+        if (!engagementMilestonesReached.current.has(secs) && !document.hidden) {
+          engagementMilestonesReached.current.add(secs);
+          trackEngagementMilestone(secs);
+        }
+      }, secs * 1000);
+    });
+
+    // 4. Tab Visibility Attention Tracking
+    const handleVisibilityChange = () => {
+      try {
+        if (document.hidden) {
+          blurTimestampRef.current = Date.now();
+          trackTabFocusChange('hidden');
+        } else {
+          const awayDuration = blurTimestampRef.current > 0
+            ? Math.round((Date.now() - blurTimestampRef.current) / 1000)
+            : 0;
+          blurTimestampRef.current = 0;
+          trackTabFocusChange('visible', awayDuration);
+        }
+      } catch {}
+    };
+
+    // 5. Clipboard Selection & Copy Listener
+    const handleCopy = () => {
+      try {
+        const selection = window.getSelection();
+        const text = selection ? selection.toString() : '';
+        if (text && text.trim().length > 1) {
+          trackClipboardCopy(text.trim());
+        }
+      } catch {}
+    };
+
+    // 6. Strict High-Intent Real User Click Tracking
     const handleGlobalClick = (event: MouseEvent) => {
       try {
-        // Ignore synthetic, non-user events
         if (event.isTrusted === false) return;
+
+        const now = Date.now();
+        // Prevent high-frequency multi-clicks within 600ms
+        if (now - lastClickTimeRef.current < 600) return;
 
         const target = event.target as HTMLElement;
         if (!target) return;
 
-        // Extract real element tag
-        const targetTag = (target.tagName || 'DIV').toLowerCase();
+        // Check if user clicked an interactive element or inside one
+        const interactiveAncestor = target.closest('a, button, [role="button"], input, textarea, select, details, summary');
+        const targetElement = (interactiveAncestor || target) as HTMLElement;
+        const targetTag = targetElement.tagName.toLowerCase();
+
+        // If clicking generic empty background without interactive role, skip spam
+        const isInteractive = Boolean(
+          interactiveAncestor ||
+          targetTag === 'button' ||
+          targetTag === 'a' ||
+          targetTag === 'input' ||
+          targetElement.onclick !== null ||
+          targetElement.hasAttribute('role') ||
+          targetElement.classList.contains('cursor-pointer') ||
+          targetElement.closest('.signal-button, .text-button, .filter, .brand, .top-github, .bento-card')
+        );
+
+        if (!isInteractive && targetTag === 'div' && !target.innerText?.trim()) {
+          return;
+        }
+
+        lastClickTimeRef.current = now;
 
         // Extract class names safely
         let targetClasses = '';
-        if (typeof target.className === 'string') {
-          targetClasses = target.className.trim();
-        } else if (typeof target.className === 'object' && target.className !== null && 'baseVal' in target.className) {
-          targetClasses = (target.className as any).baseVal || '';
+        if (typeof targetElement.className === 'string') {
+          targetClasses = targetElement.className.trim();
+        } else if (typeof targetElement.className === 'object' && targetElement.className !== null && 'baseVal' in targetElement.className) {
+          targetClasses = (targetElement.className as any).baseVal || '';
         }
 
-        // Extract text content cleanly
-        const rawText = target.innerText || target.textContent || '';
-        const targetText = rawText.trim().replace(/\s+/g, ' ').slice(0, 60);
+        const rawText = targetElement.innerText || targetElement.textContent || '';
+        const targetText = rawText.trim().replace(/\s+/g, ' ').slice(0, 50);
 
-        // Check if user clicked an interactive element or inside one
-        const interactiveAncestor = target.closest('a, button, [role="button"], input, textarea, select');
-        const link = (interactiveAncestor as HTMLAnchorElement)?.href || (target as HTMLAnchorElement)?.href || '';
-        const targetId = target.id ? `#${target.id}` : '';
+        const link = (targetElement as HTMLAnchorElement)?.href || (target as HTMLAnchorElement)?.href || '';
+        const targetId = targetElement.id ? `#${targetElement.id}` : '';
 
         let actionDescription = '';
         if (link) {
           if (link.includes('github.com')) {
-            actionDescription = `GitHub Link (${link})`;
-          } else if (link.includes('linkedin.com')) {
-            actionDescription = `LinkedIn Link (${link})`;
+            actionDescription = `GitHub Outbound (${link.replace('https://github.com/', '')})`;
+          } else if (link.includes('instagram.com') || link.includes('facebook.com')) {
+            actionDescription = `Social Outbound Link (${link})`;
           } else if (link.startsWith('mailto:')) {
             actionDescription = `Email Link (${link})`;
           } else {
-            actionDescription = `Link Click (${link})`;
+            actionDescription = `Outbound Link (${link})`;
           }
-        } else if (targetTag === 'button' || interactiveAncestor?.tagName?.toLowerCase() === 'button') {
-          actionDescription = `Button Click ("${targetText || 'Button'}")`;
+        } else if (targetTag === 'button') {
+          actionDescription = `Button Click ("${targetText || 'Interactive Button'}")`;
         } else {
           actionDescription = `Clicked <${targetTag}> ("${targetText.slice(0, 30) || targetId || 'Element'}")`;
         }
@@ -74,14 +159,13 @@ export const useTracker = (_sheetId = 'portfolio') => {
           tagName: targetTag,
           className: targetClasses || '',
           textContent: targetText || '',
-          id: target.id || undefined,
-          role: target.getAttribute('role') || undefined,
+          id: targetElement.id || undefined,
+          role: targetElement.getAttribute('role') || undefined,
           href: link || undefined,
         };
 
         const targetIdentifier = `<${targetTag}${targetId ? ` ${targetId}` : ''}>`;
 
-        // Send metadata to Telegram immediately
         logVisitorData(
           _sheetId,
           'User Click',
@@ -96,7 +180,7 @@ export const useTracker = (_sheetId = 'portfolio') => {
       }
     };
 
-    // 3. User Exit Tracking
+    // 7. User Exit Tracking
     const handleBeforeUnload = () => {
       try {
         const session = getSessionInfo();
@@ -111,11 +195,18 @@ export const useTracker = (_sheetId = 'portfolio') => {
       } catch (e) {}
     };
 
-    // Attach click listener globally to document using capture phase
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('copy', handleCopy);
     document.addEventListener('click', handleGlobalClick, true);
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      timers.forEach((t) => clearTimeout(t));
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener('copy', handleCopy);
       document.removeEventListener('click', handleGlobalClick, true);
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
